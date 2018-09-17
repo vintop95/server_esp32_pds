@@ -5,6 +5,8 @@
 - Giorgio Pizzuto
 - Vincenzo Topazio
 
+**Client ESP32**: https://github.com/vintop95/client_esp32_pds
+
 ## Configurazione ambiente di sviluppo
 Useremo qt per lo sviluppo del server con interfaccia grafica in C++
 Scarica la versione open-source da https://www.qt.io/download  
