@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets
+
+QT += core gui network widgets
 
 TARGET = server_esp32_pds
 TEMPLATE = app
@@ -24,10 +25,19 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        Receiver.cpp \
+    ClientHandler.cpp \
+    logger.cpp \
+    Server.cpp
 
 HEADERS += \
-        mainwindow.h
+        main.h \
+        mainwindow.h \
+        Receiver.h \
+    ClientHandler.h \
+    logger.h \
+    Server.h
 
 FORMS += \
         mainwindow.ui

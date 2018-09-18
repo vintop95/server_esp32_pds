@@ -12,3 +12,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::writeLog(const QString &text)
+{
+    ui->txtLog->appendPlainText(text);
+}
