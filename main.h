@@ -14,15 +14,15 @@
 #include <QtNetwork>
 #include <QtCore>
 #include <QTime>
+#include <QSettings>
 
 #include "mainwindow.h"
 #include "logger.h"
 
 using namespace std;
 
-
-#define BUFSIZE 1024
-#define SERVER_PORT 7856
+static quint16 SERVER_PORT = 7856;
+static int ESP32_NO = 4;
 
 static MainWindow* pWin;
 

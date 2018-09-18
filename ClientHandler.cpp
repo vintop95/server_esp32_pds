@@ -38,12 +38,25 @@ void ClientHandler::readyRead()
     handle->setAutoDelete(true);
 
     // get the information
-    QByteArray Data = socket->readAll();
+    QByteArray data = socket->readAll();
 
     // will write on server side window
-    writeLog(QString::number(socket->socketDescriptor()) + " Data in: " + Data);
+    writeLog(QString::number(socket->socketDescriptor()) + " Data in: " + data);
 
-    socket->write(Data);
+
+    QJsonDocument jDoc = QJsonDocument::fromBinaryData(data);
+    QJsonObject jObj = jDoc.object();
+
+    Record r;
+    r.sender_mac = jObj["sender_mac"].toString();
+    r.timestamp = jObj["sender_mac"].toInt();
+    r.rssi = jObj["sender_mac"].toInt();
+    r.hashed_pkt = jObj["sender_mac"].toString();
+    r.ssid = jObj["sender_mac"].toString();
+
+    deviceFinder->pushRecord(r);
+
+    socket->write("OK\r\n");
 
     socket->flush();
     socket->waitForBytesWritten();

@@ -2,6 +2,7 @@
 #define CLIENTHANDLER_H
 
 #include "main.h"
+#include "DeviceFinder.h"
 #include <QThread>
 #include <QTcpSocket>
 #include <QDebug>
@@ -41,6 +42,7 @@ public slots:
 
 private:
    QTcpSocket *socket;
+   DeviceFinder *deviceFinder;
    qintptr socketDescriptor;
    bool isMultithread = true;
 };
