@@ -26,18 +26,18 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        Receiver.cpp \
     ClientHandler.cpp \
     logger.cpp \
-    Server.cpp
+    Server.cpp \
+    DeviceFinder.cpp
 
 HEADERS += \
         main.h \
         mainwindow.h \
-        Receiver.h \
     ClientHandler.h \
     logger.h \
-    Server.h
+    Server.h \
+    DeviceFinder.h
 
 FORMS += \
         mainwindow.ui

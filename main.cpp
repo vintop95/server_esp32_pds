@@ -1,7 +1,6 @@
 #include "main.h"
 
 #include "Server.h"
-#include "Receiver.h"
 
 void writeLog(const QString &text, QtMsgType type){
     pLog->writeLog(text,type);
