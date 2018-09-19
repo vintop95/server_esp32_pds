@@ -10,7 +10,7 @@
 ## Configurazione ambiente di sviluppo
 Useremo qt per lo sviluppo del server con interfaccia grafica in C++
 Scarica la versione open-source da https://www.qt.io/download  
-e installa **SOLO** il componente MSVC2017 64BIT
+e installa **SOLO** il componente MSVC2017 64BIT e Qt Charts
 
 Documentazione: http://doc.qt.io/qt-5/qtwidgets-index.html#  
 
