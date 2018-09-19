@@ -1,6 +1,6 @@
 #include "DeviceFinder.h"
 
-DeviceFinder::DeviceFinder(int n): ESPNo(n)
+DeviceFinder::DeviceFinder(int n, int p): ESPNo(n), chartPeriod(p)
 {
     for(int i=0; i<ESPNo; ++i){
         QString newName = "ESP" + QString::number(i);
@@ -8,6 +8,7 @@ DeviceFinder::DeviceFinder(int n): ESPNo(n)
            newName,
            ESP32(newName) );
     }
+    initChart();
 }
 
 void DeviceFinder::setESPPos(QString devName, float xpos, float ypos)
@@ -62,6 +63,14 @@ void DeviceFinder::logCurrentDevices()
     writeLog("+++++++++++++++++", QtInfoMsg);
 }
 
+void DeviceFinder::initChart()
+{
+    //TODO: questa linea fa crashare
+    //QObject::connect(&timer, &QTimer::timeout, pWin->getChart(), &Chart::updateChart);
+    timer.setInterval(chartPeriod);
+    timer.start();
+}
+
 void DeviceFinder::test()
 {
     Record r;
@@ -106,6 +115,36 @@ void DeviceFinder::test()
         pushRecord(r);
         logCurrentDevices();
     }
+}
+
+// https://forums.estimote.com/t/determine-accurate-distance-of-signal/2858/2
+// https://gist.github.com/eklimcz/446b56c0cb9cfe61d575
+// https://stackoverflow.com/questions/20416218/understanding-ibeacon-distancing/20434019#20434019
+
+double calculateDistance(int rssi) {
+
+    // TX-power-level == RSSI at 1m distance
+    // esp txPower
+    // https://www.esp32.com/viewtopic.php?t=5359
+    int txPower = -59; //hard coded power value. Usually ranges between -59 to -65
+
+    if (rssi == 0) {
+        return -1.0;
+    }
+
+    double ratio = rssi*1.0/txPower;
+    double distance;
+    if (ratio < 1.0) {
+        return qPow(ratio,10);
+    }
+    else {
+        distance =  (0.89976)* qPow(ratio,7.7095) + 0.111;
+        return distance;
+    }
+
+    // oppure questa formula
+    // distance in meters = pow(10, (RssiAtOneMeter - ReceivedRSSI) / 20)
+    distance = qPow(10, (txPower - rssi) / 20);
 }
 
 QPointF DeviceFinder::calculatePosition(Record r)

@@ -95,17 +95,20 @@ class DeviceFinder : public QThread
 {
 private:
     int ESPNo;
+    int chartPeriod;
     QVector<Record> records;
     QMap<QString, ESP32> esp;
     QHash<QString, Device> devices;
     void pushDevice(Device d);
     QPointF calculatePosition(Record r);
+    QTimer timer;
 public:
-    DeviceFinder(int espNo);
+    DeviceFinder(int espNo, int chartPeriod);
     //void run() override;
     void setESPPos(QString ESPName, float xpos, float ypos);
     void pushRecord(Record r);
     void logCurrentDevices();
+    void initChart();
     void test();
 };
 

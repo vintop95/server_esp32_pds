@@ -23,6 +23,7 @@ using namespace std;
 
 static quint16 SERVER_PORT = 7856;
 static int ESP32_NO = 4;
+static int CHART_PERIOD = 10000;
 
 static MainWindow* pWin;
 

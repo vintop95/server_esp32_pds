@@ -6,6 +6,7 @@
 
 
 QT += core gui network widgets
+QT += charts
 
 TARGET = server_esp32_pds
 TEMPLATE = app
@@ -29,7 +30,8 @@ SOURCES += \
     ClientHandler.cpp \
     logger.cpp \
     Server.cpp \
-    DeviceFinder.cpp
+    DeviceFinder.cpp \
+    Chart.cpp
 
 HEADERS += \
         main.h \
@@ -37,10 +39,13 @@ HEADERS += \
     ClientHandler.h \
     logger.h \
     Server.h \
-    DeviceFinder.h
+    DeviceFinder.h \
+    Chart.h
 
 FORMS += \
         mainwindow.ui
+
+RC_FILE = server_esp32_pds.rc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

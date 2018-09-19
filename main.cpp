@@ -17,6 +17,7 @@ void loadSettings(QList<ESP32> &espList){
 
     // If the file does not exist
     if(! settings.contains("ESP32_NO")){
+        settings.setValue("CHART_PERIOD", 10000);
         settings.setValue("ESP32_NO", ESP32_NO);
 
         for(int i=0; i < ESP32_NO; ++i){
@@ -26,6 +27,7 @@ void loadSettings(QList<ESP32> &espList){
         }
 
     }else{
+        CHART_PERIOD = settings.value("CHART_PERIOD", 1000).toInt();
         ESP32_NO = settings.value("ESP32_NO").toInt();
 
         for(int i=0; i < ESP32_NO; ++i){
@@ -46,6 +48,7 @@ int main(int argc, char *argv[])
     pWin = &w;
     Logger logger(pWin);
     pLog = &logger;
+
     w.show();
 
     QList<ESP32> espList;
@@ -56,7 +59,7 @@ int main(int argc, char *argv[])
 
     writeLog("+++ WELCOME TO THE ESP32 SERVER +++", QtInfoMsg);
 
-    DeviceFinder deviceFinder(ESP32_NO);
+    DeviceFinder deviceFinder(ESP32_NO, CHART_PERIOD);
     for(auto e : espList){
         deviceFinder.setESPPos(e.getName(), e.getX(), e.getY());
     }
