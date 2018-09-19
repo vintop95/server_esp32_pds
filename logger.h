@@ -1,3 +1,10 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #ifndef LOGGER_H
 #define LOGGER_H
 
@@ -6,7 +13,7 @@
 #include <QString>
 #include <QDebug>
 
-/*
+/**
  * We use a Logger class in order to make writeLog a thread-safe
  * function by using signals to call ui with pWin, because
  * calling ui methods from non-main thread is not allowed

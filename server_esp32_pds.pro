@@ -6,7 +6,7 @@
 
 
 QT += core gui network widgets
-QT += charts
+QT += charts sql
 
 TARGET = server_esp32_pds
 TEMPLATE = app
@@ -31,7 +31,8 @@ SOURCES += \
     logger.cpp \
     Server.cpp \
     DeviceFinder.cpp \
-    Chart.cpp
+    Chart.cpp \
+    dbmanager.cpp
 
 HEADERS += \
         main.h \
@@ -40,7 +41,8 @@ HEADERS += \
     logger.h \
     Server.h \
     DeviceFinder.h \
-    Chart.h
+    Chart.h \
+    dbmanager.h
 
 FORMS += \
         mainwindow.ui

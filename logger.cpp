@@ -1,13 +1,32 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #include "logger.h"
 
+/**
+ * @brief Constructor of logger
+ */
 Logger::Logger(MainWindow* w, QObject* parent):QObject(parent), pWin(w){
     connect(this,&Logger::writeLogInMainWindow,pWin,&MainWindow::writeLog);
 }
 
-/*
+/**
+ * @brief Writes the log message in the correct way depending of the type
  * We are sure that this call is thread-safe (even if we did not use
  * mutex) because emitting signals in Qt::AutoConnection mode will
  * guarantee mutual exclusion in access of ui elements
+ *
+ * @param Text to write
+ * @param Type of log message:
+ * - QtDebugMsg:    for debug purposes
+ * - QtInfoMsg:     for information purposes
+ * - QtWarningMsg:  something went wrong
+ * - QtCriticalMsg: something went very wrong
+ * - QtFatalMsg:    something went terribly wrong
  */
 void Logger::writeLog(const QString &text, QtMsgType type){
     QString msg = text;

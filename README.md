@@ -20,7 +20,17 @@ Qt Tutorial for beginners: https://www.youtube.com/watch?v=EkjaiDsiM-Q&list=PLS1
 ### Strutture dati
 Sono utilizzate le strutture dati offerte dal framework qt, in sostanza le librerie standard con una Q davanti (es QString, QVector, ...)
 
+### Signals e slots
+Nella documentazione trovate cosa sono nel dettaglio
+connect(oggetto_sender, signal_triggerante,
+        oggetto_receiver, slot_cioè_metodo_da_chiamare);
 
+### Definizione classi 
+- aggiungere macro Q_OBJECT all'inizio della classe
+  per poter usare il meccanismo di signal e slots
+  nelle classi derivate da qualsiasi classe che inizia
+  con Q (sono tutte derivate dalla classe padre QObject)
+  
 # Ulteriori informazioni
 ### Videolezione del progetto
 LEZIONE 24 2017/18

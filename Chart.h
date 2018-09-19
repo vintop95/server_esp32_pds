@@ -1,11 +1,19 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #ifndef CHART_H
 #define CHART_H
 
 #include <QtCharts>
-//#include "DeviceFinder.h"
-
 using namespace QtCharts;
 
+/**
+ * It models the chart showing the devices
+ */
 class Chart: public QChart
 {
     Q_OBJECT
@@ -14,7 +22,7 @@ public:
     virtual ~Chart();
 
 public slots:
-    void updateChart();
+    void updateChart(int countCurrDev);
 
 private:
     QSplineSeries *m_series;

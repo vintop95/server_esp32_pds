@@ -1,3 +1,10 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #ifndef CLIENTHANDLER_H
 #define CLIENTHANDLER_H
 
@@ -7,8 +14,9 @@
 #include <QTcpSocket>
 #include <QDebug>
 
-/*
+/**
  * Use only for time consuming tasks
+ * Use later
  */
 class Handle : public QObject, public QRunnable
 {
@@ -22,6 +30,9 @@ public:
     }
 };
 
+/**
+ * It handles the data received from the esp32 devices
+ */
 class ClientHandler : public QObject
 {
     Q_OBJECT

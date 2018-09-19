@@ -1,5 +1,15 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #include "Server.h"
 
+/**
+ * @brief Constructor of Server
+ */
 Server::Server(quint16 p, QObject* parent):QTcpServer(parent), port(p)
 {
     //Create a Thread Pool
@@ -7,31 +17,36 @@ Server::Server(quint16 p, QObject* parent):QTcpServer(parent), port(p)
     //writeLog("Num of threads in pool: " + QString::number(QThread::idealThreadCount()));
 }
 
-void Server::start()
+/**
+ * @brief Starts the Server
+ *
+ * @return true if all went well
+ */
+bool Server::start()
 {
-    if (!this->listen(QHostAddress::Any, port)) {
+    bool res = listen(QHostAddress::Any, port);
+    if (!res) {
         writeLog("Unable to start the server: " + this->errorString(), QtCriticalMsg);
-        return;
+        return res;
     }
     writeLog("Server started.");
+    return res;
 }
 
+/**
+ * @brief Callback called when a new connection is requested
+ * The ClientHandler object will handle the client
+ * It is a virtual function derived from QThread
+ *
+ * @param socket descriptor of the client connected
+ */
 void Server::incomingConnection(qintptr socketDescriptor)
 {
-    // 1. QTcpServer gets a new connection request from a client.
-    // 2. It makes a task (runnable) here.
-    // 3. Then, the server grabs one of the threads.
-    // 4. The server throws the runnable to the thread.
-
-
-    // Every new connection will be run in a newly created thread
     ClientHandler *ch = new ClientHandler(socketDescriptor, this);
-
-    // IF ch WAS A QTHREAD
-    // connect signal/slot
-    // once a thread is not needed, it will be beleted later
-    // connect(ch, &ClientHandler::finished, ch, &ClientHandler::deleteLater);
-
     ch->setMultithread(this->isMultithread);
     ch->handle();
+
+    // IF ch WAS A QTHREAD
+    // once a thread is not needed, it will be beleted later
+    // connect(ch, &ClientHandler::finished, ch, &ClientHandler::deleteLater);
 }

@@ -1,12 +1,37 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #include "main.h"
 
 #include "Server.h"
-#include <QPointF>
+#include "DeviceFinder.h"
 
+/**
+ * @brief Write into the log window
+ *
+ * @param Text to write
+ * @param Type of log message:
+ * - QtDebugMsg:    for debug purposes
+ * - QtInfoMsg:     for information purposes
+ * - QtWarningMsg:  something went wrong
+ * - QtCriticalMsg: something went very wrong
+ * - QtFatalMsg:    something went terribly wrong
+ */
 void writeLog(const QString &text, QtMsgType type){
-    pLog->writeLog(text,type);
+    pLog->writeLog(text, type);
 }
 
+/**
+ * @brief Loads settings from the .ini file
+ * It generates a .ini file or reads from it
+ * It uses <QSettings>
+ *
+ * @param List of esp32 devices read from .ini file
+ */
 void loadSettings(QList<ESP32> &espList){
     // Read settings
     QString settingsFile =
@@ -40,32 +65,39 @@ void loadSettings(QList<ESP32> &espList){
     }
 }
 
-// -35 MOLTO VICINO, -100 MOLTO LONTANO
+
 int main(int argc, char *argv[])
 {
+    // Necessary in order to make the program work
     QApplication a(argc, argv);
+
+    // Initializes the main window and open it
+    // static pointers are global variables
     MainWindow w;
     pWin = &w;
     Logger logger(pWin);
     pLog = &logger;
-
     w.show();
 
+    // Retrieve the list of esp32 devices
     QList<ESP32> espList;
     loadSettings(espList);
-
-    writeLog("ESP_NO: " + QString::number(ESP32_NO));
+    writeLog("NUM OF ESPs: " + QString::number(ESP32_NO));
 
 
     writeLog("+++ WELCOME TO THE ESP32 SERVER +++", QtInfoMsg);
 
+    // Initializes the object that handles the packets
+    // to find the devices in the area
     DeviceFinder deviceFinder(ESP32_NO, CHART_PERIOD);
+    deviceFinder.setWindow(&w);
     for(auto e : espList){
         deviceFinder.setESPPos(e.getName(), e.getX(), e.getY());
     }
-
     deviceFinder.test();
 
+    // Initializes the server that listens for the
+    // esp devices to send the packets
     Server c(SERVER_PORT);
     c.setMultithread(false);
     c.start();

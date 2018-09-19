@@ -1,3 +1,10 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -11,18 +18,23 @@ namespace Ui {
 class MainWindow;
 }
 
+/**
+ * This class models the main window
+ * that can be modified in the mainwindow.ui file
+ */
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+    Q_OBJECT //needed for QObject derived classes
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
     void writeLog(const QString &text, const QColor& = Qt::white);
     Chart* getChart();
 private slots:
     void on_actionExit_triggered();
-
+    void on_actionAbout_triggered();
 private:
     void initChart();
     Ui::MainWindow *ui;
