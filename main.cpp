@@ -7,7 +7,7 @@ void writeLog(const QString &text, QtMsgType type){
     pLog->writeLog(text,type);
 }
 
-void loadSettings(QVector<ESP32> &espList){
+void loadSettings(QList<ESP32> &espList){
     // Read settings
     QString settingsFile =
             //QApplication::applicationDirPath() + "/" +
@@ -21,17 +21,19 @@ void loadSettings(QVector<ESP32> &espList){
 
         for(int i=0; i < ESP32_NO; ++i){
             settings.setValue(QString("ESP%1/name").arg(i), QString("ESP%1").arg(i));
-            settings.setValue(QString("ESP%1/pos").arg(i), QPointF(0,0));
+            settings.setValue(QString("ESP%1/pos_x").arg(i), 0);
+            settings.setValue(QString("ESP%1/pos_y").arg(i), 0);
         }
 
     }else{
         ESP32_NO = settings.value("ESP32_NO").toInt();
 
         for(int i=0; i < ESP32_NO; ++i){
-            QString name = settings.value(QString("ESP%1/name").arg(i), QString("ESP%1").arg(i)).toString();
-            QPointF pos = settings.value(QString("ESP%1/pos").arg(i), QPointF(0,0)).toPointF();
+            QString name = settings.value(QString("ESP%1/name").arg(i), QString("not_found_%1").arg(i)).toString();
+            float x = settings.value(QString("ESP%1/pos_x").arg(i), -1).toFloat();
+            float y = settings.value(QString("ESP%1/pos_y").arg(i), -1).toFloat();
 
-            espList.push_back(ESP32(name, pos));
+            espList.push_back(ESP32(name, QPointF(x,y)));
         }
     }
 }
@@ -46,7 +48,7 @@ int main(int argc, char *argv[])
     pLog = &logger;
     w.show();
 
-    QVector<ESP32> espList;
+    QList<ESP32> espList;
     loadSettings(espList);
 
     writeLog("ESP_NO: " + QString::number(ESP32_NO));
