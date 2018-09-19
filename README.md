@@ -13,16 +13,13 @@ Scarica la versione open-source da https://www.qt.io/download
 e installa **SOLO** il componente MSVC2017 64BIT e Qt Charts
 
 Documentazione: http://doc.qt.io/qt-5/qtwidgets-index.html#  
+Qt Tutorial for beginners: https://www.youtube.com/watch?v=EkjaiDsiM-Q&list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
 
 ## Commenti sul codice
 
-### Server TCP
-Mediante lo switch di compilazione (mediante define)
-```
-#define __WINDOWS
-//#define __LINUX
-```
-è possibile creare un server funzionante o in Windows o in Linux a seconda della configurazione scelta
+### Strutture dati
+Sono utilizzate le strutture dati offerte dal framework qt, in sostanza le librerie standard con una Q davanti (es QString, QVector, ...)
+
 
 # Ulteriori informazioni
 ### Videolezione del progetto
