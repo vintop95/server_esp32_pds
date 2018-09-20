@@ -21,7 +21,7 @@ Qt Tutorial for beginners: https://www.youtube.com/watch?v=EkjaiDsiM-Q&list=PLS1
 Sono utilizzate le strutture dati offerte dal framework qt, in sostanza le librerie standard con una Q davanti (es QString, QVector, ...)
 
 ### Signals e slots
-Nella documentazione trovate cosa sono nel dettaglio
+Nella documentazione trovate cosa sono nel dettaglio  
 connect(oggetto_sender, signal_triggerante,
         oggetto_receiver, slot_cioè_metodo_da_chiamare);
 
