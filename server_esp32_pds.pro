@@ -32,7 +32,9 @@ SOURCES += \
     Server.cpp \
     DeviceFinder.cpp \
     Chart.cpp \
-    dbmanager.cpp
+    dbmanager.cpp \
+    record.cpp \
+    settings.cpp
 
 HEADERS += \
         main.h \
@@ -42,7 +44,11 @@ HEADERS += \
     Server.h \
     DeviceFinder.h \
     Chart.h \
-    dbmanager.h
+    dbmanager.h \
+    record.h \
+    settings2.h \
+    settings2cpp \
+    settings.h
 
 FORMS += \
         mainwindow.ui

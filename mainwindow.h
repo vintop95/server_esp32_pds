@@ -35,6 +35,8 @@ public:
 private slots:
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
+    void on_actionPreferences_triggered();
+
 private:
     void initChart();
     Ui::MainWindow *ui;

@@ -88,3 +88,11 @@ void MainWindow::on_actionAbout_triggered()
 
     QMessageBox::about(this, "About ESP32 Server",text);
 }
+
+/**
+ * @brief Open preferences form
+ */
+void MainWindow::on_actionPreferences_triggered()
+{
+
+}

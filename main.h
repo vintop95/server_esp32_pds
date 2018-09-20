@@ -33,16 +33,13 @@
 
 #include "mainwindow.h"
 #include "logger.h"
+#include "settings.h"
 
 using namespace std;
 
-static quint16 SERVER_PORT = 7856;
-static int ESP32_NO = 4;
-// The application shows the devices in area each CHART_PERIOD ms
-static int CHART_PERIOD = 10000;
-
 static MainWindow* pWin;
 static Logger* pLog;
+static Settings* pSet;
 
 void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 
