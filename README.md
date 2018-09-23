@@ -21,23 +21,24 @@ Modello
 
  -------
 ```DeviceFinder```  
-Gestisce l'analisi dei pacchetti per trovare i dispositivi nell'area
+Gestisce l'analisi dei pacchetti inseriti da ```ClientHandler``` per trovare i dispositivi nell'area
 
 ```ClientHandler```  
-Gestisce il client appena connesso
+Gestisce il client appena connesso ricevuto da ```Server``` e inserisce i pacchetti ricevuti in ```DeviceFinder```  
+Inoltre usa ```DbManager``` per salvare i dati in modo persistente
 
 ```Server```  
-Resta in ascolto dei client in ingresso
+Resta in ascolto dei client in ingresso e richiama ```ClientHandler``` per la gestione dei client appena connessi
 
 ```Record```  
 Contiene le strutture dati per gestire i pacchetti e i dispositivi  
 
  -------
 ```DbManager```  
-Gestisce l'interfaccia al database SQLite
+Gestisce l'interfaccia al database SQLite,
 
 ```Logger```  
-Gestisce il logging per il debug, stampando in una finestra i messaggi di log
+Gestisce il logging per il debug, stampando in una finestra nella ```MainWindow``` i messaggi di log
 
 ```Settings```  
 Gestisce le impostazioni dell'applicazione  
