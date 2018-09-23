@@ -10,23 +10,6 @@
 #include "Server.h"
 #include "DeviceFinder.h"
 
-/**
- * @brief Write into the log window
- *
- * @param Text to write
- * @param Type of log message:
- * - QtDebugMsg:    for debug purposes
- * - QtInfoMsg:     for information purposes
- * - QtWarningMsg:  something went wrong
- * - QtCriticalMsg: something went very wrong
- * - QtFatalMsg:    something went terribly wrong
- */
-void writeLog(const QString &text, QtMsgType type){
-    pLog->writeLog(text, type);
-}
-
-
-
 int main(int argc, char *argv[])
 {
     // Necessary in order to make the program work

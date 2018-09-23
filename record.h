@@ -1,13 +1,23 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #ifndef RECORD_H
 #define RECORD_H
 
 #include <QObject>
 #include <QPointF>
 
+
 /**
  * Record received from the ESP32 devices
+ * rssi: -35 MOLTO VICINO, -100 MOLTO LONTANO
+ *
+ * @todo: change operator==
  */
-// -35 MOLTO VICINO, -100 MOLTO LONTANO
 class Record{
 public:
     Record() {}

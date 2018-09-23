@@ -35,11 +35,8 @@
 #include "mainwindow.h"
 #include "logger.h"
 #include "settings.h"
+#include "record.h"
 
 using namespace std;
-
-static MainWindow* pWin;
-
-void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 
 #endif // MAIN_H

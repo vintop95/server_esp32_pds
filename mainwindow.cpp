@@ -8,6 +8,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+MainWindow* pWin;
+
 /**
  * @brief Constructor
  *
@@ -94,6 +96,6 @@ void MainWindow::on_actionAbout_triggered()
  */
 void MainWindow::on_actionPreferences_triggered()
 {
-    SettingsForm* settingsForm = new SettingsForm(this);
+    SettingsForm* settingsForm = new SettingsForm(SETTINGS_PATH, this);
     settingsForm->show();
 }

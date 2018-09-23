@@ -30,6 +30,11 @@ public slots:
     void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 };
 
+/**
+ * Nedded to have a singleton global class
+ */
 extern Logger* pLog;
+
+void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 
 #endif // LOGGER_H

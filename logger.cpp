@@ -68,3 +68,19 @@ void Logger::writeLog(const QString &text, QtMsgType type){
     }
     emit writeLogInMainWindow(msg, txtColor);
 }
+
+/**
+ * @brief Write into the log window, this function is callable
+ * from anywhere logger.h is included
+ *
+ * @param Text to write
+ * @param Type of log message:
+ * - QtDebugMsg:    for debug purposes
+ * - QtInfoMsg:     for information purposes
+ * - QtWarningMsg:  something went wrong
+ * - QtCriticalMsg: something went very wrong
+ * - QtFatalMsg:    something went terribly wrong
+ */
+void writeLog(const QString &text, QtMsgType type){
+    pLog->writeLog(text, type);
+}

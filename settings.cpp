@@ -1,13 +1,22 @@
+/**
+ * PDS Project - Server ESP32
+ * Gianluca D'Alleo
+ * Salvatore Di Cara
+ * Giorgio Pizzuto
+ * Vincenzo Topazio
+ */
 #include "settings.h"
 
 #include <QMessageBox>
 
+Settings* pSet;
+
+/**
+ * @brief Constructor of Settings
+ */
 Settings::Settings()
 {
-    QString settingsFile =
-            //QApplication::applicationDirPath() + "/" +
-            "settings.ini";
-    setPath(QSettings::IniFormat, UserScope, settingsFile);
+    setPath(QSettings::IniFormat, UserScope, SETTINGS_PATH);
 }
 
 /**

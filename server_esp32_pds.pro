@@ -65,3 +65,6 @@ RC_FILE = server_esp32_pds.rc
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    classmodel.qmodel

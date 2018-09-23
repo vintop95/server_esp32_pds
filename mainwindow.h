@@ -44,4 +44,9 @@ private:
     Chart *chart;
 };
 
+/**
+ * Nedded to have a singleton global class
+ */
+extern MainWindow* pWin;
+
 #endif // MAINWINDOW_H
