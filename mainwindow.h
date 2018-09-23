@@ -11,6 +11,7 @@
 #include <QMainWindow>
 #include <QtCharts>
 #include "Chart.h"
+#include "settingsform.h"
 
 using namespace QtCharts;
 

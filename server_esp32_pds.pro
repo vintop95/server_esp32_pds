@@ -34,7 +34,9 @@ SOURCES += \
     Chart.cpp \
     dbmanager.cpp \
     record.cpp \
-    settings.cpp
+    settings.cpp \
+    settingsform.cpp \
+    espwidget.cpp
 
 HEADERS += \
         main.h \
@@ -48,10 +50,14 @@ HEADERS += \
     record.h \
     settings2.h \
     settings2cpp \
-    settings.h
+    settings.h \
+    settingsform.h \
+    espwidget.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    settingsform.ui \
+    espwidget.ui
 
 RC_FILE = server_esp32_pds.rc
 

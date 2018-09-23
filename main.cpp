@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
     w.show();
 
     // Retrieve the list of esp32 devices
-    QList<ESP32> espList;
+    QSharedPointer<QList<ESP32>> espList = QSharedPointer<QList<ESP32>>::create();
     settings.loadSettings(espList);
     writeLog("NUM OF ESPs: " + QString::number(ESP32_NO));
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     // to find the devices in the area
     DeviceFinder deviceFinder(ESP32_NO, CHART_PERIOD);
     deviceFinder.setWindow(&w);
-    for(auto e : espList){
+    for(auto e : *espList){
         deviceFinder.setESPPos(e.getName(), e.getX(), e.getY());
     }
     deviceFinder.test();

@@ -7,6 +7,8 @@
  */
 #include "logger.h"
 
+Logger* pLog;
+
 /**
  * @brief Constructor of logger
  */

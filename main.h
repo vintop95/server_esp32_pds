@@ -30,6 +30,7 @@
 #include <QtCore>
 #include <QTime>
 #include <QSettings>
+#include <QSharedPointer>
 
 #include "mainwindow.h"
 #include "logger.h"
@@ -38,8 +39,6 @@
 using namespace std;
 
 static MainWindow* pWin;
-static Logger* pLog;
-static Settings* pSet;
 
 void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 

@@ -30,4 +30,6 @@ public slots:
     void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 };
 
+extern Logger* pLog;
+
 #endif // LOGGER_H

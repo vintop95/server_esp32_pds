@@ -1,5 +1,7 @@
 #include "settings.h"
 
+#include <QMessageBox>
+
 Settings::Settings()
 {
     QString settingsFile =
@@ -15,8 +17,8 @@ Settings::Settings()
  *
  * @param List of esp32 devices read from .ini file
  */
-void Settings::loadSettings(QList<ESP32> &espList){
-
+void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
+    espList = esps;
     QStringList keys = allKeys();
 
     // If the file does not exist
@@ -39,7 +41,7 @@ void Settings::loadSettings(QList<ESP32> &espList){
             float x = value(QString("ESP%1/pos_x").arg(i), -1).toFloat();
             float y = value(QString("ESP%1/pos_y").arg(i), -1).toFloat();
 
-            espList.push_back(ESP32(name, QPointF(x,y)));
+            espList->push_back(ESP32(name, QPointF(x,y)));
         }
     }
 }
