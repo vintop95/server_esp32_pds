@@ -15,6 +15,10 @@ e installa **SOLO** il componente MSVC2017 64BIT e Qt Charts
 Documentazione: http://doc.qt.io/qt-5/qtwidgets-index.html#  
 Qt Tutorial for beginners: https://www.youtube.com/watch?v=EkjaiDsiM-Q&list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
 
+## Classi principali
+Modello
+![aaa](https://github.com/vintop95/server_esp32_pds/blob/master/classModel.PNG)
+
 ## Commenti sul codice
 
 ### Strutture dati
