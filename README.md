@@ -16,8 +16,45 @@ Documentazione: http://doc.qt.io/qt-5/qtwidgets-index.html#
 Qt Tutorial for beginners: https://www.youtube.com/watch?v=EkjaiDsiM-Q&list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
 
 ## Classi principali
-Modello
+Modello  
 ![aaa](https://github.com/vintop95/server_esp32_pds/blob/master/classModel.PNG)
+
+ -------
+```DeviceFinder```  
+Gestisce l'analisi dei pacchetti per trovare i dispositivi nell'area
+
+```ClientHandler```  
+Gestisce il client appena connesso
+
+```Server```  
+Resta in ascolto dei client in ingresso
+
+```Record```  
+Contiene le strutture dati per gestire i pacchetti e i dispositivi  
+
+ -------
+```DbManager```  
+Gestisce l'interfaccia al database SQLite
+
+```Logger```  
+Gestisce il logging per il debug, stampando in una finestra i messaggi di log
+
+```Settings```  
+Gestisce le impostazioni dell'applicazione  
+
+ -------
+```MainWindow```  
+Gestisce la finestra principale dell'applicazione
+
+```Chart```  
+Gestisce il grafico dei dispositivi trovati durante il tempo
+
+```SettingsForm```  
+Gestisce la modifica via GUI delle impostazioni del programma
+
+```ESPWidget```  
+Gestisce una riga della lista di ESP all'interno di SettingsForm
+
 
 ## Commenti sul codice
 
@@ -36,6 +73,13 @@ connect(oggetto_sender, signal_triggerante,
   con Q (sono tutte derivate dalla classe padre QObject)
   
 # Ulteriori informazioni
+
+## Altri file
+```classModel.qmodel```  
+File modificabile da Qt Creator per modellare le classi dell'applicazione
+
+```server_esp32_pds.pro```  
+File del progetto Qt Creator
+
 ### Videolezione del progetto
 LEZIONE 24 2017/18
-https://video.polito.it/dl/ad1eec5c99f6f41650c415ac15604a74/5b9fece3/2018/2018_02GRSOV_0219089/Programmazione_di_sistema_lez_24/Programmazione_di_sistema_lez_24.mp4
