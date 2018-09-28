@@ -14,7 +14,7 @@
  * @param socket descriptor of the new client
  */
 ClientHandler::ClientHandler(qintptr ID, DeviceFinder* dF, QObject *parent) :
-    QObject(parent), deviceFinder(dF)
+    QThread(parent), deviceFinder(dF)
 {
     this->socketDescriptor = ID;
 }
@@ -50,6 +50,11 @@ void ClientHandler::handle()
     writeLog("Client connected: " + QString::number(socketDescriptor));
 }
 
+void ClientHandler::run()
+{
+
+}
+
 /**
  * @brief Callback called when the server received data from client
  * This function works together with 'Sender::sendRecordsToServer()' function
@@ -57,48 +62,24 @@ void ClientHandler::handle()
  */
 void ClientHandler::readyRead()
 {
+    int msWaitingTime = 3000;
+    int bufferSize = 1024;
     // get the information
-    // TODO: enhance
-    // https://stackoverflow.com/questions/7923485/simplest-qt-tcp-client
+    // https://stackoverflow.com/questions/28955961/qt-socket-does-no-read-all-data
     // è possibile ricevere i dati in modo incompleto, quindi bisogna mantenere uno stato
     // per essere sicuro di aver ricevuto tutti i dati
 
-    /*
-     * // Loop reading data.
-        while(1) {
-            ssize_t sizeRead = recv(clientSock, data + sizeUsed, total-sizeUsed, 0);
-            if (sizeRead < 0) {
-                ESP_LOGE(tag, "recv: %d %s", sizeRead, strerror(errno));
-                goto END;
-            }
-            if (sizeRead == 0) {
-                break;
-            }
-            sizeUsed += sizeRead;
-        }
-    */
-
-    /*
-        do {
-            bzero(recv_buf, sizeof(recv_buf));
-            r = read(s, recv_buf, sizeof(recv_buf)-1);
-            for(int i = 0; i < r; i++) {
-                putchar(recv_buf[i]);
-            }
-        } while(r > 0);
-    */
-
-    QByteArray data = socket->readAll();
-    data = data.replace('\0', '\n');
-
-    // will write on server side window
-    writeLog(QString::number(socket->socketDescriptor()) + " - Data in: " + data);
+    QByteArray data = socket->peek(10);
 
 
     // AGGIUNGERE IF INIT, DATA, END (chiudi)
     if(data.startsWith("INIT ")){
+        socket->skip(strlen("INIT "));
+        data = socket->readAll();
+        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
+        data = data.replace('\0', '\n');
+
         writeLog(QString::number(socketDescriptor) + " - INIT MESSAGE");
-        data = data.remove(0,strlen("INIT "));
         // Deserialize data received
         QJsonDocument jDoc = QJsonDocument::fromJson(data);
 
@@ -116,17 +97,45 @@ void ClientHandler::readyRead()
         socket->waitForBytesWritten();
     }
     else if(data.startsWith("DATA ")){
-        writeLog(QString::number(socketDescriptor) + " - DATA MESSAGE");
 
         if(espName == "UNKNOWN"){
             writeLog(QString::number(socketDescriptor) + " - ESPNAME UNKNOWN", QtCriticalMsg);
+            socket->write("ERR\r\n");
+            socket->flush();
+            socket->waitForBytesWritten();
             return;
         }
 
-        data = data.remove(0,strlen("DATA "));
-        // Deserialize data received
-        QJsonDocument jDoc = QJsonDocument::fromJson(data);
+        socket->skip(strlen("DATA "));
+        int bytesRead;
 
+
+        data = "";
+        QJsonDocument jDoc;
+        do{
+            bytesRead = bufferSize;
+            data += socket->read(bytesRead);
+
+            data = data.replace('\0', '\n');
+
+            // Deserialize data received
+            jDoc = QJsonDocument::fromJson(data);
+            if(!jDoc.isNull() && jDoc.isArray()){
+                // IF WE RECEIVED ALL THE JSON ARRAY
+                break;
+            }
+            // da fare in un thread ulteriore perché bloccante
+            if (!socket->waitForReadyRead(msWaitingTime)){
+                writeLog("waitForReadyRead() timed out", QtCriticalMsg);
+                socket->write("ERR\r\n");
+                socket->flush();
+                socket->waitForBytesWritten();
+                return;
+            }
+
+        }while(bytesRead > 0);
+
+        writeLog(QString::number(socketDescriptor) + " - DATA MESSAGE");
 
         if(!jDoc.isNull() && jDoc.isArray()){
             writeLog(QString::number(socketDescriptor) + " - RECORD RECEIVED", QtInfoMsg);
@@ -162,6 +171,9 @@ void ClientHandler::readyRead()
         socket->flush();
         socket->waitForBytesWritten();
     }else{
+        writeLog(QString::number(socketDescriptor) + " - FORMAT NOT RECOGNIZED");
+        data = socket->readAll();
+        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
         socket->write("ERR\r\n");
         socket->flush();
         socket->waitForBytesWritten();

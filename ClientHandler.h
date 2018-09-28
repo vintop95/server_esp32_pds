@@ -14,26 +14,11 @@
 #include <QTcpSocket>
 #include <QDebug>
 
-/**
- * Use only for time consuming tasks
- * Use later
- */
-class Handle : public QObject, public QRunnable
-{
-    Q_OBJECT
-public:
-    qintptr descr;
-    Handle(qintptr d): descr(d){
-
-    }
-    void run() override{
-    }
-};
 
 /**
  * It handles the data received from the esp32 devices
  */
-class ClientHandler : public QObject
+class ClientHandler : public QThread
 {
     Q_OBJECT
 public:
@@ -44,6 +29,7 @@ public:
        writeLog("Multithreading set to " + QString::number(flag));
        isMultithread=flag;
    }
+   void run() override;
 signals:
    void error(QTcpSocket::SocketError socketerror);
 

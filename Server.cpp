@@ -45,9 +45,14 @@ void Server::incomingConnection(qintptr socketDescriptor)
 {
     ClientHandler *ch = new ClientHandler(socketDescriptor, deviceFinder, this);
     ch->setMultithread(this->isMultithread);
-    ch->handle();
 
-    // IF ch WAS A QTHREAD
-    // once a thread is not needed, it will be beleted later
-    // connect(ch, &ClientHandler::finished, ch, &ClientHandler::deleteLater);
+    if(this->isMultithread){
+        // once a thread is not needed, it will be beleted later
+        connect(ch, &ClientHandler::finished, ch, &ClientHandler::deleteLater);
+    }else{
+        ch->handle();
+    }
+
+
+
 }
