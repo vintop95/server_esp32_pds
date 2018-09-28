@@ -14,7 +14,7 @@
  * @param socket descriptor of the new client
  */
 ClientHandler::ClientHandler(qintptr ID, DeviceFinder* dF, QObject *parent) :
-    QThread(parent), deviceFinder(dF)
+    QObject(parent), deviceFinder(dF)
 {
     this->socketDescriptor = ID;
 }
@@ -24,6 +24,15 @@ ClientHandler::ClientHandler(qintptr ID, DeviceFinder* dF, QObject *parent) :
  */
 void ClientHandler::handle()
 {
+    // after waitPeriod close the connection
+    connect(&timer, &QTimer::timeout,
+    [&](){
+        if(socket->isOpen())
+            socket->close();
+    });
+    timer.setInterval(waitPeriod);
+    timer.start();
+
     socket = new QTcpSocket();
 
     if(!socket->setSocketDescriptor(this->socketDescriptor))
@@ -50,10 +59,6 @@ void ClientHandler::handle()
     writeLog("Client connected: " + QString::number(socketDescriptor));
 }
 
-void ClientHandler::run()
-{
-
-}
 
 /**
  * @brief Callback called when the server received data from client
@@ -62,26 +67,34 @@ void ClientHandler::run()
  */
 void ClientHandler::readyRead()
 {
-    int msWaitingTime = 3000;
-    int bufferSize = 1024;
     // get the information
     // https://stackoverflow.com/questions/28955961/qt-socket-does-no-read-all-data
     // è possibile ricevere i dati in modo incompleto, quindi bisogna mantenere uno stato
     // per essere sicuro di aver ricevuto tutti i dati
 
-    QByteArray data = socket->peek(10);
 
+    if(!data.isEmpty()){
+        // There is a connection to conclude
+        data += socket->readAll();
+        writeLog("INITIAL STATE OF DATA VARIABLE: " + data);
+        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
+        this->pushRecord();
+        return;
+    }
+
+    data = socket->peek(10);
 
     // AGGIUNGERE IF INIT, DATA, END (chiudi)
     if(data.startsWith("INIT ")){
+        QByteArray msg;
         socket->skip(strlen("INIT "));
-        data = socket->readAll();
-        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
-        data = data.replace('\0', '\n');
+        msg = socket->readAll();
+        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + msg);
+        msg = msg.replace('\0', '\n');
 
         writeLog(QString::number(socketDescriptor) + " - INIT MESSAGE");
         // Deserialize data received
-        QJsonDocument jDoc = QJsonDocument::fromJson(data);
+        QJsonDocument jDoc = QJsonDocument::fromJson(msg);
 
         if(!jDoc.isNull() && jDoc.isObject()){
             QJsonObject jObj = jDoc.object();
@@ -94,7 +107,8 @@ void ClientHandler::readyRead()
         }
 
         socket->flush();
-        socket->waitForBytesWritten();
+        //socket->waitForBytesWritten();
+        data.clear();
     }
     else if(data.startsWith("DATA ")){
 
@@ -102,82 +116,39 @@ void ClientHandler::readyRead()
             writeLog(QString::number(socketDescriptor) + " - ESPNAME UNKNOWN", QtCriticalMsg);
             socket->write("ERR\r\n");
             socket->flush();
-            socket->waitForBytesWritten();
+            //socket->waitForBytesWritten();
+            data.clear();
             return;
         }
 
-        socket->skip(strlen("DATA "));
-        int bytesRead;
-
-
-        data = "";
-        QJsonDocument jDoc;
-        do{
-            bytesRead = bufferSize;
-            data += socket->read(bytesRead);
-
-            data = data.replace('\0', '\n');
-
-            // Deserialize data received
-            jDoc = QJsonDocument::fromJson(data);
-            if(!jDoc.isNull() && jDoc.isArray()){
-                // IF WE RECEIVED ALL THE JSON ARRAY
-                break;
-            }
-            // da fare in un thread ulteriore perché bloccante
-            if (!socket->waitForReadyRead(msWaitingTime)){
-                writeLog("waitForReadyRead() timed out", QtCriticalMsg);
-                socket->write("ERR\r\n");
-                socket->flush();
-                socket->waitForBytesWritten();
-                return;
-            }
-
-        }while(bytesRead > 0);
-
         writeLog(QString::number(socketDescriptor) + " - DATA MESSAGE");
 
-        if(!jDoc.isNull() && jDoc.isArray()){
-            writeLog(QString::number(socketDescriptor) + " - RECORD RECEIVED", QtInfoMsg);
+        socket->skip(strlen("DATA "));
 
-            QJsonArray records = jDoc.array();
-
-            for(auto recRcvd : records){
-                QJsonObject obj = recRcvd.toObject();
-                Record r;
-                r.sender_mac = obj["sender_mac"].toString();
-                r.timestamp = obj["timestamp"].toInt();
-                r.rssi = obj["rssi"].toInt();
-                r.hashed_pkt = obj["hashed_pkt"].toString();
-                r.ssid = obj["ssid"].toString();
-                r.espName = this->espName;
-                deviceFinder->pushRecord(r);
-            }
-
-            socket->write("OK\r\n");
-        }else{
-            writeLog(QString::number(socketDescriptor) + " - ERROR GETTING RECORD", QtCriticalMsg);
-            socket->write("ERR\r\n");
-        }
-        socket->flush();
-        socket->waitForBytesWritten();
+        data = socket->readAll();
+        this->pushRecord();
     }
     else if(data.startsWith("END")){
         writeLog(QString::number(socketDescriptor) + " - END MESSAGE");
-        socket->close();
 
         // Acknowledge the client
         socket->write("OK\r\n");
         socket->flush();
-        socket->waitForBytesWritten();
+        //socket->waitForBytesWritten();
+
+        socket->close();
+        data.clear();
     }else{
         writeLog(QString::number(socketDescriptor) + " - FORMAT NOT RECOGNIZED");
         data = socket->readAll();
         writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
         socket->write("ERR\r\n");
         socket->flush();
-        socket->waitForBytesWritten();
+        //socket->waitForBytesWritten();
+        data.clear();
     }
+
+
 }
 
 /**
@@ -187,8 +158,43 @@ void ClientHandler::disconnected()
 {
     writeLog(QString::number(socketDescriptor) + " Disconnected.");
 
+    timer.stop();
     socket->deleteLater();
 
     // if it was a QThread
     //exit(0);
+}
+
+void ClientHandler::pushRecord()
+{
+    data = data.replace('\0', '\n');
+
+    // Deserialize data received
+    QJsonDocument jDoc = QJsonDocument::fromJson(data);
+    if(!jDoc.isNull() && jDoc.isArray()){
+        // IF WE RECEIVED ALL THE JSON ARRAY
+        writeLog(QString::number(socketDescriptor) + " - RECORD RECEIVED", QtInfoMsg);
+
+        QJsonArray records = jDoc.array();
+
+        for(auto recRcvd : records){
+            QJsonObject obj = recRcvd.toObject();
+            Record r;
+            r.sender_mac = obj["sender_mac"].toString();
+            r.timestamp = obj["timestamp"].toInt();
+            r.rssi = obj["rssi"].toInt();
+            r.hashed_pkt = obj["hashed_pkt"].toString();
+            r.ssid = obj["ssid"].toString();
+            r.espName = this->espName;
+            deviceFinder->pushRecord(r);
+        }
+
+        socket->write("OK\r\n");
+        data.clear();
+    }else{
+        writeLog(QString::number(socketDescriptor) + " - ERROR GETTING RECORD, it may arrive later the rest", QtWarningMsg);
+        //socket->write("ERR\r\n");
+    }
+    socket->flush();
+    //socket->waitForBytesWritten();
 }

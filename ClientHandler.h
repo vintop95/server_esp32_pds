@@ -13,12 +13,13 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QDebug>
+#include <QTimer>
 
 
 /**
  * It handles the data received from the esp32 devices
  */
-class ClientHandler : public QThread
+class ClientHandler : public QObject
 {
     Q_OBJECT
 public:
@@ -29,7 +30,6 @@ public:
        writeLog("Multithreading set to " + QString::number(flag));
        isMultithread=flag;
    }
-   void run() override;
 signals:
    void error(QTcpSocket::SocketError socketerror);
 
@@ -43,6 +43,10 @@ private:
    qintptr socketDescriptor;
    bool isMultithread = true;
    QString espName = "UNKNOWN";
+   QByteArray data;
+   QTimer timer;
+   int waitPeriod = 40000;
+   void pushRecord();
 };
 
 #endif // CLIENTHANDLER_H
