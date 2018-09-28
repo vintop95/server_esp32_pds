@@ -52,7 +52,7 @@ void ClientHandler::handle()
 
 /**
  * @brief Callback called when the server received data from client
- * This function works together with 'SendRecordsToServer()' function
+ * This function works together with 'Sender::sendRecordsToServer()' function
  * in the client
  */
 void ClientHandler::readyRead()
@@ -127,26 +127,31 @@ void ClientHandler::readyRead()
         // Deserialize data received
         QJsonDocument jDoc = QJsonDocument::fromJson(data);
 
-        Record r;
-        if(!jDoc.isNull() && jDoc.isObject()){
-            QJsonObject jObj = jDoc.object();
-            r.sender_mac = jObj["sender_mac"].toString();
-            r.timestamp = jObj["timestamp"].toInt();
-            r.rssi = jObj["rssi"].toInt();
-            r.hashed_pkt = jObj["hashed_pkt"].toString();
-            r.ssid = jObj["ssid"].toString();
-            r.espName = this->espName;
+
+        if(!jDoc.isNull() && jDoc.isArray()){
             writeLog(QString::number(socketDescriptor) + " - RECORD RECEIVED", QtInfoMsg);
 
-            // Push the record received
-            deviceFinder->pushRecord(r);
+            QJsonArray records = jDoc.array();
+
+            for(auto recRcvd : records){
+                QJsonObject obj = recRcvd.toObject();
+                Record r;
+                r.sender_mac = obj["sender_mac"].toString();
+                r.timestamp = obj["timestamp"].toInt();
+                r.rssi = obj["rssi"].toInt();
+                r.hashed_pkt = obj["hashed_pkt"].toString();
+                r.ssid = obj["ssid"].toString();
+                r.espName = this->espName;
+                deviceFinder->pushRecord(r);
+            }
+
+            socket->write("OK\r\n");
         }else{
             writeLog(QString::number(socketDescriptor) + " - ERROR GETTING RECORD", QtCriticalMsg);
             socket->write("ERR\r\n");
-            socket->flush();
-            socket->waitForBytesWritten();
         }
-
+        socket->flush();
+        socket->waitForBytesWritten();
     }
     else if(data.startsWith("END")){
         writeLog(QString::number(socketDescriptor) + " - END MESSAGE");
