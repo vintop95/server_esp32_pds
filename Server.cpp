@@ -10,7 +10,8 @@
 /**
  * @brief Constructor of Server
  */
-Server::Server(quint16 p, QObject* parent):QTcpServer(parent), port(p)
+Server::Server(quint16 p, DeviceFinder* dF, QObject* parent)
+    :QTcpServer(parent), port(p), deviceFinder(dF)
 {
     //Create a Thread Pool
     pool = new QThreadPool(this);
@@ -42,7 +43,7 @@ bool Server::start()
  */
 void Server::incomingConnection(qintptr socketDescriptor)
 {
-    ClientHandler *ch = new ClientHandler(socketDescriptor, this);
+    ClientHandler *ch = new ClientHandler(socketDescriptor, deviceFinder, this);
     ch->setMultithread(this->isMultithread);
     ch->handle();
 

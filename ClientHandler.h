@@ -37,7 +37,7 @@ class ClientHandler : public QObject
 {
     Q_OBJECT
 public:
-   explicit ClientHandler(qintptr ID, QObject *parent = nullptr);
+   explicit ClientHandler(qintptr ID, DeviceFinder* dF, QObject *parent = nullptr);
 
    void handle();
    void setMultithread(bool flag){
@@ -56,6 +56,7 @@ private:
    DeviceFinder *deviceFinder;
    qintptr socketDescriptor;
    bool isMultithread = true;
+   QString espName = "UNKNOWN";
 };
 
 #endif // CLIENTHANDLER_H

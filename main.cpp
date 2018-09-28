@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 
     // Initializes the server that listens for the
     // esp devices to send the packets
-    Server c(SERVER_PORT);
+    Server c(SERVER_PORT, &deviceFinder);
     c.setMultithread(false);
     c.start();
 

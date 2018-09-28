@@ -84,11 +84,12 @@ void DeviceFinder::pushRecord(Record r)
 
     // records.count(r) checks how many records are there in the list
     // that satisfies the operator== definition of Record
+
     if( records.count(r) < ESPNo-1 ){
-        //we haven't reached yet all packets needed
+        // we haven't reached yet all packets needed
         records.push_back(r);
     }else{
-        //we have all packets needed to calculate the position
+        // we have all packets needed to calculate the position
         records.push_back(r);
         QPointF p = calculatePosition(r);
         pushDevice(Device(r.sender_mac, p));

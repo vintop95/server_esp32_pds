@@ -24,7 +24,7 @@ class DeviceFinder : public QThread
 private:
     int ESPNo;
     int chartPeriod;
-    QVector<Record> records;
+    QVector<Record> records = QVector<Record>();
     QMap<QString, ESP32> esp;
     QHash<QString, Device> devices;
     QTimer timer;

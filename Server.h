@@ -24,6 +24,7 @@ private:
     QTcpSocket *socket;
     QThreadPool *pool;
     bool isMultithread = true;
+    DeviceFinder* deviceFinder;
 signals:
 
 public slots:
@@ -32,7 +33,7 @@ protected:
     void incomingConnection(qintptr socketDescriptor) override;
 
 public:
-    Server(quint16 port, QObject* parent = nullptr);
+    Server(quint16 port, DeviceFinder *deviceFinder, QObject* parent = nullptr);
     void setMultithread(bool flag){
         isMultithread=flag;
     }
