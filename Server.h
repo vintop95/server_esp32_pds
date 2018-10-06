@@ -22,13 +22,8 @@ class Server : public QTcpServer
 private:
     quint16 port;
     QTcpSocket *socket;
-    QThreadPool *pool;
     bool isMultithread = true;
     DeviceFinder* deviceFinder;
-signals:
-
-public slots:
-
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 

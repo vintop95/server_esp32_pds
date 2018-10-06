@@ -12,11 +12,7 @@
  */
 Server::Server(quint16 p, DeviceFinder* dF, QObject* parent)
     :QTcpServer(parent), port(p), deviceFinder(dF)
-{
-    //Create a Thread Pool
-    pool = new QThreadPool(this);
-    //writeLog("Num of threads in pool: " + QString::number(QThread::idealThreadCount()));
-}
+{}
 
 /**
  * @brief Starts the Server
