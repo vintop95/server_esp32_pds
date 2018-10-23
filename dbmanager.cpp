@@ -68,3 +68,17 @@ void DbManager::test()
         writeLog("sender_mac: " + sender_mac);
     }
 }
+
+bool DbManager::saveCsv(Record &r, const QString& path)
+{
+    QFile file(path);
+
+    if(file.open(QFile::WriteOnly | QIODevice::Append)) {
+        QTextStream stream(&file);
+        stream << r.toString() << endl;
+        file.close();
+        return true;
+    }else{
+        return false;
+    }
+}

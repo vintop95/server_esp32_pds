@@ -78,6 +78,7 @@ void DeviceFinder::setESPPos(QString devName, float xpos, float ypos)
 void DeviceFinder::pushRecord(Record r)
 {
     writeLog("Received pkt\n" + r.toString());
+    db.saveCsv(r);
 
     // IPOTESI: un dispositivo non invia due volte
     // lo stesso pacchetto (secondo la definzione di operator==)
