@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     // Initializes the object that handles the packets
     // to find the devices in the area
-    DeviceFinder deviceFinder(ESP32_NO, CHART_PERIOD);
+    DeviceFinder deviceFinder(ESP32_NO);
     deviceFinder.setWindow(&w);
     for(auto e : *espList){
         deviceFinder.setESPPos(e.getName(), e.getX(), e.getY());
