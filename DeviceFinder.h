@@ -33,16 +33,22 @@ private:
 
     void pushDevice(Device d);
     QPointF calculatePosition(Record r);
+    QPointF trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3);
 public:
     DeviceFinder(int espNo, QString dbPath="server_esp32_pds.sqlite3");
     //void run() override;
     void setWindow(MainWindow *);
-    void setESPPos(QString ESPName, float xpos, float ypos);
+    void setESPPos(QString ESPName, double xpos, double ypos);
     void pushRecord(Record r);
     void logCurrentDevices();
     int countCurrentDevices();
     void initChart();
     void test();
 };
+
+/**
+ * Nedded to have a singleton global class
+ */
+extern DeviceFinder* pDF;
 
 #endif // DEVICEFINDER_H

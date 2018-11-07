@@ -45,8 +45,8 @@ void SettingsForm::loadValues()
     QString name;
     for(int i=0; i < ESP32No; ++i){
         name = qs.value(QString("ESP%1/name").arg(i), QString("not_found_%1").arg(i)).toString();
-        float x = qs.value(QString(name + "/pos_x"), -1).toFloat();
-        float y = qs.value(QString(name + "/pos_y"), -1).toFloat();
+        double x = qs.value(QString(name + "/pos_x"), -1).toDouble();
+        double y = qs.value(QString(name + "/pos_y"), -1).toDouble();
 
         addESPWidget(name, x, y, false);
     }
@@ -68,8 +68,8 @@ void SettingsForm::saveValues()
 
     for(int i=0; i < ESP32No; ++i){
         QString name = QString("ESP%1").arg(i);
-        float x = ((ESPWidget*)ui->listWidget->itemWidget(ui->listWidget->item(i)))->getX();
-        float y = ((ESPWidget*)ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY();
+        double x = ((ESPWidget*)ui->listWidget->itemWidget(ui->listWidget->item(i)))->getX();
+        double y = ((ESPWidget*)ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY();
 
         qs.setValue(QString(name + "/name"), name);
         qs.setValue(QString(name + "/pos_x"), QString::number(x,'f'));
@@ -86,7 +86,7 @@ void SettingsForm::saveValues()
  * @param y position
  * @param if true, the row will be set modified (and the text becomes italic)
  */
-void SettingsForm::addESPWidget(QString name, float x, float y, bool modified)
+void SettingsForm::addESPWidget(QString name, double x, double y, bool modified)
 {
     //Creating an object of the designed widget which is to be added to the listwidget
     ESPWidget *espWidget = new ESPWidget;

@@ -15,10 +15,14 @@ class AreaChart : public QChart
     Q_OBJECT
 public:
     explicit AreaChart(QChart *parent = nullptr);
-
+    void appendDevice(Device d);
 signals:
 
 public slots:
+
+private:
+    QScatterSeries *deviceSeries;
+    QScatterSeries *ESPSeries;
 };
 
 #endif // AREACHART_H

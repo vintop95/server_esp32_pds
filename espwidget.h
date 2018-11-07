@@ -31,7 +31,7 @@ public:
     ~ESPWidget();
 
     void setName(QString name);
-    void setPoint(float x, float y);
+    void setPoint(double x, double y);
     void setModified(bool m);
 
     QString getName();
