@@ -41,9 +41,6 @@ private slots:
     void on_actionAbout_triggered();
     void on_actionPreferences_triggered();
 
-    void on_logCurrentDevices_clicked();
-signals:
-    void logCurrDev();
 private:
     void initChart();
     Ui::MainWindow *ui;

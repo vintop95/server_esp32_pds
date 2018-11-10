@@ -27,7 +27,6 @@ public:
 
    void handle();
    void setMultithread(bool flag){
-       writeLog("ClientHandler");
        writeLog("Multithreading set to " + QString::number(flag));
        isMultithread=flag;
    }

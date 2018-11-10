@@ -94,21 +94,16 @@ private:
 public:
     ESP32(QString n, QPointF p = QPointF(0,0)):
     name(n), pos(p){ }
-
     QString getName() const{
         return name;
     }
-
-    qreal getX() const{
+    float getX() const{
         return pos.x();
     }
-    qreal getY() const{
+    float getY() const{
         return pos.y();
     }
-    QPointF getPos() const{
-        return pos;
-    }
-    void setPos(qreal xpos, qreal ypos){
+    void setPos(float xpos, float ypos){
         pos = QPointF(xpos, ypos);
     }
 };

@@ -29,7 +29,6 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
     m_x(START_TIME),
     m_y(0)
 {
-    qDebug() << "#Chart";
     // The series of values
     m_series = new QSplineSeries(this);
 
@@ -38,8 +37,10 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
     pen.setWidth(3);
     m_series->setPen(pen);
 
+    qDebug() << m_x.toTime_t()*1000;
     // Initial value
     m_series->append(m_x.toMSecsSinceEpoch(), m_y);
+
     m_timeAxisX->setFormat("hh:mm:ss");
     addSeries(m_series);
     createDefaultAxes();
@@ -47,6 +48,7 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
     setAxisY(m_valueAxisY, m_series);
 
     // Set initial view of the graph
+
     m_valueAxisY->setTickCount(11);
     m_timeAxisX->setTickCount(10);
     axisX()->setRange(m_x.addSecs(-CHART_PERIOD/1000*10), m_x.addSecs(0));
@@ -55,7 +57,6 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
 
     legend()->hide();
     setAnimationOptions(QChart::AllAnimations);
-    qDebug() << "created.";
 }
 
 Chart::~Chart()
@@ -73,14 +74,12 @@ Chart::~Chart()
  */
 void Chart::updateChart(int countCurrDev)
 {
-    qDebug() << "#Chart";
-    qDebug() << "update number of devices.";
     // random generator
     //QRandomGenerator::global()->bounded(5) - 2.5
 
     qreal x = plotArea().width() / m_timeAxisX->tickCount();
     qreal y = (m_timeAxisX->max().toMSecsSinceEpoch() - m_timeAxisX->min().toMSecsSinceEpoch()) / m_timeAxisX->tickCount() / 1000;
-    m_x = m_x.addSecs(static_cast<qint64>(y));
+    m_x = m_x.addSecs(y);
     m_y = countCurrDev;
     //qDebug() << m_x.toTime_t()*1000;
     m_series->append(m_x.toMSecsSinceEpoch(), m_y);

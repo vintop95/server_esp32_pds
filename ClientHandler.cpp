@@ -24,7 +24,6 @@ ClientHandler::ClientHandler(qintptr ID, DeviceFinder* dF, QObject *parent) :
  */
 void ClientHandler::handle()
 {
-    writeLog("#ClientHandler");
     // after waitPeriod close the connection
     connect(&timer, &QTimer::timeout,
     [&](){
@@ -68,7 +67,6 @@ void ClientHandler::handle()
  */
 void ClientHandler::readyRead()
 {
-    writeLog("#ClientHandler");
     // get the information
     // https://stackoverflow.com/questions/28955961/qt-socket-does-no-read-all-data
     // è possibile ricevere i dati in modo incompleto, quindi bisogna mantenere uno stato
@@ -158,7 +156,6 @@ void ClientHandler::readyRead()
  */
 void ClientHandler::disconnected()
 {
-    writeLog("#ClientHandler");
     writeLog(QString::number(socketDescriptor) + " Disconnected.");
 
     timer.stop();
@@ -170,7 +167,6 @@ void ClientHandler::disconnected()
 
 void ClientHandler::pushRecord()
 {
-    writeLog("#ClientHandler");
     data = data.replace('\0', '\n');
 
     // Deserialize data received

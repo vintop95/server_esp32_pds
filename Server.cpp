@@ -21,7 +21,6 @@ Server::Server(quint16 p, DeviceFinder* dF, QObject* parent)
  */
 bool Server::start()
 {
-    writeLog("#Server");
     bool res = listen(QHostAddress::Any, port);
     if (!res) {
         writeLog("Unable to start the server: " + this->errorString(), QtCriticalMsg);

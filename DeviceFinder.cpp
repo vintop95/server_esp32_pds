@@ -7,8 +7,6 @@
  */
 #include "DeviceFinder.h"
 
-DeviceFinder* pDF;
-
 /**
  * @brief Constructor of DeviceFinder
  * Initializes the ESP32 devices calling them for each n
@@ -17,11 +15,6 @@ DeviceFinder* pDF;
 DeviceFinder::DeviceFinder(int n, QString dbPath):
     ESPNo(n), db(dbPath)
 {
-    // in order to let the command of printing
-    // from the gui
-    connect(pWin, &MainWindow::logCurrDev,
-            this, &DeviceFinder::logCurrentDevices);
-
     for(int i=0; i<ESPNo; ++i){
         QString newName = "ESP" + QString::number(i);
         esp.insert(
@@ -63,9 +56,8 @@ void DeviceFinder::setWindow(MainWindow *w)
  * @param x position
  * @param y position
  */
-void DeviceFinder::setESPPos(QString devName, double xpos, double ypos)
+void DeviceFinder::setESPPos(QString devName, float xpos, float ypos)
 {
-    writeLog("#DeviceFinder");
     writeLog("Set " + devName + " pos: ("
              + QString::number(xpos) +  ","
              + QString::number(ypos) + ")");
@@ -85,7 +77,6 @@ void DeviceFinder::setESPPos(QString devName, double xpos, double ypos)
  */
 void DeviceFinder::pushRecord(Record r)
 {
-    writeLog("#DeviceFinder");
     writeLog("Received pkt\n" + r.toString());
     db.saveCsv(r);
 
@@ -115,7 +106,6 @@ void DeviceFinder::pushRecord(Record r)
  */
 void DeviceFinder::pushDevice(Device d)
 {
-    writeLog("#DeviceFinder");
     writeLog("Added/updated device " + d.sender_mac);
 
     // TODO: save in record the actual position device
@@ -124,7 +114,6 @@ void DeviceFinder::pushDevice(Device d)
     // If there is already an item with the key, that
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
-    win->getAreaChart()->appendDevice(d);
 
     // TODO: remove device after a timeout?
 
@@ -184,9 +173,8 @@ double calculateDistance(int rssi) {
         return -1.0;
     }
 
-
-    double distance;
     double ratio = rssi*1.0/txPower;
+    double distance;
     if (ratio < 1.0) {
         return qPow(ratio,10);
     }
@@ -195,23 +183,10 @@ double calculateDistance(int rssi) {
         return distance;
     }
 
-//    // oppure questa formula
-//    // distance in meters = pow(10, (RssiAtOneMeter - ReceivedRSSI) / 20)
-//    distance = qPow(10, (txPower - rssi) / 20);
-    return distance;
+    // oppure questa formula
+    // distance in meters = pow(10, (RssiAtOneMeter - ReceivedRSSI) / 20)
+    distance = qPow(10, (txPower - rssi) / 20);
 }
-
-/**
- * @brief Auxiliary struct, for sorting Records by their rssi
- */
-struct sort_rssi_desc
-{
-    inline bool operator() (const Record& r1, const Record& r2)
-    {
-        //writeLog(QString::number(r1.rssi) + ">" + QString::number(r2.rssi) + "?");
-        return ( r1.rssi > r2.rssi );
-    }
-};
 
 /**
  * @brief It calculates the position of the device identified by the sender_mac
@@ -225,115 +200,13 @@ struct sort_rssi_desc
  */
 QPointF DeviceFinder::calculatePosition(Record r)
 {
-    writeLog("#DeviceFinder");
     //TODO: completare
+    QPointF pos(0,0);
 
-
-    QVector<Record> v;
-    for(Record r2 : records){
-
-        ESP32 esp2("NO");
-        auto it = esp.find(r2.espName);
-        if(it != esp.end() && r2 == r){
-            v.push_back(r2);
-        }
-    }
-
-    // take the 3 records with the most powerful rssi
-    std::sort( v.begin(), v.end(), sort_rssi_desc() );
-
-    QList<ESP32> v_esp;
-    writeLog("PRINTING RECORDS ORDERED FOR RSSI");
-    for(Record r2 : v){
-        writeLog(r2.toString());
-
-        ESP32 esp2("NO");
-        auto it = esp.find(r2.espName);
-        if(it != esp.end()){
-            esp2 = esp.value(r2.espName, ESP32("NO"));
-            v_esp.push_back(esp2);
-        }
-    }
-
-
-//    // DEBUG: test di trilateration
-//    QPointF pos = trilateration(QPointF(0,0), QPointF(2,0), QPointF(0,2),
-//            1.0,
-//            sqrt(5.0),
-//            1.0);
-
-    QPointF pos = trilateration(v_esp[0].getPos(), v_esp[1].getPos(), v_esp[2].getPos(),
-                calculateDistance(v[0].rssi),
-                calculateDistance(v[1].rssi),
-                calculateDistance(v[2].rssi));
+    pos.setX(-r.rssi);
+    pos.setY(-r.rssi);
 
     return pos;
-}
-
-
-double norm (QPointF p) // get the norm of a vector
-{
-    return pow( pow(p.x(),2) + pow(p.y(),2), .5);
-}
-
-void printPoint(QPointF p, QString name)
-{
-    writeLog(name + ":(" + QString::number(p.x(), 'f', 2) + "," + QString::number(p.y(), 'f', 2) + ")");
-
-}
-
-void printValue(double v, QString name)
-{
-    writeLog(name + ":" + QString::number(v, 'f', 2));
-}
-
-QPointF DeviceFinder::trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3)
-{
-    printPoint(p1, "p1");
-    printPoint(p2, "p2");
-    printPoint(p3, "p3");
-    printValue(r1, "r1");
-    printValue(r2, "r2");
-    printValue(r3, "r3");
-
-    QPointF resultPose;
-    //unit vector in a direction from point1 to point 2
-    double p2p1Distance = pow(pow(p2.x()-p1.x(),2) + pow(p2.y()-   p1.y(),2),0.5);
-//    printValue(p2p1Distance, "p2p1Distance");
-    // Ex ed ey sono i versori della direzione, aux e aux2 sono solo delle variabili ausiliarie
-    QPointF ex = {(p2.x()-p1.x())/p2p1Distance, (p2.y()-p1.y())/p2p1Distance};
-//    printPoint(ex, "ex");
-    QPointF aux = {p3.x()-p1.x(),p3.y()-p1.y()};
-//    printPoint(aux, "aux");
-    //signed magnitude of the x component
-    double i = ex.x() * aux.x() + ex.y() * aux.y();
-//    printValue(i, "i");
-    //the unit vector in the y direction.
-    QPointF aux2 = { p3.x()-p1.x()-i*ex.x(), p3.y()-p1.y()-i*ex.y()};
-//    printPoint(aux2, "aux2");
-    QPointF ey = { aux2.x() / norm(aux2), aux2.y() / norm(aux2) };
-//    printPoint(ey, "ey");
-    //the signed magnitude of the y component
-    double j = ey.x() * aux.x() + ey.y() * aux.y();
-//    printValue(j, "j");
-    //coordinates
-    double x = (pow(r1,2) - pow(r2,2) + pow(p2p1Distance,2))/ (2 * p2p1Distance);
-
-//    printValue(x, "x");
-    double y = (pow(r1,2) - pow(r3,2) + pow(i,2) + pow(j,2))/(2*j) - i*x/j;
-//    printValue(y, "y");
-    //result coordinates
-    double finalX = p1.x()+ x*ex.x() + y*ey.x();
-    double finalY = p1.y()+ x*ex.y() + y*ey.y();
-    finalX = finalX<0?0:finalX;
-    finalY = finalY<0?0:finalY;
-    finalX = finalX>10?10:finalX;
-    finalY = finalY>10?10:finalY;
-    resultPose.setX(finalX);
-    resultPose.setY(finalY);
-//    printPoint(resultPose, "resultPose");
-    return resultPose;
-
 }
 
 /**
@@ -343,15 +216,42 @@ void DeviceFinder::test()
 {
     Record r;
 
+    r.sender_mac = "AA";
+    r.timestamp = 10;
+    r.rssi = -35;
+    r.hashed_pkt = "12345";
+    r.espName = "ESP0";
+    pushRecord(r);
+    logCurrentDevices();
+
+    r.sender_mac = "AA";
+    r.timestamp = 10;
+    r.rssi = -55;
+    r.hashed_pkt = "12345";
+    r.espName = "ESP1";
+    pushRecord(r);
+    logCurrentDevices();
+
+    r.sender_mac = "AA";
+    r.timestamp = 10;
+    r.rssi = -55;
+    r.hashed_pkt = "12345";
+    r.espName = "ESP2";
+    pushRecord(r);
+    logCurrentDevices();
+
+    r.sender_mac = "AA";
+    r.timestamp = 10;
+    r.rssi = -65;
+    r.hashed_pkt = "12345";
+    r.espName = "ESP3";
+    pushRecord(r);
+    logCurrentDevices();
+
     for(int i=0; i<5; ++i){
-        if(i==0){
-            r.rssi = -50;
-        }else if(i>=1){
-            r.rssi = -70;
-        }
-        r.espName = "ESP" + QString::number(i);
-        r.sender_mac = "TEST";
+        r.sender_mac = "AA";
         r.timestamp = 10;
+        r.rssi = -55;
         r.hashed_pkt = "123456";
         pushRecord(r);
         logCurrentDevices();
