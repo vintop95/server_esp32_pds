@@ -27,11 +27,10 @@ public slots:
 private:
     QSplineSeries *m_series;
     QStringList m_titles;
-    QValueAxis *m_valueAxisY;
-    QDateTimeAxis *m_timeAxisX;
+    QValueAxis *m_axis;
     qreal m_step;
-    QDateTime m_x;
-    int m_y;
+    qreal m_x;
+    qreal m_y;
 };
 
 #endif // CHART_H

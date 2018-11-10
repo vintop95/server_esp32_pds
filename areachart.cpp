@@ -7,33 +7,46 @@ bool compareHeight(const ESP32 &e1, const ESP32 &e2)
 
 AreaChart::AreaChart(QChart *parent) : QChart(parent)
 {
+    //![1]
+        QLineSeries *seriesHigh = new QLineSeries();
+        QLineSeries *seriesLow = new QLineSeries();
+    //![1]
 
-    QScatterSeries *deviceSeries = new QScatterSeries();
-    deviceSeries->setName("Device");
-    deviceSeries->setMarkerShape(QScatterSeries::MarkerShapeCircle);
-    deviceSeries->setMarkerSize(15.0);
+    QList<ESP32> list;
+    for (auto e: *(pSet->espList)){
+        list.append(e);
+    }
+    std::sort(list.begin(), list.end(), compareHeight);
 
-    QScatterSeries *ESPSeries = new QScatterSeries();
-    ESPSeries->setName("ESP32");
-    ESPSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
-    ESPSeries->setMarkerSize(20.0);
-
-
-    for (ESP32 e: *(pSet->espList)){
-        ESPSeries->append(e.getX(), e.getY());
+    int i=0;
+    for(ESP32 e : list){
+        i++;
+        if(i <= ESP32_NO/2 ){
+            *seriesLow << QPointF(e.getX(), e.getY());
+        }else{
+            *seriesHigh << QPointF(e.getX(), e.getY());
+        }
     }
 
+    //![3]
+        QAreaSeries *series = new QAreaSeries(seriesHigh, seriesLow);
+        series->setName("ESP32Area");
+        QPen pen(0x059605);
+        pen.setWidth(3);
+        series->setPen(pen);
 
+        QLinearGradient gradient(QPointF(0, 0), QPointF(0, 1));
+        gradient.setColorAt(0.0, 0x3cc63c);
+        gradient.setColorAt(1.0, 0x26f626);
+        gradient.setCoordinateMode(QGradient::ObjectBoundingMode);
+        series->setBrush(gradient);
+    //![3]
 
-    *deviceSeries << QPointF(1, 1) << QPointF(3, 3) << QPointF(7, 6) << QPointF(8, 3) << QPointF(10, 2);
-
-
-    addSeries(deviceSeries);
-    addSeries(ESPSeries);
-
-    setTitle("Devices in the area");
-    createDefaultAxes();
-    setDropShadowEnabled(false);
-
-    legend()->setMarkerShape(QLegend::MarkerShapeFromSeries);
+    //![4]
+        addSeries(series);
+        setTitle("Areachart of devices");
+        createDefaultAxes();
+        axisX()->setRange(0, 20);
+        axisY()->setRange(0, 10);
+    //![4]
 }

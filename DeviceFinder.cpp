@@ -12,8 +12,8 @@
  * Initializes the ESP32 devices calling them for each n
  * ESPn (ESP0, ESP1, ESP2...)
  */
-DeviceFinder::DeviceFinder(int n, QString dbPath):
-    ESPNo(n), db(dbPath)
+DeviceFinder::DeviceFinder(int n, int p, QString dbPath):
+    ESPNo(n), chartPeriod(p), db(dbPath)
 {
     for(int i=0; i<ESPNo; ++i){
         QString newName = "ESP" + QString::number(i);
@@ -35,7 +35,7 @@ void DeviceFinder::initChart()
     [&](){
         win->getChart()->updateChart(this->countCurrentDevices());
     });
-    timer.setInterval(CHART_PERIOD);
+    timer.setInterval(chartPeriod);
     timer.start();
 }
 
@@ -101,22 +101,15 @@ void DeviceFinder::pushRecord(Record r)
  * @brief Push a new device into the list
  *
  * @param Device to add
- *
- * @todo save in record the actual position device
  */
 void DeviceFinder::pushDevice(Device d)
 {
     writeLog("Added/updated device " + d.sender_mac);
 
-    // TODO: save in record the actual position device
-
     // devices.insert
     // If there is already an item with the key, that
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
-
-    // TODO: remove device after a timeout?
-
 }
 
 /**
@@ -145,7 +138,8 @@ void DeviceFinder::logCurrentDevices()
  */
 int DeviceFinder::countCurrentDevices()
 {
-    return devices.size();
+    // TODO: completare
+    return 0;
 }
 
 

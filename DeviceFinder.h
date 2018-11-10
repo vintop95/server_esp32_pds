@@ -34,7 +34,7 @@ private:
     void pushDevice(Device d);
     QPointF calculatePosition(Record r);
 public:
-    DeviceFinder(int espNo, QString dbPath="server_esp32_pds.sqlite3");
+    DeviceFinder(int espNo, int chartPeriod, QString dbPath="server_esp32_pds.sqlite3");
     //void run() override;
     void setWindow(MainWindow *);
     void setESPPos(QString ESPName, float xpos, float ypos);
