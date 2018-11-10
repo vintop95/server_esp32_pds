@@ -5,7 +5,11 @@
 - Giorgio Pizzuto
 - Vincenzo Topazio
 
-**Client ESP32**: https://github.com/vintop95/client_esp32_pds
+**Client ESP32**: https://github.com/vintop95/client_esp32_pds  
+
+### TODO
+ICON TRAY: http://doc.qt.io/archives/qt-4.8/qt-desktop-systray-example.html
+
 
 ## Configurazione ambiente di sviluppo
 Useremo qt per lo sviluppo del server con interfaccia grafica in C++

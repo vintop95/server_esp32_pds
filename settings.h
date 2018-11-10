@@ -24,10 +24,11 @@ static int ESP32_NO_LIMIT = 15;
 /**
  * This class models the settings of the application
  */
-class Settings : public QSettings
+class Settings : public QObject
 {
     Q_OBJECT
 private:
+    QSettings* qset;
 public:
     QSharedPointer<QList<ESP32>> espList;
     Settings();
