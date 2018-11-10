@@ -49,8 +49,6 @@ HEADERS += \
     Chart.h \
     dbmanager.h \
     record.h \
-    settings2.h \
-    settings2cpp \
     settings.h \
     settingsform.h \
     espwidget.h \
