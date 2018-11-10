@@ -6,10 +6,8 @@
  * Vincenzo Topazio
  */
 #include "settings.h"
+
 #include <QMessageBox>
-#include <QtGlobal>
-#include <QDebug>
-#include <QCoreApplication>
 
 Settings* pSet;
 
@@ -18,7 +16,7 @@ Settings* pSet;
  */
 Settings::Settings()
 {
-    qset = new QSettings(SETTINGS_PATH,QSettings::IniFormat);
+    setPath(QSettings::IniFormat, UserScope, SETTINGS_PATH);
 }
 
 /**
@@ -29,46 +27,30 @@ Settings::Settings()
  * @param List of esp32 devices read from .ini file
  */
 void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
-    qset->setPath(QSettings::IniFormat, QSettings::UserScope, SETTINGS_PATH);
-    qset->sync();
-    qDebug() << qset->applicationName();
     espList = esps;
-    QStringList keys = qset->allKeys();
+    QStringList keys = allKeys();
 
     // If the file does not exist
-    if(! qset->contains("ESP32_NO")){
-        qset->setValue("CHART_PERIOD", 10000);
-        qset->setValue("ESP32_NO", ESP32_NO);
+    if(! contains("ESP32_NO")){
+        setValue("CHART_PERIOD", 10000);
+        setValue("ESP32_NO", ESP32_NO);
 
         for(int i=0; i < ESP32_NO; ++i){
-            QString name = QString("ESP%1").arg(i);
-            qreal x = 0.0;
-            qreal y = 0.0;
-
-            qDebug() << QString::number(x,'f');
-            qDebug() << QString::number(x,'f');
-
-            // TODO: fix the number representation in .ini file
-            qset->setValue(QString("ESP%1/name").arg(i), name);
-            qset->setValue(QString("ESP%1/pos_x").arg(i), QString::number(x,'f'));
-            qset->setValue(QString("ESP%1/pos_y").arg(i), QString::number(y,'f'));
-
-            espList->push_back(ESP32(name, QPointF(x,y)));
-
-            qset->sync();
+            setValue(QString("ESP%1/name").arg(i), QString("ESP%1").arg(i));
+            setValue(QString("ESP%1/pos_x").arg(i), 0);
+            setValue(QString("ESP%1/pos_y").arg(i), 0);
         }
 
     }else{
-        CHART_PERIOD = qset->value("CHART_PERIOD", 1000).toInt();
-        ESP32_NO = qset->value("ESP32_NO").toInt();
+        CHART_PERIOD = value("CHART_PERIOD", 1000).toInt();
+        ESP32_NO = value("ESP32_NO").toInt();
 
         for(int i=0; i < ESP32_NO; ++i){
-            QString name = qset->value(QString("ESP%1/name").arg(i), QString("not_found_%1").arg(i)).toString();
-            qreal x = qset->value(QString("ESP%1/pos_x").arg(i), -1).toReal();
-            qreal y = qset->value(QString("ESP%1/pos_y").arg(i), -1).toReal();
+            QString name = value(QString("ESP%1/name").arg(i), QString("not_found_%1").arg(i)).toString();
+            float x = value(QString("ESP%1/pos_x").arg(i), -1).toFloat();
+            float y = value(QString("ESP%1/pos_y").arg(i), -1).toFloat();
 
             espList->push_back(ESP32(name, QPointF(x,y)));
-            qset->sync();
         }
     }
 }

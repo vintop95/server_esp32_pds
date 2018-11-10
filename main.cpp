@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
     settings.loadSettings(espList);
     writeLog("NUM OF ESPs: " + QString::number(ESP32_NO));
 
-    w.initAreaChart();
 
     writeLog("+++ WELCOME TO THE ESP32 SERVER +++", QtInfoMsg);
 

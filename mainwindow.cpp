@@ -56,11 +56,6 @@ Chart* MainWindow::getChart()
     return chart;
 }
 
-AreaChart *MainWindow::getAreaChart()
-{
-    return areaChart;
-}
-
 /**
  * @brief Initializes the chart
  */
@@ -71,18 +66,6 @@ void MainWindow::initChart()
 
     ui->chartView->setChart(chart);
     ui->chartView->setRenderHint(QPainter::Antialiasing);
-}
-
-/**
- * @brief Initializes the area chart
- */
-void MainWindow::initAreaChart()
-{
-    areaChart = new AreaChart();
-    areaChart->setTitle("AREA OF DEVICES");
-
-    ui->areaChartView->setChart(areaChart);
-    ui->areaChartView->setRenderHint(QPainter::Antialiasing);
 }
 
 /**

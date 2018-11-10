@@ -36,8 +36,7 @@ SOURCES += \
     record.cpp \
     settings.cpp \
     settingsform.cpp \
-    espwidget.cpp \
-    areachart.cpp
+    espwidget.cpp
 
 HEADERS += \
         main.h \
@@ -53,8 +52,7 @@ HEADERS += \
     settings2cpp \
     settings.h \
     settingsform.h \
-    espwidget.h \
-    areachart.h
+    espwidget.h
 
 FORMS += \
         mainwindow.ui \
@@ -70,5 +68,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     classmodel.qmodel
-
-STATECHARTS +=

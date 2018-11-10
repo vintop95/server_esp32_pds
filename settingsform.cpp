@@ -37,7 +37,7 @@ void SettingsForm::loadValues()
 
     // Load CHART_PERIOD from the .ini file, if not found set value 1000
     int chartPeriod = qs.value("CHART_PERIOD", 1000).toInt();
-    int ESP32No = qs.value("ESP32_NO", 0).toInt();
+    int ESP32No = qs.value("ESP32_NO", -1).toInt();
 
     ui->txtChartPeriod->setText(QString::number(chartPeriod));
     ui->txtESP32No->setText(QString::number(ESP32No));
@@ -50,7 +50,7 @@ void SettingsForm::loadValues()
 
         addESPWidget(name, x, y, false);
     }
-    qs.sync();
+
 }
 
 /**
@@ -72,10 +72,10 @@ void SettingsForm::saveValues()
         float y = ((ESPWidget*)ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY();
 
         qs.setValue(QString(name + "/name"), name);
-        qs.setValue(QString(name + "/pos_x"), QString::number(x,'f'));
-        qs.setValue(QString(name + "/pos_y"), QString::number(y,'f'));
+        qs.setValue(QString(name + "/pos_x"), x);
+        qs.setValue(QString(name + "/pos_y"), y);
     }
-    qs.sync();
+
 }
 
 /**
