@@ -35,7 +35,7 @@ void ESPWidget::setName(QString name)
 /**
  * @brief Sets graphically the position of the ESP32 Device
  */
-void ESPWidget::setPoint(float x, float y)
+void ESPWidget::setPoint(double x, double y)
 {
     ui->txtX->setText(QString::number(x));
     ui->txtY->setText(QString::number(y));

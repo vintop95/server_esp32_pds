@@ -17,13 +17,14 @@ DbManager::DbManager(const QString& path)
    db = QSqlDatabase::addDatabase("QSQLITE");
    db.setDatabaseName(path);
 
+   writeLog("#DbManager");
    if (!db.open())
    {
       writeLog("Connection with database fail", QtCriticalMsg);
    }
    else
    {
-      writeLog("Database: connection ok");
+      writeLog("connection ok");
    }
 
    if ( !db.tables().contains( "packet" ) ) {
@@ -37,6 +38,7 @@ DbManager::DbManager(const QString& path)
  */
 bool DbManager::createTables()
 {
+    writeLog("#DbManager");
     QSqlQuery query;
     bool res = query.exec("CREATE TABLE packet(id integer primary key, sender_mac text)");
     writeLog("table created: " + QString::number(res) );
@@ -49,6 +51,7 @@ bool DbManager::createTables()
  */
 void DbManager::test()
 {
+    writeLog("#DbManager");
     QSqlQuery query;
     bool res;
 

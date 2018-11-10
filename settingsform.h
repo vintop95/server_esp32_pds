@@ -37,7 +37,7 @@ private slots:
     void on_btnIncreaseESP_clicked();
 
 private:
-    void addESPWidget(QString name, float x, float y, bool modified = true);
+    void addESPWidget(QString name, double x, double y, bool modified = true);
     void loadValues();
     void saveValues();
     Ui::SettingsForm *ui;

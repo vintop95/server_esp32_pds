@@ -116,3 +116,11 @@ void MainWindow::on_actionPreferences_triggered()
     SettingsForm* settingsForm = new SettingsForm(SETTINGS_PATH, this);
     settingsForm->show();
 }
+
+/**
+ * @brief Print the log of the current devices
+ */
+void MainWindow::on_logCurrentDevices_clicked()
+{
+    emit logCurrDev();
+}
