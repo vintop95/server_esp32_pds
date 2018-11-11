@@ -20,6 +20,7 @@ class DbManager
 public:
     DbManager(const QString& path);
     bool saveCsv(Record& record, const QString& path = "output.txt");
+    void setPath(QString p);
 private:
     QSqlDatabase db;
     bool createTables();

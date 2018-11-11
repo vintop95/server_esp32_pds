@@ -199,8 +199,8 @@ void ClientHandler::pushRecord()
             QJsonObject obj = recRcvd.toObject();
             Record r;
             r.sender_mac = obj["sender_mac"].toString();
-            r.timestamp = obj["timestamp"].toInt();
-            r.rssi = obj["rssi"].toInt();
+            r.timestamp = static_cast<quint32>(obj["timestamp"].toInt());
+            r.rssi = static_cast<qint8>(obj["rssi"].toInt());
             r.hashed_pkt = obj["hashed_pkt"].toString();
             r.ssid = obj["ssid"].toString();
             r.espName = this->espName;

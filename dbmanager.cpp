@@ -30,7 +30,7 @@ DbManager::DbManager(const QString& path)
    if ( !db.tables().contains( "packet" ) ) {
        createTables();
    }
-   test();
+   //test();
 }
 
 /**
@@ -84,4 +84,9 @@ bool DbManager::saveCsv(Record &r, const QString& path)
     }else{
         return false;
     }
+}
+
+void DbManager::setPath(QString p)
+{
+    db.setDatabaseName(p);
 }

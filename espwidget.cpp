@@ -83,7 +83,7 @@ float ESPWidget::getY()
 /**
  * @brief When x is modified, call this function
  */
-void ESPWidget::on_txtX_textEdited(const QString &arg1)
+void ESPWidget::on_txtX_textEdited(const QString &dummy)
 {
      setModified(true);
 }
@@ -91,7 +91,7 @@ void ESPWidget::on_txtX_textEdited(const QString &arg1)
 /**
  * @brief When y is modified, call this function
  */
-void ESPWidget::on_txtY_textEdited(const QString &arg1)
+void ESPWidget::on_txtY_textEdited(const QString &dummy)
 {
     setModified(true);
 }

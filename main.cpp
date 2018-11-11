@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     // Retrieve the list of esp32 devices
     QSharedPointer<QList<ESP32>> espList = QSharedPointer<QList<ESP32>>::create();
     settings->loadSettings(espList);
+    ESP32_NO = espList->size();
     writeLog("NUM OF ESPs: " + QString::number(ESP32_NO));
 
     MainWindow* w = MainWindow::getInstance();

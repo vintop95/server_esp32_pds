@@ -37,7 +37,7 @@ private:
     void setWindow(MainWindow *);
     QPointF calculatePosition(Record r);
     QPointF trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3);
-
+    std::pair<QPointF, QPointF> bilateration(QPointF p1, QPointF p2, double r1, double r2);
 public:
     static DeviceFinder* getInstance(int espNo = 0, QString dbPath="server_esp32_pds.sqlite3");
 

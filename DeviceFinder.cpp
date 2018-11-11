@@ -7,6 +7,8 @@
  */
 #include "devicefinder.h"
 
+#include <limits>
+
 DeviceFinder* DeviceFinder::instance;
 
 /**
@@ -40,7 +42,7 @@ DeviceFinder* DeviceFinder::getInstance(int espNo, QString dbPath)
 void DeviceFinder::setInit(int espNo, QString dbPath)
 {
     ESPNo = espNo;
-    db = dbPath;
+    db.setPath(dbPath);
 
     for(int i=0; esp.size()<ESPNo; ++i){
         QString newName = "ESP" + QString::number(i);
@@ -197,27 +199,17 @@ double calculateDistance(int rssi) {
     // TX-power-level == RSSI at 1m distance
     // esp txPower
     // https://www.esp32.com/viewtopic.php?t=5359
-    int txPower = -59; //hard coded power value. Usually ranges between -59 to -65
 
-    if (rssi == 0) {
+    if (rssi >= 0) {
         return -1.0;
     }
 
+    double txCalibratedPower = -59; //hard coded power value. Usually ranges between -59 to -65
+    double ratio_db = txCalibratedPower - rssi;
+    double ratio_linear =  pow(10, ratio_db / 10);
 
-    double distance;
-    double ratio = rssi*1.0/txPower;
-    if (ratio < 1.0) {
-        return qPow(ratio,10);
-    }
-    else {
-        distance =  (0.89976)* qPow(ratio,7.7095) + 0.111;
-        return distance;
-    }
-
-//    // oppure questa formula
-//    // distance in meters = pow(10, (RssiAtOneMeter - ReceivedRSSI) / 20)
-//    distance = qPow(10, (txPower - rssi) / 20);
-    return distance;
+    double r = sqrt(ratio_linear);
+    return r;
 }
 
 /**
@@ -281,11 +273,28 @@ QPointF DeviceFinder::calculatePosition(Record r)
 //            sqrt(5.0),
 //            1.0);
 
-    // TODO: check if v_esp contains all the esp needed
-    QPointF pos = trilateration(v_esp[0].getPos(), v_esp[1].getPos(), v_esp[2].getPos(),
+    // check if v_esp contains all the esp needed
+    QPointF pos;
+
+    if(v_esp.size() <= 1){
+        pos.setX(std::numeric_limits<double>::quiet_NaN());
+        pos.setY(std::numeric_limits<double>::quiet_NaN());
+    }else if(v_esp.size() == 2){
+        // TODO: how to return two points?
+        std::pair<QPointF,QPointF> pair = bilateration(
+                v_esp[0].getPos(), v_esp[1].getPos(),
                 calculateDistance(v[0].rssi),
-                calculateDistance(v[1].rssi),
-                calculateDistance(v[2].rssi));
+                calculateDistance(v[1].rssi));
+        pos = pair.first;
+    }else{
+        pos = trilateration(v_esp[0].getPos(), v_esp[1].getPos(), v_esp[2].getPos(),
+                        calculateDistance(v[0].rssi),
+                        calculateDistance(v[1].rssi),
+                        calculateDistance(v[2].rssi));
+    }
+
+    // delete the existing record used for find the position
+    records.removeAll(r);
 
     return pos;
 }
@@ -354,6 +363,42 @@ QPointF DeviceFinder::trilateration(QPointF p1, QPointF p2, QPointF p3, double r
 //    printPoint(resultPose, "resultPose");
     return resultPose;
 
+}
+
+double distance(QPointF point1, QPointF point2){
+    return pow(pow(point2.x()-point1.x(), 2) + pow(point2.y()-point1.y(), 2), 0.5);
+}
+QPointF normal(QPointF p1) {
+    double length = sqrt(p1.x()*p1.x() + p1.y()*p1.y());
+    return QPointF(p1.x()/length, p1.y()/length);
+}
+QPointF scale(QPointF p, double s) {
+    return QPointF(p.x()*s, p.y()*s);
+}
+QPointF sub(QPointF p1, QPointF p2) {
+    return QPointF(p1.x() - p2.x(), p1.y() - p2.y());
+}
+QPointF add(QPointF p1, QPointF p2) {
+    return QPointF(p1.x() + p2.x(), p1.y() + p2.y());
+}
+
+std::pair<QPointF, QPointF> DeviceFinder::bilateration(QPointF p1, QPointF p2, double r1, double r2){
+    QPointF P0(p1.x(), p1.y());
+    QPointF P1(p2.x(), p2.y());
+
+    double d, a, h;
+    d = distance(P0, P1);
+    a = (r1*r1 - r2*r2 + d*d)/(2*d);
+    h = sqrt(r1*r1 - a*a);
+    QPointF P2 = add( scale( sub(P1, P0), a/d), P0);
+
+    double x3, y3, x4, y4;
+    x3 = P2.x() + h*(P1.y() - P0.y())/d;
+    y3 = P2.y() - h*(P1.x() - P0.x())/d;
+    x4 = P2.x() - h*(P1.y() - P0.y())/d;
+    y4 = P2.y() + h*(P1.x() - P0.x())/d;
+
+    return std::pair<QPointF, QPointF>(QPointF(x3, y3), QPointF(x4, y4));
 }
 
 

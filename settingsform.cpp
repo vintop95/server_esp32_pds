@@ -68,8 +68,8 @@ void SettingsForm::saveValues()
 
     for(int i=0; i < ESP32No; ++i){
         QString name = QString("ESP%1").arg(i);
-        double x = ((ESPWidget*)ui->listWidget->itemWidget(ui->listWidget->item(i)))->getX();
-        double y = ((ESPWidget*)ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY();
+        double x = static_cast<double>(static_cast<ESPWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getX());
+        double y = static_cast<double>(static_cast<ESPWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY());
 
         qs.setValue(QString(name + "/name"), name);
         qs.setValue(QString(name + "/pos_x"), QString::number(x,'f'));
@@ -112,12 +112,12 @@ void SettingsForm::addESPWidget(QString name, double x, double y, bool modified)
  */
 void SettingsForm::on_buttonBox_clicked(QAbstractButton *button)
 {
-    if((QPushButton *)button == ui->buttonBox->button(QDialogButtonBox::RestoreDefaults) ){
+    if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::RestoreDefaults) ){
         // Not added yet
-    }else if((QPushButton *)button == ui->buttonBox->button(QDialogButtonBox::Save) ){
+    }else if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::Save) ){
         saveValues();
         QMessageBox::warning(this,"Apply changes","Restart the application to apply changes.");
-    }else if((QPushButton *)button == ui->buttonBox->button(QDialogButtonBox::Cancel) ){
+    }else if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::Cancel) ){
         this->close();
     }
 }

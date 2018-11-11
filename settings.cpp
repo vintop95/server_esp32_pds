@@ -75,5 +75,7 @@ void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
             espList->push_back(ESP32(name, QPointF(x,y)));
             qset->sync();
         }
+
+
     }
 }
