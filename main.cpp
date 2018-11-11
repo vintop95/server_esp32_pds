@@ -10,6 +10,24 @@
 #include "server.h"
 #include "devicefinder.h"
 
+void printRssiDistanceLog(int rssi){
+    writeLog("rssi: " + QString::number(rssi) + " dBm, meters: " + QString::number(DeviceFinder::calculateDistance(rssi),'f',2) + " m", QtInfoMsg);
+}
+
+void printMainRssiMeasures(){
+
+    writeLog("+++ MAIN RSSI MEASURES IN METERS +++", QtInfoMsg);
+
+    for(int i=-90; i <= -65; i+=1){
+        printRssiDistanceLog(i);
+    }
+    for(int i=-65; i <= -25; i+=5){
+        printRssiDistanceLog(i);
+    }
+
+    writeLog("++++++++++++++++++++++++++++++++++++", QtInfoMsg);
+}
+
 int main(int argc, char *argv[])
 {
     // Necessary in order to make the program work
@@ -28,6 +46,9 @@ int main(int argc, char *argv[])
     w->show();
 
     writeLog("+++ WELCOME TO THE ESP32 SERVER +++", QtInfoMsg);
+
+    printMainRssiMeasures();
+
 
     // Initializes the object that handles the packets
     // to find the devices in the area

@@ -194,7 +194,7 @@ int DeviceFinder::countCurrentDevices()
  *
  * @todo completare
  */
-double calculateDistance(int rssi) {
+double DeviceFinder::calculateDistance(int rssi) {
 
     // TX-power-level == RSSI at 1m distance
     // esp txPower

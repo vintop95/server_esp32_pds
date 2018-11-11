@@ -35,9 +35,10 @@ private:
     DeviceFinder();
     void pushDevice(Device d);
     void setWindow(MainWindow *);
+
     QPointF calculatePosition(Record r);
-    QPointF trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3);
-    std::pair<QPointF, QPointF> bilateration(QPointF p1, QPointF p2, double r1, double r2);
+    static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3);
+    static std::pair<QPointF, QPointF> bilateration(QPointF p1, QPointF p2, double r1, double r2);
 public:
     static DeviceFinder* getInstance(int espNo = 0, QString dbPath="server_esp32_pds.sqlite3");
 
@@ -46,6 +47,9 @@ public:
 
     void setESPPos(QString ESPName, double xpos, double ypos);
     void pushRecord(Record r);
+
+    static double calculateDistance(int rssi);
+
     void logCurrentDevices();
     int countCurrentDevices();
     void initChart();
