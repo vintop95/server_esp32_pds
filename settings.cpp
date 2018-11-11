@@ -11,7 +11,7 @@
 #include <QDebug>
 #include <QCoreApplication>
 
-Settings* pSet;
+Settings* Settings::instance;
 
 /**
  * @brief Constructor of Settings
@@ -19,6 +19,14 @@ Settings* pSet;
 Settings::Settings()
 {
     qset = new QSettings(SETTINGS_PATH,QSettings::IniFormat);
+}
+
+Settings* Settings::getInstance()
+{
+    if (instance == nullptr){
+        instance = new Settings();
+    }
+    return instance;
 }
 
 /**
@@ -31,22 +39,19 @@ Settings::Settings()
 void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
     qset->setPath(QSettings::IniFormat, QSettings::UserScope, SETTINGS_PATH);
     qset->sync();
-    qDebug() << qset->applicationName();
     espList = esps;
-    QStringList keys = qset->allKeys();
 
     // If the file does not exist
     if(! qset->contains("ESP32_NO")){
-        qset->setValue("CHART_PERIOD", 10000);
+        //qDebug() << qset->applicationName();
+
+        qset->setValue("CHART_PERIOD", CHART_PERIOD);
         qset->setValue("ESP32_NO", ESP32_NO);
 
         for(int i=0; i < ESP32_NO; ++i){
             QString name = QString("ESP%1").arg(i);
             qreal x = 0.0;
             qreal y = 0.0;
-
-            qDebug() << QString::number(x,'f');
-            qDebug() << QString::number(x,'f');
 
             // TODO: fix the number representation in .ini file
             qset->setValue(QString("ESP%1/name").arg(i), name);

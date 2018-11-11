@@ -9,7 +9,7 @@
 #define SERVER_H
 
 #include "main.h"
-#include "ClientHandler.h"
+#include "clienthandler.h"
 #include <QThreadPool>
 
 /**
@@ -20,15 +20,18 @@ class Server : public QTcpServer
 {
     Q_OBJECT
 private:
+    static Server* instance;
     quint16 port;
     QTcpSocket *socket;
     bool isMultithread = true;
-    DeviceFinder* deviceFinder;
+
+    Server(QObject* parent = nullptr);
+    void setPort(quint16 p);
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 
 public:
-    Server(quint16 port, DeviceFinder *deviceFinder, QObject* parent = nullptr);
+    static Server* getInstance(quint16 p);
     void setMultithread(bool flag){
         isMultithread=flag;
     }

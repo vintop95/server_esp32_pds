@@ -27,32 +27,32 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    ClientHandler.cpp \
     logger.cpp \
-    Server.cpp \
-    DeviceFinder.cpp \
-    Chart.cpp \
     dbmanager.cpp \
     record.cpp \
     settings.cpp \
     settingsform.cpp \
     espwidget.cpp \
-    areachart.cpp
+    areachart.cpp \
+    devicefinder.cpp \
+    server.cpp \
+    clienthandler.cpp \
+    chart.cpp
 
 HEADERS += \
         main.h \
         mainwindow.h \
-    ClientHandler.h \
     logger.h \
-    Server.h \
-    DeviceFinder.h \
-    Chart.h \
     dbmanager.h \
     record.h \
     settings.h \
     settingsform.h \
     espwidget.h \
-    areachart.h
+    areachart.h \
+    devicefinder.h \
+    server.h \
+    clienthandler.h \
+    chart.h
 
 FORMS += \
         mainwindow.ui \

@@ -22,22 +22,28 @@
 class DeviceFinder : public QThread
 {
 private:
+    static DeviceFinder* instance;
+    MainWindow* pWin;
+    DbManager db;
     int ESPNo;
-    int chartPeriod;
     QVector<Record> records = QVector<Record>();
     QMap<QString, ESP32> esp;
     QHash<QString, Device> devices;
     QTimer timer;
-    MainWindow *win;
-    DbManager db;
 
+
+    DeviceFinder();
     void pushDevice(Device d);
+    void setWindow(MainWindow *);
     QPointF calculatePosition(Record r);
     QPointF trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3);
+
 public:
-    DeviceFinder(int espNo, QString dbPath="server_esp32_pds.sqlite3");
+    static DeviceFinder* getInstance(int espNo = 0, QString dbPath="server_esp32_pds.sqlite3");
+
     //void run() override;
-    void setWindow(MainWindow *);
+    void setInit(int espNo, QString dbPath="server_esp32_pds.sqlite3");
+
     void setESPPos(QString ESPName, double xpos, double ypos);
     void pushRecord(Record r);
     void logCurrentDevices();
@@ -45,10 +51,5 @@ public:
     void initChart();
     void test();
 };
-
-/**
- * Nedded to have a singleton global class
- */
-extern DeviceFinder* pDF;
 
 #endif // DEVICEFINDER_H

@@ -21,19 +21,17 @@
 class Logger : public QObject{
     Q_OBJECT
 private:
+    static Logger* instance;
     MainWindow* pWin;
+    Logger(QObject* parent = nullptr);
+
 signals:
     void writeLogInMainWindow(const QString &text, const QColor& = Qt::black);
 public:
-    Logger(MainWindow* w, QObject* parent = nullptr);
+    static Logger* getInstance();
 public slots:
     void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 };
-
-/**
- * Nedded to have a singleton global class
- */
-extern Logger* pLog;
 
 void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 

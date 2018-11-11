@@ -7,13 +7,22 @@
  */
 #include "logger.h"
 
-Logger* pLog;
+Logger* Logger::instance;
 
 /**
  * @brief Constructor of logger
  */
-Logger::Logger(MainWindow* w, QObject* parent):QObject(parent), pWin(w){
+Logger::Logger( QObject* parent): QObject(parent){
+    pWin = MainWindow::getInstance();
     connect(this,&Logger::writeLogInMainWindow,pWin,&MainWindow::writeLog);
+}
+
+Logger *Logger::getInstance()
+{
+    if (instance == nullptr){
+        instance = new Logger();
+    }
+    return instance;
 }
 
 /**
@@ -82,5 +91,5 @@ void Logger::writeLog(const QString &text, QtMsgType type){
  * - QtFatalMsg:    something went terribly wrong
  */
 void writeLog(const QString &text, QtMsgType type){
-    pLog->writeLog(text, type);
+    Logger::getInstance()->writeLog(text, type);
 }

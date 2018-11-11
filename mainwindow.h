@@ -23,15 +23,16 @@ class MainWindow;
 /**
  * This class models the main window
  * that can be modified in the mainwindow.ui file
+ *
+ * Singleton pattern is applied
  */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT //needed for QObject derived classes
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    static MainWindow* getInstance();
     ~MainWindow();
-
     void writeLog(const QString &text, const QColor& = Qt::white);
     Chart* getChart();
     AreaChart* getAreaChart();
@@ -40,20 +41,16 @@ private slots:
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
     void on_actionPreferences_triggered();
-
     void on_logCurrentDevices_clicked();
 signals:
     void logCurrDev();
 private:
-    void initChart();
+    static MainWindow* instance;
     Ui::MainWindow *ui;
     Chart *chart;
     AreaChart *areaChart;
+    explicit MainWindow(QWidget *parent = nullptr);
+    void initChart();
 };
-
-/**
- * Nedded to have a singleton global class
- */
-extern MainWindow* pWin;
 
 #endif // MAINWINDOW_H

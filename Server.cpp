@@ -5,14 +5,30 @@
  * Giorgio Pizzuto
  * Vincenzo Topazio
  */
-#include "Server.h"
+#include "server.h"
+
+Server* Server::instance;
 
 /**
  * @brief Constructor of Server
  */
-Server::Server(quint16 p, DeviceFinder* dF, QObject* parent)
-    :QTcpServer(parent), port(p), deviceFinder(dF)
+Server::Server(QObject* parent)
+    :QTcpServer(parent)
 {}
+
+void Server::setPort(quint16 p)
+{
+    port = p;
+}
+
+Server *Server::getInstance(quint16 p)
+{
+    if (instance == nullptr){
+        instance = new Server();
+    }
+    instance->setPort(p);
+    return instance;
+}
 
 /**
  * @brief Starts the Server
@@ -40,7 +56,7 @@ bool Server::start()
  */
 void Server::incomingConnection(qintptr socketDescriptor)
 {
-    ClientHandler *ch = new ClientHandler(socketDescriptor, deviceFinder, this);
+    ClientHandler *ch = ClientHandler::getInstance(socketDescriptor);
     ch->setMultithread(this->isMultithread);
     ch->handle();
 
@@ -53,3 +69,5 @@ void Server::incomingConnection(qintptr socketDescriptor)
 //    }
 
 }
+
+

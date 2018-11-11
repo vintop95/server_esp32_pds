@@ -9,7 +9,7 @@
 #define CLIENTHANDLER_H
 
 #include "main.h"
-#include "DeviceFinder.h"
+#include "devicefinder.h"
 #include <QThread>
 #include <QTcpSocket>
 #include <QDebug>
@@ -23,8 +23,7 @@ class ClientHandler : public QObject
 {
     Q_OBJECT
 public:
-   explicit ClientHandler(qintptr ID, DeviceFinder* dF, QObject *parent = nullptr);
-
+   static ClientHandler* getInstance(qintptr = 0);
    void handle();
    void setMultithread(bool flag){
        writeLog("ClientHandler");
@@ -39,14 +38,19 @@ public slots:
    void disconnected();
 
 private:
-   QTcpSocket *socket;
+   static ClientHandler* instance;
    DeviceFinder *deviceFinder;
+   QTcpSocket *socket;
+
    qintptr socketDescriptor;
    bool isMultithread = true;
    QString espName = "UNKNOWN";
    QByteArray data;
    QTimer timer;
    int waitPeriod = 40000;
+
+   explicit ClientHandler(QObject *parent = nullptr);
+   void setSocketDescriptor(qintptr);
    void pushRecord();
 };
 

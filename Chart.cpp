@@ -5,7 +5,7 @@
  * Giorgio Pizzuto
  * Vincenzo Topazio
  */
-#include "Chart.h"
+#include "chart.h"
 #include <QtCharts/QAbstractAxis>
 #include <QtCharts/QSplineSeries>
 #include <QtCharts/QValueAxis>

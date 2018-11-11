@@ -25,22 +25,21 @@ static int ESP32_NO_LIMIT = 15;
 
 /**
  * This class models the settings of the application
+ *
+ * Singleton pattern is applied
  */
 class Settings : public QObject
 {
     Q_OBJECT
 private:
     QSettings* qset;
+    static Settings* instance;
+    Settings();
 public:
     QSharedPointer<QList<ESP32>> espList;
-    Settings();
+    static Settings* getInstance();
     void loadSettings(QSharedPointer<QList<ESP32>>);
     void test();
 };
-
-/**
- * Nedded to have a singleton global class
- */
-extern Settings* pSet;
 
 #endif // SETTINGS_H

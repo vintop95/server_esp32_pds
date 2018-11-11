@@ -5,30 +5,49 @@
  * Giorgio Pizzuto
  * Vincenzo Topazio
  */
-#include "DeviceFinder.h"
+#include "devicefinder.h"
 
-DeviceFinder* pDF;
+DeviceFinder* DeviceFinder::instance;
 
 /**
  * @brief Constructor of DeviceFinder
  * Initializes the ESP32 devices calling them for each n
  * ESPn (ESP0, ESP1, ESP2...)
  */
-DeviceFinder::DeviceFinder(int n, QString dbPath):
-    ESPNo(n), db(dbPath)
+DeviceFinder::DeviceFinder():
+    db("server_esp32_pds.sqlite3")
 {
+    setInit(0);
+
     // in order to let the command of printing
     // from the gui
+    setWindow(MainWindow::getInstance());
+
     connect(pWin, &MainWindow::logCurrDev,
             this, &DeviceFinder::logCurrentDevices);
 
-    for(int i=0; i<ESPNo; ++i){
+}
+
+DeviceFinder* DeviceFinder::getInstance(int espNo, QString dbPath)
+{
+    if (instance == nullptr){
+        instance = new DeviceFinder();
+    }
+    instance->setInit(espNo, dbPath);
+    return instance;
+}
+
+void DeviceFinder::setInit(int espNo, QString dbPath)
+{
+    ESPNo = espNo;
+    db = dbPath;
+
+    for(int i=0; esp.size()<ESPNo; ++i){
         QString newName = "ESP" + QString::number(i);
         esp.insert(
            newName,
            ESP32(newName) );
     }
-
 }
 
 /**
@@ -40,7 +59,7 @@ void DeviceFinder::initChart()
 {
     connect(&timer, &QTimer::timeout,
     [&](){
-        win->getChart()->updateChart(this->countCurrentDevices());
+        pWin->getChart()->updateChart(this->countCurrentDevices());
     });
     timer.setInterval(CHART_PERIOD);
     timer.start();
@@ -52,7 +71,7 @@ void DeviceFinder::initChart()
  */
 void DeviceFinder::setWindow(MainWindow *w)
 {
-    win = w;
+    pWin = w;
     initChart();
 }
 
@@ -124,7 +143,7 @@ void DeviceFinder::pushDevice(Device d)
     // If there is already an item with the key, that
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
-    win->getAreaChart()->appendDevice(d);
+    pWin->getAreaChart()->appendDevice(d);
 
     // TODO: remove device after a timeout?
 
@@ -262,6 +281,7 @@ QPointF DeviceFinder::calculatePosition(Record r)
 //            sqrt(5.0),
 //            1.0);
 
+    // TODO: check if v_esp contains all the esp needed
     QPointF pos = trilateration(v_esp[0].getPos(), v_esp[1].getPos(), v_esp[2].getPos(),
                 calculateDistance(v[0].rssi),
                 calculateDistance(v[1].rssi),
@@ -335,6 +355,7 @@ QPointF DeviceFinder::trilateration(QPointF p1, QPointF p2, QPointF p3, double r
     return resultPose;
 
 }
+
 
 /**
  * @brief A test function

@@ -5,23 +5,37 @@
  * Giorgio Pizzuto
  * Vincenzo Topazio
  */
-#include "ClientHandler.h"
+#include "clienthandler.h"
 #include <iostream>
+
+ClientHandler* ClientHandler::instance;
 
 /**
  * @brief Constructor
  *
  * @param socket descriptor of the new client
  */
-ClientHandler::ClientHandler(qintptr ID, DeviceFinder* dF, QObject *parent) :
-    QObject(parent), deviceFinder(dF)
-{
-    this->socketDescriptor = ID;
-}
+ClientHandler::ClientHandler(QObject *parent) :
+    QObject(parent), deviceFinder(DeviceFinder::getInstance())
+{}
 
 /**
  * @brief Handles the client
  */
+ClientHandler* ClientHandler::getInstance(qintptr id)
+{
+    if (instance == nullptr){
+        instance = new ClientHandler();
+    }
+    instance->setSocketDescriptor(id);
+    return instance;
+}
+
+void ClientHandler::setSocketDescriptor(qintptr id)
+{
+    this->socketDescriptor = id;
+}
+
 void ClientHandler::handle()
 {
     writeLog("#ClientHandler");

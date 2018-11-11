@@ -18,6 +18,7 @@ AreaChart::AreaChart(QChart *parent) : QChart(parent)
     ESPSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
     ESPSeries->setMarkerSize(20.0);
 
+    Settings* pSet = Settings::getInstance();
     for (ESP32 e: *(pSet->espList)){
         ESPSeries->append(e.getX(), e.getY());
     }

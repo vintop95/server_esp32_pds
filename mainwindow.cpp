@@ -8,7 +8,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow* pWin;
+MainWindow* MainWindow::instance;
 
 /**
  * @brief Constructor
@@ -29,6 +29,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->txtLog->setPalette(p);
 
     initChart();
+}
+
+MainWindow *MainWindow::getInstance()
+{
+    if (instance == nullptr){
+        instance = new MainWindow();
+    }
+    return instance;
 }
 
 MainWindow::~MainWindow()
