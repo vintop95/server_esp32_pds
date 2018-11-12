@@ -8,12 +8,12 @@
 AreaChart::AreaChart(QChart *parent) : QChart(parent)
 {
     qDebug() << "#AreaChart";
-    deviceSeries = new QScatterSeries();
+    deviceSeries = new QScatterSeries(this);
     deviceSeries->setName("Device");
     deviceSeries->setMarkerShape(QScatterSeries::MarkerShapeCircle);
     deviceSeries->setMarkerSize(15.0);
 
-    ESPSeries = new QScatterSeries();
+    ESPSeries = new QScatterSeries(this);
     ESPSeries->setName("ESP32");
     ESPSeries->setMarkerShape(QScatterSeries::MarkerShapeRectangle);
     ESPSeries->setMarkerSize(20.0);

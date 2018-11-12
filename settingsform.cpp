@@ -89,7 +89,7 @@ void SettingsForm::saveValues()
 void SettingsForm::addESPWidget(QString name, double x, double y, bool modified)
 {
     //Creating an object of the designed widget which is to be added to the listwidget
-    ESPWidget *espWidget = new ESPWidget;
+    ESPWidget *espWidget = new ESPWidget(this);
     espWidget->setName(name);
     espWidget->setPoint(x,y);
     espWidget->setModified(modified);

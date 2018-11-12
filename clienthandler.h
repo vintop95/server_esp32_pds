@@ -23,7 +23,7 @@ class ClientHandler : public QObject
 {
     Q_OBJECT
 public:
-   static ClientHandler* getInstance(qintptr = 0);
+   explicit ClientHandler(qintptr s, QObject *parent = nullptr);
    void handle();
    void setMultithread(bool flag){
        writeLog("ClientHandler");
@@ -38,7 +38,6 @@ public slots:
    void disconnected();
 
 private:
-   static ClientHandler* instance;
    DeviceFinder *deviceFinder;
    QTcpSocket *socket;
 
@@ -49,7 +48,7 @@ private:
    QTimer timer;
    int waitPeriod = 40000;
 
-   explicit ClientHandler(QObject *parent = nullptr);
+
    void setSocketDescriptor(qintptr);
    void pushRecord();
 };

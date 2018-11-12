@@ -23,8 +23,8 @@
 Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
     QChart(QChart::ChartTypeCartesian, parent, wFlags),
     m_series(nullptr),
-    m_valueAxisY(new QValueAxis),
-    m_timeAxisX(new QDateTimeAxis),
+    m_valueAxisY(new QValueAxis(this)),
+    m_timeAxisX(new QDateTimeAxis(this)),
     m_step(0),
     m_x(START_TIME),
     m_y(0)

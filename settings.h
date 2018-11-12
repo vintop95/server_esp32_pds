@@ -35,6 +35,7 @@ private:
     QSettings* qset;
     static Settings* instance;
     Settings();
+    ~Settings();
 public:
     QSharedPointer<QList<ESP32>> espList;
     static Settings* getInstance();

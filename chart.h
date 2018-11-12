@@ -26,7 +26,6 @@ public slots:
 
 private:
     QSplineSeries *m_series;
-    QStringList m_titles;
     QValueAxis *m_valueAxisY;
     QDateTimeAxis *m_timeAxisX;
     qreal m_step;

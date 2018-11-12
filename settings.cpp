@@ -21,6 +21,11 @@ Settings::Settings()
     qset = new QSettings(SETTINGS_PATH,QSettings::IniFormat);
 }
 
+Settings::~Settings()
+{
+    delete qset;
+}
+
 Settings* Settings::getInstance()
 {
     if (instance == nullptr){

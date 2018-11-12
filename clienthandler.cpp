@@ -8,28 +8,17 @@
 #include "clienthandler.h"
 #include <iostream>
 
-ClientHandler* ClientHandler::instance;
-
 /**
  * @brief Constructor
  *
  * @param socket descriptor of the new client
  */
-ClientHandler::ClientHandler(QObject *parent) :
+ClientHandler::ClientHandler(qintptr s, QObject *parent) :
     QObject(parent), deviceFinder(DeviceFinder::getInstance())
-{}
-
-/**
- * @brief Handles the client
- */
-ClientHandler* ClientHandler::getInstance(qintptr id)
 {
-    if (instance == nullptr){
-        instance = new ClientHandler();
-    }
-    instance->setSocketDescriptor(id);
-    return instance;
+    setSocketDescriptor(s);
 }
+
 
 void ClientHandler::setSocketDescriptor(qintptr id)
 {
@@ -48,7 +37,7 @@ void ClientHandler::handle()
     timer.setInterval(waitPeriod);
     timer.start();
 
-    socket = new QTcpSocket();
+    socket = new QTcpSocket(this);
 
     if(!socket->setSocketDescriptor(this->socketDescriptor))
     {
@@ -177,6 +166,9 @@ void ClientHandler::disconnected()
 
     timer.stop();
     socket->deleteLater();
+
+    // TODO: check if it's ok
+    delete this;
 
     // if it was a QThread
     //exit(0);

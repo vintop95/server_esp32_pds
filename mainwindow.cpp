@@ -42,6 +42,8 @@ MainWindow *MainWindow::getInstance()
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete chart;
+    delete areaChart;
 }
 
 /**

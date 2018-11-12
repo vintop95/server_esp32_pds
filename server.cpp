@@ -56,7 +56,7 @@ bool Server::start()
  */
 void Server::incomingConnection(qintptr socketDescriptor)
 {
-    ClientHandler *ch = ClientHandler::getInstance(socketDescriptor);
+    ClientHandler *ch = new ClientHandler(socketDescriptor, this);
     ch->setMultithread(this->isMultithread);
     ch->handle();
 
