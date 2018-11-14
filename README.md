@@ -10,6 +10,14 @@
 ### TODO
 ICON TRAY: http://doc.qt.io/archives/qt-4.8/qt-desktop-systray-example.html
 
+### ERRORI DI LINKING - Possibili cause
+- tasto dx su nome del progetto > Clean
+- tasto dx su nome del progetto > Run qmake
+- Controlla che il .pro contenga le giuste inclusioni (es QT += printsupport)
+- Elimina i file .pro.user nella cartella del progetto
+- Contempla il codice nella speranza di una illuminazione divina
+- ???
+- Profit
 
 ## Configurazione ambiente di sviluppo
 Useremo qt per lo sviluppo del server con interfaccia grafica in C++
