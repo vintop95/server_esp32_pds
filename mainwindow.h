@@ -10,7 +10,7 @@
 
 #include <QMainWindow>
 #include <QtCharts>
-#include "Chart.h"
+#include "chart.h"
 #include "settingsform.h"
 #include "areachart.h"
 
@@ -37,11 +37,22 @@ public:
     Chart* getChart();
     AreaChart* getAreaChart();
     void initAreaChart();
+
+    // Plot management
+    void addPoint(double x, double y);
+    void removePoint(double x, double y);
+    void addBoard(double x, double y);
+    void removeBoard(double x, double y);
+    void clearData();
+    void plot();
+
 private slots:
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
     void on_actionPreferences_triggered();
     void on_logCurrentDevices_clicked();
+    void on_actionDebug_triggered();
+
 signals:
     void logCurrDev();
 private:
@@ -49,6 +60,9 @@ private:
     Ui::MainWindow *ui;
     Chart *chart;
     AreaChart *areaChart;
+
+    QVector<double> qv_x, qv_y, qvs_x, qvs_y;
+
     explicit MainWindow(QWidget *parent = nullptr);
     void initChart();
 };

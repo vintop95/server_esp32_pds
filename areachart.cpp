@@ -10,6 +10,7 @@ AreaChart::AreaChart(QChart *parent) : QChart(parent)
     qDebug() << "#AreaChart";
     deviceSeries = new QScatterSeries(this);
     deviceSeries->setName("Device");
+
     deviceSeries->setMarkerShape(QScatterSeries::MarkerShapeCircle);
     deviceSeries->setMarkerSize(15.0);
 

@@ -6,7 +6,7 @@
 
 
 QT += core gui network widgets
-QT += charts sql
+QT += charts sql printsupport
 
 TARGET = server_esp32_pds
 TEMPLATE = app
@@ -37,7 +37,8 @@ SOURCES += \
     devicefinder.cpp \
     server.cpp \
     clienthandler.cpp \
-    chart.cpp
+    chart.cpp \
+    qcustomplot.cpp
 
 HEADERS += \
         main.h \
@@ -52,7 +53,8 @@ HEADERS += \
     devicefinder.h \
     server.h \
     clienthandler.h \
-    chart.h
+    chart.h \
+    qcustomplot.h
 
 FORMS += \
         mainwindow.ui \

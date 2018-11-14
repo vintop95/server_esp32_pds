@@ -145,10 +145,9 @@ void DeviceFinder::pushDevice(Device d)
     // If there is already an item with the key, that
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
-    pWin->getAreaChart()->appendDevice(d);
+    pWin->addPoint(d.pos.x(),d.pos.y());
 
     // TODO: remove device after a timeout?
-
 }
 
 /**
