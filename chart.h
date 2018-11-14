@@ -9,6 +9,9 @@
 #define CHART_H
 
 #include <QtCharts>
+
+#include "settings.h"
+
 using namespace QtCharts;
 
 /**

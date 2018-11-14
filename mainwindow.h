@@ -12,7 +12,6 @@
 #include <QtCharts>
 #include "chart.h"
 #include "settingsform.h"
-#include "areachart.h"
 
 using namespace QtCharts;
 
@@ -35,8 +34,6 @@ public:
     ~MainWindow();
     void writeLog(const QString &text, const QColor& = Qt::white);
     Chart* getChart();
-    AreaChart* getAreaChart();
-    void initAreaChart();
 
     // Plot management
     void addPoint(double x, double y);
@@ -59,7 +56,6 @@ private:
     static MainWindow* instance;
     Ui::MainWindow *ui;
     Chart *chart;
-    AreaChart *areaChart;
 
     QVector<double> qv_x, qv_y, qvs_x, qvs_y;
 

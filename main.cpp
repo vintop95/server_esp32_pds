@@ -42,7 +42,6 @@ int main(int argc, char *argv[])
     writeLog("NUM OF ESPs: " + QString::number(ESP32_NO));
 
     MainWindow* w = MainWindow::getInstance();
-    w->initAreaChart();
     w->show();
 
     writeLog("+++ WELCOME TO THE ESP32 SERVER +++", QtInfoMsg);

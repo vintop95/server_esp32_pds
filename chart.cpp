@@ -13,8 +13,6 @@
 #include <QtCore/QDebug>
 #include <QDate>
 
-#include "settings.h"
-
 /**
  * @brief Constructor
  *

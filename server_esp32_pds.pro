@@ -33,7 +33,6 @@ SOURCES += \
     settings.cpp \
     settingsform.cpp \
     espwidget.cpp \
-    areachart.cpp \
     devicefinder.cpp \
     server.cpp \
     clienthandler.cpp \
@@ -49,7 +48,6 @@ HEADERS += \
     settings.h \
     settingsform.h \
     espwidget.h \
-    areachart.h \
     devicefinder.h \
     server.h \
     clienthandler.h \
