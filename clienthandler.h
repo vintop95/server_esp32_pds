@@ -46,7 +46,7 @@ private:
    QString espName = "UNKNOWN";
    QByteArray data;
    QTimer timer;
-   int waitPeriod = 40000;
+   int waitPeriod = 30000;
 
 
    void setSocketDescriptor(qintptr);

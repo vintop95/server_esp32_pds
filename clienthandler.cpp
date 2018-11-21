@@ -30,9 +30,10 @@ void ClientHandler::handle()
     writeLog("#ClientHandler");
     // after waitPeriod close the connection
     connect(&timer, &QTimer::timeout,
-    [&](){
-        if(socket->isOpen())
-            socket->close();
+    [=](){
+        if (socket->isValid())
+            socket->disconnectFromHost();
+        writeLog("Timeout expired.", QtWarningMsg);
     });
     timer.setInterval(waitPeriod);
     timer.start();
@@ -68,6 +69,8 @@ void ClientHandler::handle()
  * @brief Callback called when the server received data from client
  * This function works together with 'Sender::sendRecordsToServer()' function
  * in the client
+ *
+ * @todo: add catch for runtime exceptions (like the socket already closed)
  */
 void ClientHandler::readyRead()
 {
@@ -137,12 +140,21 @@ void ClientHandler::readyRead()
         writeLog(QString::number(socketDescriptor) + " - END MESSAGE");
 
         // Acknowledge the client
-        socket->write("OK\r\n");
+        // And send him the timestamp
+        QDateTime current = QDateTime::currentDateTime();
+        uint tmpstmp = current.toTime_t();
+
+        QString msgOut = "OK " + QString::number(tmpstmp) + "\r\n";
+        socket->write(msgOut.toStdString().c_str(), msgOut.length());
         socket->flush();
         //socket->waitForBytesWritten();
 
-        socket->close();
         data.clear();
+
+        // Close the connection emitting the disconnected signal
+        if (socket->isValid())
+            socket->disconnectFromHost();
+
     }else{
         writeLog(QString::number(socketDescriptor) + " - FORMAT NOT RECOGNIZED");
         data = socket->readAll();
@@ -165,10 +177,14 @@ void ClientHandler::disconnected()
     writeLog(QString::number(socketDescriptor) + " Disconnected.");
 
     timer.stop();
+
+    if (socket->isValid())
+        socket->disconnectFromHost();
+
     socket->deleteLater();
 
     // TODO: check if it's ok
-    delete this;
+    this->deleteLater();
 
     // if it was a QThread
     //exit(0);

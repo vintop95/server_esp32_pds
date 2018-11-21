@@ -1,0 +1,28 @@
+INIT {"espName":"ESP0"}
+
+DATA [{"sender_mac":"D1:OF:EC:C1:AA:AA", "rssi":-65, "hashed_pkt":"asdf"},
+			{"sender_mac":"D1:OB:A5:7A:4D:00", "rssi":-50, "hashed_pkt":"zxcv"}]
+			
+END
+
+=====
+
+INIT {"espName":"ESP1"}
+
+DATA [{"sender_mac":"D1:OF:EC:C1:AA:AA", "rssi":-55, "hashed_pkt":"asdf"},
+			{"sender_mac":"D1:OB:A5:7A:4D:00", "rssi":-40, "hashed_pkt":"zxcv"}]
+			
+END
+
+=====
+
+INIT {"espName":"ESP2"}
+
+DATA [{"sender_mac":"D1:OF:EC:C1:AA:AA", "rssi":-45, "hashed_pkt":"asdf"},
+			{"sender_mac":"D1:OB:A5:7A:4D:00", "rssi":-60, "hashed_pkt":"zxcv"}]
+			
+END
+
+=====
+
+

@@ -41,8 +41,13 @@ DeviceFinder* DeviceFinder::getInstance(int espNo, QString dbPath)
 
 void DeviceFinder::setInit(int espNo, QString dbPath)
 {
-    ESPNo = espNo;
-    db.setPath(dbPath);
+    if(espNo != 0){
+        ESPNo = espNo;
+    }
+    if(dbPath != "server_esp32_pds.sqlite3"){
+        db.setPath(dbPath);
+    }
+
 
     for(int i=0; esp.size()<ESPNo; ++i){
         QString newName = "ESP" + QString::number(i);
