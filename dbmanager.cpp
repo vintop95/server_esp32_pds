@@ -14,6 +14,9 @@
  */
 DbManager::DbManager(const QString& path)
 {
+    // TODO: calculate the nOfCols from the CREATE query
+    int nOfCols = 7;
+
    db = QSqlDatabase::addDatabase("QSQLITE");
    db.setDatabaseName(path);
 
@@ -29,8 +32,16 @@ DbManager::DbManager(const QString& path)
 
    if ( !db.tables().contains( "packet" ) ) {
        createTables();
+   }else{
+       // it must contain all the attributes
+       // defined: the number of columns of the two
+       // version of packet must be equal
+       QSqlRecord record = db.driver()->record("packet");
+       if (record.count() != nOfCols){
+            createTables();
+       };
    }
-   //test();
+   test();
 }
 
 /**
@@ -38,37 +49,110 @@ DbManager::DbManager(const QString& path)
  */
 bool DbManager::createTables()
 {
+    /*
+    QString sender_mac;
+    quint32 timestamp;
+    qint8 rssi;
+    QString hashed_pkt;
+    QString ssid;
+    QString espName;
+    */
     writeLog("#DbManager");
     QSqlQuery query;
-    bool res = query.exec("CREATE TABLE packet(id integer primary key, sender_mac text)");
-    writeLog("table created: " + QString::number(res) );
+    bool res;
+
+    QString strQuery = "DROP TABLE packet";
+    QString strQuery2 = "DROP TABLE packet_old";
+    QString strQuery3 = "ALTER TABLE packet RENAME TO packet_old";
+    //res = query.exec(strQuery);
+    //writeLog("TABLE packet DELETED: " + QString::number(res) + "/1" );
+    res = query.exec(strQuery2);
+    writeLog("TABLE packet_old DELETED: " + QString::number(res) + "/1" );
+    res = query.exec(strQuery3);
+    writeLog("TABLE packet RENAMED TO packet_old: " + QString::number(res) + "/1" );
+
+    strQuery = "CREATE TABLE packet("
+               "id integer primary key,"
+               "sender_mac text,"
+               "timestamp integer,"
+               "rssi integer,"
+               "hashed_pkt text,"
+               "ssid text,"
+               "espName text)";
+    res = query.exec(strQuery);
+    writeLog("TABLE packet CREATED: " + QString::number(res) + "/1" );
 
     return res;
 }
+
+/**
+ * @brief Add a packet in the db
+ */
+bool DbManager::addPacket(Record r)
+{
+    writeLog("#DbManager");
+    QSqlQuery query;
+    query.exec("SELECT COUNT(*)+1 FROM packet;");
+    bool res = query.exec();
+    int id = 0;
+
+    query.next();
+    writeLog("POS: " + QString::number(query.at()) );
+    writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
+    id = query.value(0).toInt();
+
+    query.prepare("INSERT INTO packet("
+                  "id,"
+                  "sender_mac,"
+                  "timestamp,"
+                  "rssi,"
+                  "hashed_pkt,"
+                  "ssid,"
+                  "espName) "
+                  "VALUES (:id, :sender_mac, :timestamp, :rssi, :hashed_pkt,"
+                  ":ssid, :espName)");
+    query.bindValue(":id", id);
+    query.bindValue(":sender_mac", r.sender_mac);
+    query.bindValue(":timestamp", r.timestamp);
+    query.bindValue(":rssi", r.rssi);
+    query.bindValue(":hashed_pkt", r.hashed_pkt);
+    query.bindValue(":ssid", r.ssid);
+    query.bindValue(":espName", r.espName);
+
+    res = query.exec();
+    writeLog("packet inserted: " + QString::number(res) + "/1" );
+
+    return true;
+}
+
 
 /**
  * @brief Test database functions
  */
 void DbManager::test()
 {
-    writeLog("#DbManager");
+    //writeLog("#DbManager");
     QSqlQuery query;
     bool res;
 
-    query.prepare("INSERT INTO packet(id, sender_mac) "
-                  "VALUES (:id, :sender_mac)");
-    query.bindValue(":id", 1);
-    query.bindValue(":sender_mac", "AA");
-    res = query.exec();
-    writeLog("packet inserted: " + QString::number(res) );
+    Record r;
+    r.sender_mac="HEYNIGGAITSME";
+    r.timestamp=123456789;
+    r.rssi = -50;
+    r.hashed_pkt = "123456";
+    r.ssid = "fuori dalla mia wifi N3GR0";
+    r.espName = "ESP69";
+    addPacket(r);
 
 
-    query.exec("SELECT sender_mac FROM packet");
-    writeLog("select result: " + QString::number(res) );
+    res = query.exec("SELECT id, sender_mac FROM packet");
+    writeLog("select result: " + QString::number(res) + "/1" );
 
     while (query.next()) {
-        QString sender_mac = query.value(0).toString();
-        writeLog("sender_mac: " + sender_mac);
+        int id = query.value(0).toInt();
+        writeLog("id: " + QString::number(id));
+        QString sender_mac = query.value(1).toString();
+        writeLog("sender_mac: " + sender_mac);  
     }
 }
 
@@ -90,3 +174,4 @@ void DbManager::setPath(QString p)
 {
     db.setDatabaseName(p);
 }
+

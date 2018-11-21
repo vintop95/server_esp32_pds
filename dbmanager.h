@@ -21,6 +21,7 @@ public:
     DbManager(const QString& path);
     bool saveCsv(Record& record, const QString& path = "output.txt");
     void setPath(QString p);
+    bool addPacket(Record r);
 private:
     QSqlDatabase db;
     bool createTables();
