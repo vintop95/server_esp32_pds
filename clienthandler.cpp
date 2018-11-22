@@ -8,6 +8,7 @@
 #include "clienthandler.h"
 #include <iostream>
 
+
 /**
  * @brief Constructor
  *
@@ -144,7 +145,12 @@ void ClientHandler::readyRead()
         QDateTime current = QDateTime::currentDateTime();
         uint tmpstmp = current.toTime_t();
 
-        QString msgOut = "OK " + QString::number(tmpstmp) + "\r\n";
+        //QString msgOut = "OK " + QString::number(tmpstmp) + "\r\n";
+        QString msgOut = "OK ";
+        socket->write(msgOut.toStdString().c_str(), msgOut.length());
+        tmpstmp = qToBigEndian(tmpstmp);
+        socket->write((const char*) &tmpstmp, sizeof(tmpstmp));
+        msgOut = "\r\n";
         socket->write(msgOut.toStdString().c_str(), msgOut.length());
         socket->flush();
         //socket->waitForBytesWritten();

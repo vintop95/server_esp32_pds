@@ -32,9 +32,8 @@ int main(int argc, char *argv[])
 {
     // Necessary in order to make the program work
     QApplication a(argc, argv);
-
+    //writeLog("SIZE OF UINT: " + QString::number(sizeof(uint)));
     Settings* settings = Settings::getInstance();
-
     // Retrieve the list of esp32 devices
     QSharedPointer<QList<ESP32>> espList = QSharedPointer<QList<ESP32>>::create();
     settings->loadSettings(espList);
