@@ -30,6 +30,7 @@ private:
     QMap<QString, ESP32> esp;
     QHash<QString, Device> devices;
     QTimer timer;
+    uint last_ts;
 
 
     DeviceFinder();

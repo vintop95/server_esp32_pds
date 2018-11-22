@@ -46,6 +46,9 @@ DbManager::DbManager(const QString& path)
 
 /**
  * @brief Creates the needed tables
+ * if the table 'packet' already exists but it has a different set of columns
+ * of the set that we defined, rename it in 'packet_old' (after dropping
+ * whatever was the old 'packet_old') and create again the 'packet' table
  */
 bool DbManager::createTables()
 {
@@ -59,14 +62,21 @@ bool DbManager::createTables()
     */
     writeLog("#DbManager");
     QSqlQuery query;
+    QString strQuery;
     bool res;
 
-    QString strQuery = "DROP TABLE packet";
-    QString strQuery2 = "DROP TABLE packet_old";
-    QString strQuery3 = "ALTER TABLE packet RENAME TO packet_old";
+
+    // not needed
+    //strQuery = "DROP TABLE packet";
     //res = query.exec(strQuery);
     //writeLog("TABLE packet DELETED: " + QString::number(res) + "/1" );
+
+    QString strQuery2 = "DROP TABLE packet_old";
+    QString strQuery3 = "ALTER TABLE packet RENAME TO packet_old";
     res = query.exec(strQuery2);
+    writeLog("if the table 'packet' already exists but it has a different set of columns "
+             "of the set that we defined, rename it in 'packet_old' (after dropping "
+             "whatever was the old 'packet_old') and create again the 'packet' table" );
     writeLog("TABLE packet_old DELETED: " + QString::number(res) + "/1" );
     res = query.exec(strQuery3);
     writeLog("TABLE packet RENAMED TO packet_old: " + QString::number(res) + "/1" );
@@ -87,28 +97,24 @@ bool DbManager::createTables()
 
 /**
  * @brief Add a packet in the db
+ * ATTENTION TO ALL 9 Y.O. GAMERS
+ * Record and Packet are synonymous
  */
 bool DbManager::addPacket(Record r)
 {
     writeLog("#DbManager");
     QSqlQuery query;
-    query.exec("SELECT COUNT(*)+1 FROM packet;");
+    query.exec("SELECT MAX(id)+1 FROM packet;");
     bool res = query.exec();
     int id = 0;
 
     query.next();
-    writeLog("POS: " + QString::number(query.at()) );
-    writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
+    //writeLog("POS: " + QString::number(query.at()) );
+    //writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
     id = query.value(0).toInt();
 
-    query.prepare("INSERT INTO packet("
-                  "id,"
-                  "sender_mac,"
-                  "timestamp,"
-                  "rssi,"
-                  "hashed_pkt,"
-                  "ssid,"
-                  "espName) "
+    query.prepare("INSERT INTO packet"
+                  "(id,sender_mac,timestamp,rssi,hashed_pkt,ssid,espName) "
                   "VALUES (:id, :sender_mac, :timestamp, :rssi, :hashed_pkt,"
                   ":ssid, :espName)");
     query.bindValue(":id", id);
@@ -125,6 +131,34 @@ bool DbManager::addPacket(Record r)
     return true;
 }
 
+/**
+ * @todo implement
+ * LAST_TS = the timestamp of the last time we calculated the positions
+of devices
+
+"CREATE TABLE packet("
+ "id integer primary key,"
+ "sender_mac text,"
+ "timestamp integer,"
+ "rssi integer,"
+ "hashed_pkt text,"
+ "ssid text,"
+ "espName text)"
+
+SELECT 		sender_mac, espName, AVG(rssi) AS avgRssi
+FROM 		packet P
+WHERE		timestamp > LAST_TS
+    AND	hashed_pkt IN (
+            SELECT 		hashed_pkt
+            FROM 			packet P1
+            WHERE 		timestamp > LAST_TS
+            GROUP BY	hashed_pkt
+            HAVING COUNT(*) = N)
+GROUP BY	sender_mac, espName
+ */
+bool DbManager::calculateAvgRssi(){
+    return false;
+}
 
 /**
  * @brief Test database functions

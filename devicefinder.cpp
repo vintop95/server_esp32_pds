@@ -229,44 +229,56 @@ struct sort_rssi_desc
 };
 
 /**
- * @brief It calculates the position of the device identified by the sender_mac
- * in the Record
+ * @brief It calculates the position of the device identified by the
+ * sender_mac in the Record
+ *
+ * https://trello.com/c/X2EOGoxG
+ * HOW IT SHOULD WORK WITH SQL:
+ * SQL Query returns (sender_mac, espName, avgRssi)
+ * for all sender_mac
+ *  we take the records that has the same sender_mac (and hashed_pkt)
+ *  and we calculate the position with avgRssi
+ * we push all the devices with their position in the 'device' table
+ * (or in a QVector<Device>)
+ *
+ *  last_ts = the timestamp of the last time we calculated the positions
+ *  of devices
  *
  * @param Record containing the device
+ * it's the last received for calculation purposes from the last board
  *
  * @return Position in space of the device detected
  *
  * @todo completare
  */
-QPointF DeviceFinder::calculatePosition(Record r)
+QPointF DeviceFinder::calculatePosition(Record lastRecord)
 {
-    writeLog("#DeviceFinder");
     //TODO: completare
+    writeLog("#DeviceFinder");
 
-
-    QVector<Record> v;
-    for(Record r2 : records){
-
-        ESP32 esp2("NO");
-        auto it = esp.find(r2.espName);
-        if(it != esp.end() && r2 == r){
-            v.push_back(r2);
+    QVector<Record> recordsOrdered;
+    for(Record genericRecord : records){
+        auto it = esp.find(genericRecord.espName);
+        bool exists = (it != esp.end());
+        if(exists && genericRecord == lastRecord){
+            recordsOrdered.push_back(genericRecord);
         }
     }
 
     // take the 3 records with the most powerful rssi
-    std::sort( v.begin(), v.end(), sort_rssi_desc() );
+    std::sort(recordsOrdered.begin(), recordsOrdered.end(), sort_rssi_desc());
 
-    QList<ESP32> v_esp;
+    QList<ESP32> espChosen;
     writeLog("PRINTING RECORDS ORDERED FOR RSSI");
-    for(Record r2 : v){
-        writeLog(r2.toString());
+    for(Record recordOrdered : recordsOrdered){
+        writeLog(recordOrdered.toString());
 
-        ESP32 esp2("NO");
-        auto it = esp.find(r2.espName);
-        if(it != esp.end()){
-            esp2 = esp.value(r2.espName, ESP32("NO"));
-            v_esp.push_back(esp2);
+        ESP32 espToPush("");
+        auto it = esp.find(recordOrdered.espName);
+        bool exists = (it != esp.end());
+        if(exists){
+            espToPush = esp.value(recordOrdered.espName, ESP32(""));
+            espChosen.push_back(espToPush);
         }
     }
 
@@ -277,28 +289,30 @@ QPointF DeviceFinder::calculatePosition(Record r)
 //            sqrt(5.0),
 //            1.0);
 
-    // check if v_esp contains all the esp needed
+    // check if espChosen contains all the esp needed
     QPointF pos;
 
-    if(v_esp.size() <= 1){
+    if(espChosen.size() <= 1){
         pos.setX(std::numeric_limits<double>::quiet_NaN());
         pos.setY(std::numeric_limits<double>::quiet_NaN());
-    }else if(v_esp.size() == 2){
+    }else if(espChosen.size() == 2){
         // TODO: how to return two points?
         std::pair<QPointF,QPointF> pair = bilateration(
-                v_esp[0].getPos(), v_esp[1].getPos(),
-                calculateDistance(v[0].rssi),
-                calculateDistance(v[1].rssi));
+                espChosen[0].getPos(), espChosen[1].getPos(),
+                calculateDistance(recordsOrdered[0].rssi),
+                calculateDistance(recordsOrdered[1].rssi));
         pos = pair.first;
     }else{
-        pos = trilateration(v_esp[0].getPos(), v_esp[1].getPos(), v_esp[2].getPos(),
-                        calculateDistance(v[0].rssi),
-                        calculateDistance(v[1].rssi),
-                        calculateDistance(v[2].rssi));
+        pos = trilateration(espChosen[0].getPos(), espChosen[1].getPos(), espChosen[2].getPos(),
+                        calculateDistance(recordsOrdered[0].rssi),
+                        calculateDistance(recordsOrdered[1].rssi),
+                        calculateDistance(recordsOrdered[2].rssi));
     }
 
     // delete the existing record used for find the position
-    records.removeAll(r);
+    records.removeAll(lastRecord);
+
+    last_ts = QDateTime::currentDateTime().toTime_t();
 
     return pos;
 }

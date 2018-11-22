@@ -142,14 +142,13 @@ void ClientHandler::readyRead()
 
         // Acknowledge the client
         // And send him the timestamp
-        QDateTime current = QDateTime::currentDateTime();
-        uint tmpstmp = current.toTime_t();
+        uint timestamp_now = QDateTime::currentDateTime().toTime_t();
 
         //QString msgOut = "OK " + QString::number(tmpstmp) + "\r\n";
         QString msgOut = "OK ";
         socket->write(msgOut.toStdString().c_str(), msgOut.length());
-        tmpstmp = qToBigEndian(tmpstmp);
-        socket->write((const char*) &tmpstmp, sizeof(tmpstmp));
+        timestamp_now = qToBigEndian(timestamp_now);
+        socket->write((const char*) &timestamp_now, sizeof(timestamp_now));
         msgOut = "\r\n";
         socket->write(msgOut.toStdString().c_str(), msgOut.length());
         socket->flush();
