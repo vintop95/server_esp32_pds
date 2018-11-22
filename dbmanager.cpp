@@ -126,7 +126,7 @@ bool DbManager::addPacket(Record r)
     query.bindValue(":espName", r.espName);
 
     res = query.exec();
-    writeLog("packet inserted: " + QString::number(res) + "/1" );
+    writeLog("Packet inserted: " + QString::number(res) + "/1" );
 
     return true;
 }
@@ -176,11 +176,12 @@ void DbManager::test()
     r.hashed_pkt = "123456";
     r.ssid = "fuori dalla mia wifi N3GR0";
     r.espName = "ESP69";
+    writeLog("TEST: add packet");
     addPacket(r);
 
 
     res = query.exec("SELECT id, sender_mac FROM packet");
-    writeLog("select result: " + QString::number(res) + "/1" );
+    writeLog("TEST: select result: " + QString::number(res) + "/1" );
 
     while (query.next()) {
         int id = query.value(0).toInt();

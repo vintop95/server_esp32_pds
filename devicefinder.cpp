@@ -91,10 +91,10 @@ void DeviceFinder::setWindow(MainWindow *w)
  */
 void DeviceFinder::setESPPos(QString devName, double xpos, double ypos)
 {
-    writeLog("#DeviceFinder");
+    writeLog("#DeviceFinder", QtInfoMsg);
     writeLog("Set " + devName + " pos: ("
              + QString::number(xpos) +  ","
-             + QString::number(ypos) + ")");
+             + QString::number(ypos) + ")", QtInfoMsg);
     esp.find(devName).value().setPos(xpos, ypos);
 }
 
