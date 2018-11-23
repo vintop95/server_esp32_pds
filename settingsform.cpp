@@ -7,6 +7,7 @@
  */
 #include "settingsform.h"
 #include "ui_settingsform.h"
+#include <QProcess>
 
 /**
  * @brief Constructor of SettingsForm
@@ -116,7 +117,11 @@ void SettingsForm::on_buttonBox_clicked(QAbstractButton *button)
         // Not added yet
     }else if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::Save) ){
         saveValues();
-        QMessageBox::warning(this,"Apply changes","Restart the application to apply changes.");
+        QMessageBox::warning(this,"Apply changes","Application will be restarted.");
+        //this two instructions will restart the application "like a charm"
+        qApp->quit();
+        QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+
     }else if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::Cancel) ){
         this->close();
     }
