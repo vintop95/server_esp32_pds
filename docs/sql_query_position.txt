@@ -1,3 +1,5 @@
+SCHEMA:
+"CREATE TABLE location("mac_device text primary key", "timestamp integer primary key", "X double", "Y double")"
 "CREATE TABLE packet("
  "id integer primary key,"
  "sender_mac text,"
@@ -5,6 +7,8 @@
  "rssi integer,"
  "hashed_pkt text,"
  "ssid text,"
+ "seq_num integer",
+ "hidden_mac boolean",
  "espName text)"
 
 SELECT 		sender_mac, espName, AVG(rssi)
@@ -26,3 +30,6 @@ AND timestamp > -5 + (
 			FROM 		packet P2
 			WHERE		P2.sender_mac = P.sender_mac
 				AND		P2.espName = P.espName)
+				
+				
+
