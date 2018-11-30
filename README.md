@@ -45,7 +45,7 @@ Inoltre usa ```DbManager``` per salvare i dati in modo persistente
 ```Server```  
 Resta in ascolto dei client in ingresso e richiama ```ClientHandler``` per la gestione dei client appena connessi
 
-```Record```  
+```datastructures.h```  
 Contiene le strutture dati per gestire i pacchetti e i dispositivi  
 
  -------

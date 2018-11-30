@@ -25,10 +25,10 @@ private:
 
 public:
     DbManager(const QString& path);
-    bool saveCsv(Record& record, const QString& path = "output.txt");
+    bool saveCsv(Packet& packet, const QString& path = "output.txt");
     void setPath(QString p);
-    bool addPacket(Record r);
-    bool addPackets(QVector<Record> recordVector);
+    bool addPacket(Packet r);
+    bool addPackets(QVector<Packet> packets);
     bool calculateAvgRssi();
 };
 

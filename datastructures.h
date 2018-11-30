@@ -5,22 +5,22 @@
  * Giorgio Pizzuto
  * Vincenzo Topazio
  */
-#ifndef RECORD_H
-#define RECORD_H
+#ifndef PACKET_H
+#define PACKET_H
 
 #include <QObject>
 #include <QPointF>
 
 /**
- * Record received from the ESP32 devices
+ * Packet received from the ESP32 devices
  * rssi: -35 MOLTO VICINO, -100 MOLTO LONTANO
  *
  * @todo: change operator==
  */
-class Record{
+class Packet{
 public:
-    Record() {}
-    Record(QString pkt, QString mac):
+    Packet() {}
+    Packet(QString pkt, QString mac):
         sender_mac(mac), hashed_pkt(pkt) {}
     QString sender_mac;
     quint32 timestamp;
@@ -47,7 +47,7 @@ public:
     }
 
     // TODO: check if is OK
-    bool operator==(const Record& r2) const
+    bool operator==(const Packet& r2) const
     {
         return
         (sender_mac == r2.sender_mac) &&

@@ -29,7 +29,7 @@ private:
    int timeoutPeriod = 30000;
 
    void setSocketDescriptor(qintptr socketDescriptor);
-   void pushRecordsToDeviceFinder();
+   void pushPacketsToDeviceFinder();
 
 signals:
    void error(QTcpSocket::SocketError socketerror);

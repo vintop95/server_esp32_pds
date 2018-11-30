@@ -12,7 +12,7 @@
 #include "dbmanager.h"
 
 /**
- * It detects the devices by processing Records received from the ClientHandler
+ * It detects the devices by processing packets received from the ClientHandler
  * Implement run() method in order to run this on a new thread
  */
 class DeviceFinder : public QThread
@@ -21,9 +21,9 @@ private:
     static DeviceFinder* instance;
     MainWindow* pWin;
     DbManager db;
-    QVector<Record> records = QVector<Record>();
     //a vector that holds true in position i if ESP32#i already connected to server during the listening window
     QMap<QString, bool> espInteracted;
+    QVector<Packet> packets;
     QMap<QString, ESP32> esp32s;
     QHash<QString, Device> devices;
 
@@ -36,14 +36,17 @@ private:
     void init(QString dbPath="server_esp32_pds.sqlite3");
 
     void setInteractionWithEsp(QString espName);
-    void processLocationsFromPackets();
+
     void resetInteractionsWithEsp();
 
     void pushDevice(Device d);    
 
-    QPointF calculatePosition(Record r);
+    QPointF calculatePosition(Packet r);
     static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3);
     static std::pair<QPointF, QPointF> bilateration(QPointF p1, QPointF p2, double r1, double r2);
+
+public slots:
+    void processLocationsFromPackets();
 
 public:
     bool canStartPacketProcessing();
@@ -55,8 +58,8 @@ public:
 
     void addEsp(QString espName, double xpos, double ypos);
 
-    void pushRecord(Record r);
-    void insertPacketsIntoDB();
+    void pushPacket(Packet r);
+    void insertPacketsIntoDB(QString espName);
 
     static double calculateDistance(int rssi);
 

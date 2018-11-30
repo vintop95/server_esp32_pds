@@ -73,7 +73,7 @@ void ClientHandler::handle()
 
 /**
  * @brief Callback called when the server received data from client
- * This function works together with 'Sender::sendRecordsToServer()' function
+ * This function works together with 'Sender::sendPacketsToServer()' function
  * in the client
  *
  * @todo: add catch for runtime exceptions (like the socket already closed)
@@ -92,7 +92,7 @@ void ClientHandler::readyRead()
         writeLog("INITIAL STATE OF DATA VARIABLE: " + dataReceived);
         dataReceived += socket->readAll();
         writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + dataReceived);
-        this->pushRecordsToDeviceFinder();//save the records
+        this->pushPacketsToDeviceFinder();//save the packets
         return;
     }
 
@@ -140,7 +140,7 @@ void ClientHandler::readyRead()
         socket->skip(strlen("DATA "));
 
         dataReceived = socket->readAll();
-        this->pushRecordsToDeviceFinder();
+        this->pushPacketsToDeviceFinder();
 
     }
     else if(dataReceived.startsWith("END")){
@@ -201,7 +201,7 @@ void ClientHandler::disconnected()
     //exit(0);
 }
 
-void ClientHandler::pushRecordsToDeviceFinder()
+void ClientHandler::pushPacketsToDeviceFinder()
 {
     writeLog("#ClientHandler");
     dataReceived = dataReceived.replace('\0', '\n');
@@ -210,31 +210,30 @@ void ClientHandler::pushRecordsToDeviceFinder()
     QJsonDocument jDoc = QJsonDocument::fromJson(dataReceived);
     if(!jDoc.isNull() && jDoc.isArray()){
         // IF WE RECEIVED ALL THE JSON ARRAY
-        writeLog(QString::number(socketDescriptor) + " - RECORDS RECEIVED", QtInfoMsg);
+        writeLog(QString::number(socketDescriptor) + " - PACKETS RECEIVED", QtInfoMsg);
 
-        QJsonArray records = jDoc.array();
+        QJsonArray packets = jDoc.array();
 
-        for(auto recRcvd : records){
-            QJsonObject obj = recRcvd.toObject();
-            Record r;
+        for(auto pktRcvd : packets){
+            QJsonObject obj = pktRcvd.toObject();
+            Packet r;
             r.sender_mac = obj["sender_mac"].toString();
             r.timestamp = static_cast<quint32>(obj["timestamp"].toInt());
             r.rssi = static_cast<qint8>(obj["rssi"].toInt());
             r.hashed_pkt = obj["hashed_pkt"].toString();
             r.ssid = obj["ssid"].toString();
             r.espName = this->espName;
-            deviceFinder->pushRecord(r);
+            deviceFinder->pushPacket(r);
         }
-        //TODO: aggiungere metodo di device finder che aggiunga i record accumulati nel database
-        deviceFinder->insertPacketsIntoDB();
-        deviceFinder->setInteractionWithEsp(espName);
+        //TODO: aggiungere metodo di device finder che aggiunga i packets accumulati nel database
+        deviceFinder->insertPacketsIntoDB(espName);
         socket->write("OK\r\n");
         dataReceived.clear();
         if(deviceFinder->canStartPacketProcessing()){
             emit contactedByAllESPs();//emit a signal in order to invoke processData()
         }
     }else{
-        writeLog(QString::number(socketDescriptor) + " - ERROR GETTING RECORD, it may arrive later the rest", QtWarningMsg);
+        writeLog(QString::number(socketDescriptor) + " - ERROR GETTING PACKET, it may arrive later the rest", QtWarningMsg);
         //socket->write("ERR\r\n");
     }
     socket->flush();

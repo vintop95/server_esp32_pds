@@ -86,8 +86,6 @@ void DeviceFinder::resetInteractionsWithEsp()
 }
 
 
-
-
 /**
  * @brief Set the position of the devName esp
  *
@@ -106,40 +104,41 @@ void DeviceFinder::addEsp(QString espName, double xpos, double ypos)
 }
 
 /**
- * @brief Pushes the record received from ClientHandler in a list
+ * @brief Pushes the packets received from ClientHandler in a list
  * and checks if the packets with the same HASH are received from
  * all the esp32 clients, if yes add the device detected to a list
  *
- * @param Record to push
+ * @param Packet to push
  *
  * @todo IPOTESI: un dispositivo non invia due volte
  * lo stesso pacchetto (secondo la definzione di operator==)
  * correggere eventualmente
  */
-void DeviceFinder::pushRecord(Record r)
+void DeviceFinder::pushPacket(Packet r)
 {
     writeLog("#DeviceFinder");
     writeLog("Received pkt\n" + r.toString());
     db.saveCsv(r);
-    records.push_back(r);
+    packets.push_back(r);
     //TODO: RIPULIRE DAI COMMENTI
     // IPOTESI: un dispositivo non invia due volte
     // lo stesso pacchetto (secondo la definzione di operator==)
 
-    // records.count(r) checks how many records are there in the list
-    // that satisfies the operator== definition of Record
+    // packets.count(r) checks how many packets are there in the list
+    // that satisfies the operator== definition of Packet
 
         //QPointF p = calculatePosition(r);
     //pushDevice(Device(r.sender_mac, p));
 }
 
-void DeviceFinder::insertPacketsIntoDB()
+void DeviceFinder::insertPacketsIntoDB(QString espName)
 {
-    bool res = db.addPackets(records);
+    setInteractionWithEsp(espName);
+    bool res = db.addPackets(packets);
     if(res){//if insertion in database was succesfull we can clear the vector
-        records.clear();
+        packets.clear();
     }else{
-        writeLog("ERROR IN INSERTING " + QString::number(records.size()) + " RECORDS TO DATABASE. "
+        writeLog("ERROR IN INSERTING " + QString::number(packets.size()) + " PACKETS TO DATABASE. "
                  "We keep them for the next try.", QtWarningMsg);
     }
     //TODO:
@@ -154,15 +153,15 @@ bool DeviceFinder::canStartPacketProcessing()
     return true;
 }
 
-void DeviceFinder::setInteractionWithEsp(QString ESPid)
+void DeviceFinder::setInteractionWithEsp(QString espName)
 {
-    espInteracted[ESPid] = true;
+    espInteracted[espName] = true;
 }
 
 void DeviceFinder::processLocationsFromPackets()
 {
     writeLog("LOCATIONS PROCESSING FUNCTION CALLED! WORK IN PROGRESS...", QtInfoMsg);
-    //TODO: leggi dalla tabella 'Records' i dati, aggregali e inseriscili nella tabella 'Location'.
+    //TODO: leggi dalla tabella 'Packets' i dati, aggregali e inseriscili nella tabella 'Location'.
     //Ricordati anche di aggiornare l'interfaccia grafica
     //altro giro altra corsa:
     resetInteractionsWithEsp();
@@ -176,14 +175,14 @@ void DeviceFinder::processLocationsFromPackets()
  *
  * @param Device to add
  *
- * @todo save in record the actual position device
+ * @todo save in packet the actual position device
  */
 void DeviceFinder::pushDevice(Device d)
 {
     writeLog("#DeviceFinder");
     writeLog("Added/updated device " + d.sender_mac);
 
-    // TODO: save in record the actual position device
+    // TODO: save in packet the actual position device
 
     // devices.insert
     // If there is already an item with the key, that
@@ -261,11 +260,11 @@ double DeviceFinder::calculateDistance(int rssi) {
 }
 
 /**
- * @brief Auxiliary struct, for sorting Records by their rssi
+ * @brief Auxiliary struct, for sorting packets by their rssi
  */
 struct sort_rssi_desc
 {
-    inline bool operator() (const Record& r1, const Record& r2)
+    inline bool operator() (const Packet& r1, const Packet& r2)
     {
         //writeLog(QString::number(r1.rssi) + ">" + QString::number(r2.rssi) + "?");
         return ( r1.rssi > r2.rssi );
@@ -274,13 +273,13 @@ struct sort_rssi_desc
 
 /**
  * @brief It calculates the position of the device identified by the
- * sender_mac in the Record
+ * sender_mac in the Packet
  *
  * https://trello.com/c/X2EOGoxG
  * HOW IT SHOULD WORK WITH SQL:
  * SQL Query returns (sender_mac, espName, avgRssi)
  * for all sender_mac
- *  we take the records that has the same sender_mac (and hashed_pkt)
+ *  we take the packets that has the same sender_mac (and hashed_pkt)
  *  and we calculate the position with avgRssi
  * we push all the devices with their position in the 'device' table
  * (or in a QVector<Device>)
@@ -288,40 +287,40 @@ struct sort_rssi_desc
  *  last_ts = the timestamp of the last time we calculated the positions
  *  of devices
  *
- * @param Record containing the device
+ * @param Packet containing the device
  * it's the last received for calculation purposes from the last board
  *
  * @return Position in space of the device detected
  *
  * @todo completare
  */
-QPointF DeviceFinder::calculatePosition(Record lastRecord)
+QPointF DeviceFinder::calculatePosition(Packet lastPacket)
 {
     //TODO: completare
     writeLog("#DeviceFinder");
 
-    QVector<Record> recordsOrdered;
-    for(Record genericRecord : records){
-        auto it = esp32s.find(genericRecord.espName);
+    QVector<Packet> packetsOrdered;
+    for(Packet genericPacket : packets){
+        auto it = esp32s.find(genericPacket.espName);
         bool exists = (it != esp32s.end());
-        if(exists && genericRecord == lastRecord){
-            recordsOrdered.push_back(genericRecord);
+        if(exists && genericPacket == lastPacket){
+            packetsOrdered.push_back(genericPacket);
         }
     }
 
-    // take the 3 records with the most powerful rssi
-    std::sort(recordsOrdered.begin(), recordsOrdered.end(), sort_rssi_desc());
+    // take the 3 packets with the most powerful rssi
+    std::sort(packetsOrdered.begin(), packetsOrdered.end(), sort_rssi_desc());
 
     QList<ESP32> espChosen;
-    writeLog("PRINTING RECORDS ORDERED FOR RSSI");
-    for(Record recordOrdered : recordsOrdered){
-        writeLog(recordOrdered.toString());
+    writeLog("PRINTING PACKETS ORDERED FOR RSSI");
+    for(Packet packetOrdered : packetsOrdered){
+        writeLog(packetOrdered.toString());
 
         ESP32 espToPush("");
-        auto it = esp32s.find(recordOrdered.espName);
+        auto it = esp32s.find(packetOrdered.espName);
         bool exists = (it != esp32s.end());
         if(exists){
-            espToPush = esp32s.value(recordOrdered.espName, ESP32(""));
+            espToPush = esp32s.value(packetOrdered.espName, ESP32(""));
             espChosen.push_back(espToPush);
         }
     }
@@ -343,18 +342,18 @@ QPointF DeviceFinder::calculatePosition(Record lastRecord)
         // TODO: how to return two points?
         std::pair<QPointF,QPointF> pair = bilateration(
                 espChosen[0].getPos(), espChosen[1].getPos(),
-                calculateDistance(recordsOrdered[0].rssi),
-                calculateDistance(recordsOrdered[1].rssi));
+                calculateDistance(packetsOrdered[0].rssi),
+                calculateDistance(packetsOrdered[1].rssi));
         pos = pair.first;
     }else{
         pos = trilateration(espChosen[0].getPos(), espChosen[1].getPos(), espChosen[2].getPos(),
-                        calculateDistance(recordsOrdered[0].rssi),
-                        calculateDistance(recordsOrdered[1].rssi),
-                        calculateDistance(recordsOrdered[2].rssi));
+                        calculateDistance(packetsOrdered[0].rssi),
+                        calculateDistance(packetsOrdered[1].rssi),
+                        calculateDistance(packetsOrdered[2].rssi));
     }
 
-    // delete the existing record used for find the position
-    records.removeAll(lastRecord);
+    // delete the existing packet used for find the position
+    packets.removeAll(lastPacket);
 
     last_ts = QDateTime::currentDateTime().toTime_t();
 
@@ -469,7 +468,7 @@ std::pair<QPointF, QPointF> DeviceFinder::bilateration(QPointF p1, QPointF p2, d
  */
 void DeviceFinder::test()
 {
-    Record r;
+    Packet r;
 
     for(int i=0; i<5; ++i){
         if(i==0){
@@ -481,7 +480,7 @@ void DeviceFinder::test()
         r.sender_mac = "TEST";
         r.timestamp = 10;
         r.hashed_pkt = "123456";
-        pushRecord(r);
+        pushPacket(r);
         logCurrentDevices();
     }
 }

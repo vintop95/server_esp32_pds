@@ -29,7 +29,6 @@ SOURCES += \
         mainwindow.cpp \
     logger.cpp \
     dbmanager.cpp \
-    record.cpp \
     settings.cpp \
     settingsform.cpp \
     espwidget.cpp \
@@ -44,7 +43,6 @@ HEADERS += \
         mainwindow.h \
     logger.h \
     dbmanager.h \
-    record.h \
     settings.h \
     settingsform.h \
     espwidget.h \
@@ -52,7 +50,8 @@ HEADERS += \
     server.h \
     clienthandler.h \
     chart.h \
-    qcustomplot.h
+    qcustomplot.h \
+    datastructures.h
 
 FORMS += \
         mainwindow.ui \

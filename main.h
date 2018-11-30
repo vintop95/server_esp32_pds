@@ -40,7 +40,7 @@
 #include "mainwindow.h"
 #include "logger.h"
 #include "settings.h"
-#include "record.h"
+#include "datastructures.h"
 
 using namespace std;
 

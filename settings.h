@@ -8,7 +8,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "record.h"
+#include "datastructures.h"
 
 #include <QObject>
 #include <QSettings>

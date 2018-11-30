@@ -36,8 +36,8 @@ DbManager::DbManager(const QString& path)
        // it must contain all the attributes
        // defined: the number of columns of the two
        // version of packet must be equal
-       QSqlRecord record = db.driver()->record("packet");
-       if (record.count() != nOfCols){
+       QSqlRecord cols = db.driver()->record("packet");
+       if (cols.count() != nOfCols){
             createTables();
        };
    }
@@ -97,10 +97,8 @@ bool DbManager::createTables()
 
 /**
  * @brief Add a packet in the db
- * ATTENTION TO ALL 9 Y.O. GAMERS
- * Record and Packet are synonymous
  */
-bool DbManager::addPacket(Record r)
+bool DbManager::addPacket(Packet r)
 {
     writeLog("#DbManager");
     QSqlQuery query;
@@ -131,7 +129,7 @@ bool DbManager::addPacket(Record r)
     return res;
 }
 
-bool DbManager::addPackets(QVector<Record> recordVector)
+bool DbManager::addPackets(QVector<Packet> packets)
 {
     writeLog("#DbManager");
     QSqlQuery query;
@@ -142,22 +140,22 @@ bool DbManager::addPackets(QVector<Record> recordVector)
     //writeLog("POS: " + QString::number(query.at()) );
     //writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
     id = query.value(0).toInt();
-    //Load all records using a single query
+    //Load all packets using a single query
     QString queryString;
-    for(auto record:recordVector){
+    for(auto packet: packets){
         queryString += "INSERT INTO packet"
                        "(id,sender_mac,timestamp,rssi,hashed_pkt,ssid,espName) "
                        "VALUES ("+ QString::number(id++) + ","
-                                 + record.sender_mac + ","
-                                 + QString::number(record.timestamp) + ","
-                                 + record.rssi +","
-                                 + record.hashed_pkt +","
-                                 + record.ssid +","
-                                 + record.espName + ");";
+                                 + packet.sender_mac + ","
+                                 + QString::number(packet.timestamp) + ","
+                                 + packet.rssi +","
+                                 + packet.hashed_pkt +","
+                                 + packet.ssid +","
+                                 + packet.espName + ");";
     }
     query.prepare(queryString);
     res = query.exec();
-    writeLog(QString::number(recordVector.size()) + " packets inserted: " + QString(res ? "yes" : "no") );
+    writeLog(QString::number(packets.size()) + " packets inserted: " + QString(res ? "yes" : "no") );
 
     return res;
 }
@@ -200,7 +198,7 @@ void DbManager::test()
     QSqlQuery query;
     bool res;
 
-    Record r;
+    Packet r;
     r.sender_mac="HEYNIGGAITSME";
     r.timestamp=123456789;
     r.rssi = -50;
@@ -222,7 +220,7 @@ void DbManager::test()
     }
 }
 
-bool DbManager::saveCsv(Record &r, const QString& path)
+bool DbManager::saveCsv(Packet &r, const QString& path)
 {
     QFile file(path);
 

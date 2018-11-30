@@ -98,7 +98,7 @@
                          </base-DElement>
                          <object>{811278fc-fd85-4ccf-a111-92e1e6ad271f}</object>
                          <name>Logger</name>
-                         <pos>x:210;y:335</pos>
+                         <pos>x:290;y:345</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>6</visual-role>
                         </DObject>
@@ -136,7 +136,7 @@
                          </base-DElement>
                          <object>{0584c37b-06f0-4fac-9194-9dbd3d4bce01}</object>
                          <name>DbManager</name>
-                         <pos>x:155;y:695</pos>
+                         <pos>x:165;y:680</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>5</visual-role>
                          <stereotype-display>3</stereotype-display>
@@ -319,7 +319,7 @@
                          </base-DElement>
                          <object>{6dbfce82-4c56-454e-a63b-f433b4aa0723}</object>
                          <name>Settings</name>
-                         <pos>x:530;y:310</pos>
+                         <pos>x:525;y:330</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>5</visual-role>
                         </DObject>
@@ -361,7 +361,7 @@
                           </DElement>
                          </base-DElement>
                          <object>{3c71834d-0b52-47f1-9d4e-861d2baab746}</object>
-                         <name>Record</name>
+                         <name>datastructures.h</name>
                          <pos>x:585;y:470</pos>
                          <rect>x:-60;y:-60;w:120;h:120</rect>
                          <visual-role>0</visual-role>
@@ -402,7 +402,7 @@
                          </base-DElement>
                          <object>{631b9434-1e39-41fa-8456-a2d4cce62e5f}</object>
                          <name>DeviceFinder</name>
-                         <pos>x:295;y:695</pos>
+                         <pos>x:295;y:675</pos>
                          <rect>x:-40;y:-55;w:80;h:110</rect>
                          <visual-role>7</visual-role>
                         </DObject>
@@ -452,7 +452,7 @@
                          </base-DElement>
                          <object>{e64a0ce6-28bc-44fc-9c0a-c67a332d5255}</object>
                          <name>ClientHandler</name>
-                         <pos>x:445;y:695</pos>
+                         <pos>x:455;y:680</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>8</visual-role>
                         </DObject>
@@ -490,7 +490,7 @@
                          </base-DElement>
                          <object>{1b9efb0d-0b6f-4afe-9e69-ad563f0a3545}</object>
                          <name>Server</name>
-                         <pos>x:585;y:695</pos>
+                         <pos>x:590;y:680</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>9</visual-role>
                         </DObject>
@@ -573,7 +573,7 @@
                        </base-DElement>
                        <text>----&gt; MEANS THAT I NEED TO USE THE CLASS
 POINTED BY THE ARROW</text>
-                       <pos>x:25;y:765</pos>
+                       <pos>x:105;y:755</pos>
                        <rect>x:0;y:0;w:237;h:42</rect>
                       </DAnnotation>
                      </instance>
@@ -607,8 +607,8 @@ POINTED BY THE ARROW</text>
                           </DElement>
                          </base-DElement>
                          <object>{476f98ac-22ed-4edb-8ecb-17c7fc94244d}</object>
-                         <name>CLIENT BOARD</name>
-                         <pos>x:510;y:835</pos>
+                         <name>CLIENT ESP32</name>
+                         <pos>x:520;y:810</pos>
                          <rect>x:-45;y:-15;w:90;h:30</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -799,9 +799,23 @@ POINTED BY THE ARROW</text>
                       </DDependency>
                      </instance>
                     </item>
+                    <item>
+                     <instance type="DBoundary">
+                      <DBoundary>
+                       <base-DElement>
+                        <DElement>
+                         <uid>{907c396d-f5ec-4a92-b6f2-0048c1cdd079}</uid>
+                        </DElement>
+                       </base-DElement>
+                       <text>PROCESSING THREAD</text>
+                       <pos>x:380;y:715</pos>
+                       <rect>x:-300;y:-125;w:600;h:250</rect>
+                      </DBoundary>
+                     </instance>
+                    </item>
                    </qlist>
                   </elements>
-                  <last-modified>1543613010683</last-modified>
+                  <last-modified>1543615660254</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -1357,42 +1371,42 @@ POINTED BY THE ARROW</text>
                     <uid>{3c71834d-0b52-47f1-9d4e-861d2baab746}</uid>
                    </MElement>
                   </base-MElement>
-                  <name>Record</name>
+                  <name>datastructures.h</name>
                  </MObject>
                 </base-MObject>
                 <members>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{813a58dc-eb45-4f30-a45c-d2b13e930ec3}</uid>
+                    <uid>{787ef3c8-a298-4ce5-847e-570b041abd91}</uid>
                     <type>1</type>
                     <declaration>#include &lt;QObject&gt;</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{e4349aef-fab0-4846-bdd2-b9d630daf755}</uid>
+                    <uid>{fd8529e4-f33e-4e89-83c4-682581fbf9a6}</uid>
                     <type>1</type>
                     <declaration>#include &lt;QPointF&gt;</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{c063a47a-4e89-4983-affd-252de792b08d}</uid>
+                    <uid>{a9d89fc8-9f48-49e8-8402-1508358cd3b2}</uid>
                     <type>1</type>
-                    <declaration>class Record</declaration>
+                    <declaration>class Packet</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{4f09e10f-5439-49da-bcd5-a008a0074b7a}</uid>
+                    <uid>{fcbfd37a-d1cd-45e0-b23c-ca95c9cf04bb}</uid>
                     <type>1</type>
                     <declaration>class Device</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{6f04dba6-9be8-4cf0-8e4a-d80e45723038}</uid>
+                    <uid>{02714f66-7c77-47ce-81d8-3d132c33a8eb}</uid>
                     <type>1</type>
                     <declaration>class ESP32</declaration>
                    </MClassMember>
@@ -1487,28 +1501,28 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{2f75997b-9e51-4bfb-b12c-884066acb701}</uid>
+                    <uid>{de5f024f-775a-4b11-96ea-7bdc15832d3c}</uid>
                     <type>1</type>
                     <declaration>setInit</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{6dc937b2-b14a-470a-92de-a529c0c3f644}</uid>
+                    <uid>{70868978-0857-4832-8330-6949893d8a73}</uid>
                     <type>1</type>
                     <declaration>setEspPos</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{e82c7ff8-d42d-4fe4-90d7-e012e9ca2f7e}</uid>
+                    <uid>{84300e2c-b494-495d-9dd8-8a33298f2ce1}</uid>
                     <type>1</type>
                     <declaration>pushRecord</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{03479988-a66c-4603-85ab-373af492c044}</uid>
+                    <uid>{91706a19-863f-4f0b-8c09-0299f9162f5c}</uid>
                     <type>1</type>
                     <declaration>add</declaration>
                    </MClassMember>
@@ -1720,7 +1734,7 @@ POINTED BY THE ARROW</text>
                     <uid>{476f98ac-22ed-4edb-8ecb-17c7fc94244d}</uid>
                    </MElement>
                   </base-MElement>
-                  <name>CLIENT BOARD</name>
+                  <name>CLIENT ESP32</name>
                   <relations>
                    <handles>
                     <handles>
