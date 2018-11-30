@@ -14,21 +14,28 @@
 #include <QString>
 
 namespace Ui {
-class ESPWidget;
+class EspWidget;
 }
 
 /**
  * This is the Graphical Row containing the informations
  * about a ESP32 device
  */
-class ESPWidget : public QWidget
+class EspWidget : public QWidget
 {
     Q_OBJECT
+
 private:
+    Ui::EspWidget *ui;
     bool modified = false;
+
+private slots:
+    void on_txtX_textEdited(const QString &arg1);
+    void on_txtY_textEdited(const QString &arg1);
+
 public:
-    explicit ESPWidget(QWidget *parent = nullptr);
-    ~ESPWidget();
+    explicit EspWidget(QWidget *parent = nullptr);
+    ~EspWidget();
 
     void setName(QString name);
     void setPoint(double x, double y);
@@ -37,13 +44,6 @@ public:
     QString getName();
     float getX();
     float getY();
-
-private slots:
-    void on_txtX_textEdited(const QString &arg1);
-    void on_txtY_textEdited(const QString &arg1);
-
-private:
-    Ui::ESPWidget *ui;
 };
 
 #endif // ESPWIDGET_H

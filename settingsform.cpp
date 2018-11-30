@@ -69,8 +69,8 @@ void SettingsForm::saveValues()
 
     for(int i=0; i < ESP32No; ++i){
         QString name = QString("ESP%1").arg(i);
-        double x = static_cast<double>(static_cast<ESPWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getX());
-        double y = static_cast<double>(static_cast<ESPWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY());
+        double x = static_cast<double>(static_cast<EspWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getX());
+        double y = static_cast<double>(static_cast<EspWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY());
 
         qs.setValue(QString(name + "/name"), name);
         qs.setValue(QString(name + "/pos_x"), QString::number(x,'f'));
@@ -90,7 +90,7 @@ void SettingsForm::saveValues()
 void SettingsForm::addESPWidget(QString name, double x, double y, bool modified)
 {
     //Creating an object of the designed widget which is to be added to the listwidget
-    ESPWidget *espWidget = new ESPWidget(this);
+    EspWidget *espWidget = new EspWidget(this);
     espWidget->setName(name);
     espWidget->setPoint(x,y);
     espWidget->setModified(modified);

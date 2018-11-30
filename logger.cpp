@@ -14,7 +14,8 @@ Logger* Logger::instance;
  */
 Logger::Logger( QObject* parent): QObject(parent){
     pWin = MainWindow::getInstance();
-    connect(this,&Logger::writeLogInMainWindow,pWin,&MainWindow::writeLog);
+    connect(this, &Logger::writeLogInMainWindow,
+            pWin, &MainWindow::writeLogInUi);
 }
 
 Logger *Logger::getInstance()

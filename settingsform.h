@@ -27,21 +27,21 @@ class SettingsForm : public QDialog
 {
     Q_OBJECT
 
-public:
-    explicit SettingsForm(QString path, QWidget *parent = nullptr);
-    ~SettingsForm();
-
-private slots:
-    void on_buttonBox_clicked(QAbstractButton *button);
-    void on_btnDecreaseESP_clicked();
-    void on_btnIncreaseESP_clicked();
-
 private:
     void addESPWidget(QString name, double x, double y, bool modified = true);
     void loadValues();
     void saveValues();
     Ui::SettingsForm *ui;
     QString settingsPath;
+
+private slots:
+    void on_buttonBox_clicked(QAbstractButton *button);
+    void on_btnDecreaseESP_clicked();
+    void on_btnIncreaseESP_clicked();
+
+public:
+    explicit SettingsForm(QString path, QWidget *parent = nullptr);
+    ~SettingsForm();
 };
 
 #endif // SETTINGSFORM_H

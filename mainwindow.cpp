@@ -71,7 +71,7 @@ MainWindow::~MainWindow()
  * @param text to write
  * @param color of the text
  */
-void MainWindow::writeLog(const QString &text, const QColor& color)
+void MainWindow::writeLogInUi(const QString &text, const QColor& color)
 {
     ui->txtLog->setTextColor( color );
     ui->txtLog->append(text);
@@ -243,7 +243,7 @@ void MainWindow::on_actionDebug_triggered()
             double x,y;
             x = bx_x->value();
             y = bx_y->value();
-            writeLog("Added device at (" +
+            writeLogInUi("Added device at (" +
                      QString::number(x) + ", " +
                      QString::number(y) + ")");
             addPoint(x,y);
@@ -254,7 +254,7 @@ void MainWindow::on_actionDebug_triggered()
             double x,y;
             x = bx_x->value();
             y = bx_y->value();
-            writeLog("Removed device at (" +
+            writeLogInUi("Removed device at (" +
                  QString::number(x) + ", " +
                  QString::number(y) + ")");
             removePoint(x,y);
@@ -265,7 +265,7 @@ void MainWindow::on_actionDebug_triggered()
             double x,y;
             x = bx_x->value();
             y = bx_y->value();
-            writeLog("Added ESP Board at (" +
+            writeLogInUi("Added ESP Board at (" +
                  QString::number(x) + ", " +
                  QString::number(y) + ")");
             addBoard(x,y);
@@ -275,14 +275,14 @@ void MainWindow::on_actionDebug_triggered()
             double x,y;
             x = bx_x->value();
             y = bx_y->value();
-            writeLog("Removed ESP Board at (" +
+            writeLogInUi("Removed ESP Board at (" +
                  QString::number(x) + ", " +
                  QString::number(y) + ")");
             removeBoard(x,y);
         });
     connect(clear, &QPushButton::clicked,
         [=](){
-            writeLog("Plot cleared.");
+            writeLogInUi("Plot cleared.");
             clearData();
         });
 

@@ -49,7 +49,7 @@
                          </base-DElement>
                          <object>{c9e7eb55-68e9-4103-8097-97c75298be30}</object>
                          <name>main.h</name>
-                         <pos>x:390;y:475</pos>
+                         <pos>x:370;y:530</pos>
                          <rect>x:-70;y:-40;w:140;h:80</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>6</visual-role>
@@ -72,8 +72,8 @@
                          </base-DElement>
                          <object>{2522ccf8-fbe8-4f78-8d95-02eb891f5ef5}</object>
                          <name>MainWindow</name>
-                         <pos>x:390;y:195</pos>
-                         <rect>x:-75;y:-30;w:150;h:60</rect>
+                         <pos>x:360;y:200</pos>
+                         <rect>x:-75;y:-85;w:150;h:170</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>8</visual-role>
                         </DObject>
@@ -83,6 +83,7 @@
                          <item>QMainWindow</item>
                         </qlist>
                        </template>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -98,7 +99,7 @@
                          </base-DElement>
                          <object>{811278fc-fd85-4ccf-a111-92e1e6ad271f}</object>
                          <name>Logger</name>
-                         <pos>x:230;y:345</pos>
+                         <pos>x:210;y:400</pos>
                          <rect>x:-40;y:-40;w:80;h:80</rect>
                          <visual-role>6</visual-role>
                         </DObject>
@@ -137,7 +138,7 @@
                          </base-DElement>
                          <object>{0584c37b-06f0-4fac-9194-9dbd3d4bce01}</object>
                          <name>DbManager</name>
-                         <pos>x:120;y:700</pos>
+                         <pos>x:125;y:755</pos>
                          <rect>x:-70;y:-55;w:140;h:110</rect>
                          <visual-role>5</visual-role>
                          <stereotype-display>3</stereotype-display>
@@ -206,11 +207,12 @@
                          </base-DElement>
                          <object>{9df8309b-154a-454e-a7e0-1a613ea7c3bc}</object>
                          <name>Chart</name>
-                         <pos>x:205;y:120</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <pos>x:175;y:140</pos>
+                         <rect>x:-75;y:-40;w:150;h:80</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -244,11 +246,12 @@
                          </base-DElement>
                          <object>{2e566075-2371-4803-99da-478f21086398}</object>
                          <name>SettingsForm</name>
-                         <pos>x:560;y:110</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <pos>x:535;y:140</pos>
+                         <rect>x:-60;y:-35;w:120;h:70</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -282,11 +285,12 @@
                          </base-DElement>
                          <object>{8d37785e-93d6-4ab5-be13-3a3f8cedba42}</object>
                          <name>ESPWidget</name>
-                         <pos>x:680;y:120</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <pos>x:685;y:155</pos>
+                         <rect>x:-65;y:-50;w:130;h:100</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -320,7 +324,7 @@
                          </base-DElement>
                          <object>{6dbfce82-4c56-454e-a63b-f433b4aa0723}</object>
                          <name>Settings</name>
-                         <pos>x:525;y:330</pos>
+                         <pos>x:540;y:400</pos>
                          <rect>x:-65;y:-60;w:130;h:120</rect>
                          <visual-role>5</visual-role>
                         </DObject>
@@ -364,7 +368,7 @@
                          </base-DElement>
                          <object>{3c71834d-0b52-47f1-9d4e-861d2baab746}</object>
                          <name>datastructures.h</name>
-                         <pos>x:585;y:470</pos>
+                         <pos>x:565;y:535</pos>
                          <rect>x:-50;y:-50;w:100;h:100</rect>
                          <visual-role>0</visual-role>
                          <visual-role2>1</visual-role2>
@@ -404,7 +408,7 @@
                          </base-DElement>
                          <object>{631b9434-1e39-41fa-8456-a2d4cce62e5f}</object>
                          <name>DeviceFinder</name>
-                         <pos>x:305;y:720</pos>
+                         <pos>x:310;y:775</pos>
                          <rect>x:-75;y:-105;w:150;h:210</rect>
                          <visual-role>7</visual-role>
                          <visual-role2>1</visual-role2>
@@ -455,7 +459,7 @@
                          </base-DElement>
                          <object>{e64a0ce6-28bc-44fc-9c0a-c67a332d5255}</object>
                          <name>ClientHandler</name>
-                         <pos>x:480;y:710</pos>
+                         <pos>x:485;y:765</pos>
                          <rect>x:-65;y:-70;w:130;h:140</rect>
                          <visual-role>8</visual-role>
                         </DObject>
@@ -494,7 +498,7 @@
                          </base-DElement>
                          <object>{1b9efb0d-0b6f-4afe-9e69-ad563f0a3545}</object>
                          <name>Server</name>
-                         <pos>x:665;y:715</pos>
+                         <pos>x:670;y:770</pos>
                          <rect>x:-75;y:-60;w:150;h:120</rect>
                          <visual-role>9</visual-role>
                         </DObject>
@@ -578,7 +582,7 @@
                        </base-DElement>
                        <text>----&gt; MEANS THAT I NEED TO USE THE CLASS
 POINTED BY THE ARROW</text>
-                       <pos>x:60;y:830</pos>
+                       <pos>x:65;y:885</pos>
                        <rect>x:0;y:0;w:237;h:42</rect>
                       </DAnnotation>
                      </instance>
@@ -613,7 +617,7 @@ POINTED BY THE ARROW</text>
                          </base-DElement>
                          <object>{476f98ac-22ed-4edb-8ecb-17c7fc94244d}</object>
                          <name>CLIENT ESP32</name>
-                         <pos>x:580;y:850</pos>
+                         <pos>x:585;y:905</pos>
                          <rect>x:-45;y:-15;w:90;h:30</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
@@ -673,7 +677,7 @@ POINTED BY THE ARROW</text>
                          </base-DElement>
                          <object>{bd446bdf-8f57-45f0-92fa-be19d5881f45}</object>
                          <name>SERVER USER</name>
-                         <pos>x:390;y:55</pos>
+                         <pos>x:355;y:65</pos>
                          <rect>x:-45;y:-15;w:90;h:30</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -746,8 +750,8 @@ POINTED BY THE ARROW</text>
                        </base-DElement>
                        <text>GRAPHICAL UI THREAD
 </text>
-                       <pos>x:390;y:125</pos>
-                       <rect>x:-340;y:-120;w:680;h:240</rect>
+                       <pos>x:395;y:165</pos>
+                       <rect>x:-365;y:-140;w:730;h:280</rect>
                       </DBoundary>
                      </instance>
                     </item>
@@ -814,14 +818,14 @@ POINTED BY THE ARROW</text>
                         </DElement>
                        </base-DElement>
                        <text>PROCESSING THREAD</text>
-                       <pos>x:395;y:725</pos>
+                       <pos>x:400;y:780</pos>
                        <rect>x:-365;y:-160;w:730;h:320</rect>
                       </DBoundary>
                      </instance>
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1543619391628</last-modified>
+                  <last-modified>1543620867350</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -1075,6 +1079,66 @@ POINTED BY THE ARROW</text>
                   <item>QMainWindow</item>
                  </qlist>
                 </template>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{88eead6d-fb70-492b-880c-8f0915361015}</uid>
+                    <type>2</type>
+                    <declaration>-- LOGGER()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{f775d745-973d-45b4-ba7c-04b487cc8926}</uid>
+                    <type>2</type>
+                    <declaration>(s) writeLogInUi()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{5d80a99b-eb9e-4adf-a3b4-8a1d1830d2e7}</uid>
+                    <type>2</type>
+                    <declaration>-- EVERYONE()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{d757444d-b933-480b-b13d-8e7c669be360}</uid>
+                    <type>2</type>
+                    <declaration>+ getInstance()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{a408c75d-cb02-490f-a36d-d9229ca9584d}</uid>
+                    <type>2</type>
+                    <declaration>-- DEVICE_FINDER()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{49c82101-d4d6-4a9a-8c11-86536fb81d94}</uid>
+                    <type>2</type>
+                    <declaration>+ getChart()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{064f7012-6853-4912-84b5-98ab41e54236}</uid>
+                    <type>1</type>
+                    <declaration>+ add/remove</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{6c8b1e94-0e5b-488c-8ff6-27dc62da4a03}</uid>
+                    <type>1</type>
+                    <declaration>Device/ESP32</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1136,14 +1200,14 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{add4f120-8345-4097-98d1-31b64d7fe8c1}</uid>
+                    <uid>{7f120d98-a8f8-4de9-94c3-816800922696}</uid>
                     <type>2</type>
                     <declaration>+ writeLog()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{45e8a952-c19a-42e0-b96d-60a16bec5427}</uid>
+                    <uid>{77bf8f5b-4659-4d16-b864-034ecc2e1b40}</uid>
                     <type>2</type>
                     <declaration>+ saveCsv()</declaration>
                    </MClassMember>
@@ -1259,6 +1323,24 @@ POINTED BY THE ARROW</text>
                   <name>Chart</name>
                  </MObject>
                 </base-MObject>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{3217acc3-7fd4-46c4-a065-e2b219e0dedc}</uid>
+                    <type>2</type>
+                    <declaration>-- DEVICE_FINDER()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{492496c7-3dfd-4d66-85ae-29c8b123ed4d}</uid>
+                    <type>2</type>
+                    <declaration>(s) updateChart(#currDev)</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1332,6 +1414,17 @@ POINTED BY THE ARROW</text>
                   </relations>
                  </MObject>
                 </base-MObject>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{da820f8d-055e-4cc8-92a7-96f8ffd1edc0}</uid>
+                    <type>2</type>
+                    <declaration>+ SettingsForm(path)</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1353,6 +1446,31 @@ POINTED BY THE ARROW</text>
                   <name>ESPWidget</name>
                  </MObject>
                 </base-MObject>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{d9fba17a-4b8a-4957-8672-df2ae8ef631a}</uid>
+                    <type>2</type>
+                    <declaration>+ set/getName(name)</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{61b6ee5e-5d83-4fb8-a65b-cc91207196fb}</uid>
+                    <type>2</type>
+                    <declaration>+ set/getPoint(x,y)</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{5678f99c-455b-47b1-8dc1-82bd80042cfb}</uid>
+                    <type>2</type>
+                    <declaration>+ set/getModified(m)</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1413,28 +1531,28 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{5e6269d8-4e00-4d0d-ac69-4038ac304e16}</uid>
+                    <uid>{907f5a78-a9af-40fc-9ee7-1ff928287ece}</uid>
                     <type>1</type>
                     <declaration>+ espList</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{9b771073-0a03-4eef-8c6f-04efa4a1bb3f}</uid>
+                    <uid>{d8b2dd1e-7bd8-4787-b566-e0e7cc3f195b}</uid>
                     <type>2</type>
                     <declaration>-- MAIN.C ()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{a2156677-6d39-4b87-88db-a9e7b6e5e879}</uid>
+                    <uid>{2118f7bf-d448-4fd2-863d-4f05ad0e451a}</uid>
                     <type>2</type>
                     <declaration>+ getInstance()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{39497565-70cd-4ea7-9c5e-84e257aff589}</uid>
+                    <uid>{297eec6e-178e-4a8a-96e0-934c60e49b7f}</uid>
                     <type>2</type>
                     <declaration>+ loadSettings(espList)</declaration>
                    </MClassMember>
@@ -1466,21 +1584,21 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{1d3c0ce0-7cce-4617-b704-66e7318122c9}</uid>
+                    <uid>{fb94a1e3-e5ed-4359-a95f-02831efb1753}</uid>
                     <type>1</type>
                     <declaration>class Packet</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{0ba267d3-ebf7-49c8-8fe9-d4ed0e8e3a3c}</uid>
+                    <uid>{21b07ef4-9b39-4243-bcf3-d4890d29d6f3}</uid>
                     <type>1</type>
                     <declaration>class Device</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{a200cc41-0647-42c2-8055-8a930c615f3f}</uid>
+                    <uid>{dc6d952c-e2fe-4c3c-89fc-d2e9b32d008e}</uid>
                     <type>1</type>
                     <declaration>class ESP32</declaration>
                    </MClassMember>

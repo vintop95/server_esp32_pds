@@ -20,12 +20,6 @@ using namespace QtCharts;
 class Chart: public QChart
 {
     Q_OBJECT
-public:
-    Chart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = nullptr);
-    virtual ~Chart();
-
-public slots:
-    void updateChart(int countCurrDev);
 
 private:
     QSplineSeries *m_series;
@@ -34,6 +28,14 @@ private:
     qreal m_step;
     QDateTime m_x;
     int m_y;
+
+public slots:
+    // DEVICE_FINDER
+    void updateChart(int countCurrDev);
+
+public:
+    Chart(QGraphicsItem *parent = nullptr, Qt::WindowFlags wFlags = nullptr);
+    virtual ~Chart();
 };
 
 #endif // CHART_H

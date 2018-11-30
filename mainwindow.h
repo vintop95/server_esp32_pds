@@ -37,6 +37,11 @@ private:
     explicit MainWindow(QWidget *parent = nullptr);
     void initChart();
 
+    void plot();
+
+signals:
+    void logCurrDev();
+
 private slots:
     void on_actionExit_triggered();
     void on_actionAbout_triggered();
@@ -44,23 +49,21 @@ private slots:
     void on_logCurrentDevices_clicked();
     void on_actionDebug_triggered();
 
-signals:
-    void logCurrDev();
+public slots:
+    // LOGGER
+    void writeLogInUi(const QString &text, const QColor& = Qt::white);
 
 public:
-    static MainWindow* getInstance();
     ~MainWindow();
-    void writeLog(const QString &text, const QColor& = Qt::white);
+    static MainWindow* getInstance();
     Chart* getChart();
 
     // Plot management
-    void addPoint(double x, double y);
-    void removePoint(double x, double y);
-    void addBoard(double x, double y);
-    void removeBoard(double x, double y);
-    void clearData();
-    void plot();
-
+    void addDevice(double x, double y);
+    void removeDevice(double x, double y);
+    void addESP32(double x, double y);
+    void removeESP32(double x, double y);
+    void clearPlot();
 };
 
 #endif // MAINWINDOW_H
