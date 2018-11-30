@@ -8,13 +8,8 @@
 #ifndef CLIENTHANDLER_H
 #define CLIENTHANDLER_H
 
-#include "main.h"
 #include "devicefinder.h"
-#include <QThread>
 #include <QTcpSocket>
-#include <QDebug>
-#include <QTimer>
-
 
 /**
  * It handles the data received from the esp32 devices

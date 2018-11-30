@@ -8,6 +8,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "logger.h"
+
+
 MainWindow* MainWindow::instance;
 
 /**
@@ -44,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     initChart();
+
+    writeLog("MAIN WINDOW CREATED");
 }
 
 MainWindow *MainWindow::getInstance()

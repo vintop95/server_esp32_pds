@@ -8,15 +8,21 @@
 #ifndef DBMANAGER_H
 #define DBMANAGER_H
 
+#include "main.h"
+
 #include <QObject>
 #include <QtSql>
-#include "logger.h"
 
 /**
  * Database manager
  */
 class DbManager
 {
+private:
+    QSqlDatabase db;
+    bool createTables();
+    void test();
+
 public:
     DbManager(const QString& path);
     bool saveCsv(Record& record, const QString& path = "output.txt");
@@ -24,11 +30,6 @@ public:
     bool addPacket(Record r);
     bool addPackets(QVector<Record> recordVector);
     bool calculateAvgRssi();
-private:
-    QSqlDatabase db;
-    bool createTables();
-    void test();
-
 };
 
 

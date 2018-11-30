@@ -8,11 +8,12 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include "record.h"
+
 #include <QObject>
 #include <QSettings>
 #include <QSharedPointer>
 #include <QDateTime>
-#include "record.h"
 
 static QString SETTINGS_PATH = "settings.ini";
 

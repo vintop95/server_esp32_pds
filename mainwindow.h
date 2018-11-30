@@ -8,12 +8,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QtCharts>
 #include "chart.h"
 #include "settingsform.h"
 
-using namespace QtCharts;
+#include <QMainWindow>
 
 namespace Ui {
 class MainWindow;
@@ -29,6 +27,26 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT //needed for QObject derived classes
 
+private:
+    static MainWindow* instance;
+    Ui::MainWindow *ui;
+    Chart *chart;
+
+    QVector<double> qv_x, qv_y, qvs_x, qvs_y;
+
+    explicit MainWindow(QWidget *parent = nullptr);
+    void initChart();
+
+private slots:
+    void on_actionExit_triggered();
+    void on_actionAbout_triggered();
+    void on_actionPreferences_triggered();
+    void on_logCurrentDevices_clicked();
+    void on_actionDebug_triggered();
+
+signals:
+    void logCurrDev();
+
 public:
     static MainWindow* getInstance();
     ~MainWindow();
@@ -43,24 +61,6 @@ public:
     void clearData();
     void plot();
 
-private slots:
-    void on_actionExit_triggered();
-    void on_actionAbout_triggered();
-    void on_actionPreferences_triggered();
-    void on_logCurrentDevices_clicked();
-    void on_actionDebug_triggered();
-
-signals:
-    void logCurrDev();
-private:
-    static MainWindow* instance;
-    Ui::MainWindow *ui;
-    Chart *chart;
-
-    QVector<double> qv_x, qv_y, qvs_x, qvs_y;
-
-    explicit MainWindow(QWidget *parent = nullptr);
-    void initChart();
 };
 
 #endif // MAINWINDOW_H

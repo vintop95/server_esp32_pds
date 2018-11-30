@@ -19,7 +19,7 @@ DeviceFinder* DeviceFinder::instance;
 DeviceFinder::DeviceFinder():
     db("server_esp32_pds.sqlite3")
 {
-    setInit(0);
+    init();
 
     // in order to let the command of printing
     // from the gui
@@ -30,29 +30,24 @@ DeviceFinder::DeviceFinder():
 
 }
 
-DeviceFinder* DeviceFinder::getInstance(int espNo, QString dbPath)
+DeviceFinder* DeviceFinder::getInstance(QString dbPath)
 {
     if (instance == nullptr){
         instance = new DeviceFinder();
     }
-    instance->setInit(espNo, dbPath);
+    instance->init(dbPath);
     return instance;
 }
 
-void DeviceFinder::setInit(int espNo, QString dbPath)
+void DeviceFinder::init(QString dbPath)
 {
-    if(espNo != 0){
-        ESPNo = espNo;
-    }
     if(dbPath != "server_esp32_pds.sqlite3"){
         db.setPath(dbPath);
     }
 
 
-    for(int i=0; esp.size()<ESPNo; ++i){
-        QString newName = "ESP" + QString::number(i);
-        esp.insert(newName, ESP32(newName) );
-        ESPInteracted.insert(newName, false);
+    for(int i=0; esp32s.size()<getEspNo(); ++i){
+
     }
     //setta per la prima volta il timestamp che definisce l'inizio della finestra di ascolto
     last_ts = QDateTime::currentDateTime().toTime_t();
@@ -83,9 +78,9 @@ void DeviceFinder::setWindow(MainWindow *w)
     initChart();
 }
 
-void DeviceFinder::resetContactsMap()
+void DeviceFinder::resetInteractionsWithEsp()
 {
-    for(auto it=ESPInteracted.begin(); it!=ESPInteracted.end(); it++){
+    for(auto it=espInteracted.begin(); it!=espInteracted.end(); it++){
         it.value() = false;
     }
 }
@@ -100,13 +95,14 @@ void DeviceFinder::resetContactsMap()
  * @param x position
  * @param y position
  */
-void DeviceFinder::setESPPos(QString devName, double xpos, double ypos)
+void DeviceFinder::addEsp(QString espName, double xpos, double ypos)
 {
     writeLog("#DeviceFinder", QtInfoMsg);
-    writeLog("Set " + devName + " pos: ("
+    writeLog("Set " + espName + " pos: ("
              + QString::number(xpos) +  ","
              + QString::number(ypos) + ")", QtInfoMsg);
-    esp.find(devName).value().setPos(xpos, ypos);
+    esp32s.find(espName).value().setPos(xpos, ypos);
+    espInteracted.insert(espName, false);
 }
 
 /**
@@ -137,7 +133,7 @@ void DeviceFinder::pushRecord(Record r)
     //pushDevice(Device(r.sender_mac, p));
 }
 
-void DeviceFinder::addPacketsToDB()
+void DeviceFinder::insertPacketsIntoDB()
 {
     bool res = db.addPackets(records);
     if(res){//if insertion in database was succesfull we can clear the vector
@@ -149,27 +145,27 @@ void DeviceFinder::addPacketsToDB()
     //TODO:
 }
 //return true if it has been contacted by all the ESPs
-bool DeviceFinder::canStartProcessing()
+bool DeviceFinder::canStartPacketProcessing()
 {
-    for(auto truth_value:ESPInteracted){
+    for(auto truth_value:espInteracted){
         if(!truth_value)
             return false;
     }
     return true;
 }
 
-void DeviceFinder::setContactedByID(QString ESPid)
+void DeviceFinder::setInteractionWithEsp(QString ESPid)
 {
-    ESPInteracted[ESPid] = true;
+    espInteracted[ESPid] = true;
 }
 
-void DeviceFinder::processData()
+void DeviceFinder::processLocationsFromPackets()
 {
     writeLog("LOCATIONS PROCESSING FUNCTION CALLED! WORK IN PROGRESS...", QtInfoMsg);
     //TODO: leggi dalla tabella 'Records' i dati, aggregali e inseriscili nella tabella 'Location'.
     //Ricordati anche di aggiornare l'interfaccia grafica
     //altro giro altra corsa:
-    resetContactsMap();
+    resetInteractionsWithEsp();
     last_ts = QDateTime::currentDateTime().toTime_t();
 
 
@@ -225,6 +221,11 @@ void DeviceFinder::logCurrentDevices()
 int DeviceFinder::countCurrentDevices()
 {
     return devices.size();
+}
+
+int DeviceFinder::getEspNo()
+{
+    return esp32s.size();
 }
 
 
@@ -301,8 +302,8 @@ QPointF DeviceFinder::calculatePosition(Record lastRecord)
 
     QVector<Record> recordsOrdered;
     for(Record genericRecord : records){
-        auto it = esp.find(genericRecord.espName);
-        bool exists = (it != esp.end());
+        auto it = esp32s.find(genericRecord.espName);
+        bool exists = (it != esp32s.end());
         if(exists && genericRecord == lastRecord){
             recordsOrdered.push_back(genericRecord);
         }
@@ -317,10 +318,10 @@ QPointF DeviceFinder::calculatePosition(Record lastRecord)
         writeLog(recordOrdered.toString());
 
         ESP32 espToPush("");
-        auto it = esp.find(recordOrdered.espName);
-        bool exists = (it != esp.end());
+        auto it = esp32s.find(recordOrdered.espName);
+        bool exists = (it != esp32s.end());
         if(exists){
-            espToPush = esp.value(recordOrdered.espName, ESP32(""));
+            espToPush = esp32s.value(recordOrdered.espName, ESP32(""));
             espChosen.push_back(espToPush);
         }
     }

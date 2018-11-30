@@ -50,9 +50,9 @@ int main(int argc, char *argv[])
 
     // Initializes the object that handles the packets
     // to find the devices in the area
-    DeviceFinder* deviceFinder = DeviceFinder::getInstance(ESP32_NO);
+    DeviceFinder* deviceFinder = DeviceFinder::getInstance();
     for(auto e : *espList){
-        deviceFinder->setESPPos(e.getName(), e.getX(), e.getY());
+        deviceFinder->addEsp(e.getName(), e.getX(), e.getY());
     }
     deviceFinder->test();
 

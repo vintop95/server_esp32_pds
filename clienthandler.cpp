@@ -21,7 +21,7 @@ ClientHandler::ClientHandler(qintptr s, QObject *parent) :
     //bind the signal emitted when server has been contacted by all the ESPs
     //to the appropriate callback
     connect(this, &ClientHandler::contactedByAllESPs,
-            deviceFinder, &DeviceFinder::processData);
+            deviceFinder, &DeviceFinder::processLocationsFromPackets);
 
 }
 
@@ -226,11 +226,11 @@ void ClientHandler::pushRecordsToDeviceFinder()
             deviceFinder->pushRecord(r);
         }
         //TODO: aggiungere metodo di device finder che aggiunga i record accumulati nel database
-        deviceFinder->addPacketsToDB();
-        deviceFinder->setContactedByID(espName);
+        deviceFinder->insertPacketsIntoDB();
+        deviceFinder->setInteractionWithEsp(espName);
         socket->write("OK\r\n");
         dataReceived.clear();
-        if(deviceFinder->canStartProcessing()){
+        if(deviceFinder->canStartPacketProcessing()){
             emit contactedByAllESPs();//emit a signal in order to invoke processData()
         }
     }else{
