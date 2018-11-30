@@ -32,7 +32,7 @@ Qt Tutorial for beginners: https://www.youtube.com/watch?v=EkjaiDsiM-Q&list=PLS1
 
 ## Classi principali
 Modello  
-![aaa](https://github.com/vintop95/server_esp32_pds/blob/master/classModel.PNG)
+![modelloUmlServerEsp32Pds](https://github.com/vintop95/server_esp32_pds/blob/develop/docs/classModel.PNG)
 
  -------
 ```DeviceFinder```  
