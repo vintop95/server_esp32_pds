@@ -104,7 +104,7 @@ bool DbManager::addPacket(Record r)
 {
     writeLog("#DbManager");
     QSqlQuery query;
-    query.exec("SELECT MAX(id)+1 FROM packet;");
+    query.prepare("SELECT MAX(id)+1 FROM packet;");
     bool res = query.exec();
     int id = 0;
 
@@ -128,7 +128,38 @@ bool DbManager::addPacket(Record r)
     res = query.exec();
     writeLog("Packet inserted: " + QString::number(res) + "/1" );
 
-    return true;
+    return res;
+}
+
+bool DbManager::addPackets(QVector<Record> recordVector)
+{
+    writeLog("#DbManager");
+    QSqlQuery query;
+    query.prepare("SELECT MAX(id)+1 FROM packet;");
+    bool res = query.exec();
+    int id = 0;
+    query.next();
+    //writeLog("POS: " + QString::number(query.at()) );
+    //writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
+    id = query.value(0).toInt();
+    //Load all records using a single query
+    QString queryString;
+    for(auto record:recordVector){
+        queryString += "INSERT INTO packet"
+                       "(id,sender_mac,timestamp,rssi,hashed_pkt,ssid,espName) "
+                       "VALUES ("+ QString::number(id++) + ","
+                                 + record.sender_mac + ","
+                                 + QString::number(record.timestamp) + ","
+                                 + record.rssi +","
+                                 + record.hashed_pkt +","
+                                 + record.ssid +","
+                                 + record.espName + ");";
+    }
+    query.prepare(queryString);
+    res = query.exec();
+    writeLog(QString::number(recordVector.size()) + " packets inserted: " + QString(res ? "yes" : "no") );
+
+    return res;
 }
 
 /**

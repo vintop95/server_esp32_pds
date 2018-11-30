@@ -51,10 +51,11 @@ void DeviceFinder::setInit(int espNo, QString dbPath)
 
     for(int i=0; esp.size()<ESPNo; ++i){
         QString newName = "ESP" + QString::number(i);
-        esp.insert(
-           newName,
-           ESP32(newName) );
+        esp.insert(newName, ESP32(newName) );
+        ESPInteracted.insert(newName, false);
     }
+    //setta per la prima volta il timestamp che definisce l'inizio della finestra di ascolto
+    last_ts = QDateTime::currentDateTime().toTime_t();
 }
 
 /**
@@ -81,6 +82,16 @@ void DeviceFinder::setWindow(MainWindow *w)
     pWin = w;
     initChart();
 }
+
+void DeviceFinder::resetContactsMap()
+{
+    for(auto it=ESPInteracted.begin(); it!=ESPInteracted.end(); it++){
+        it.value() = false;
+    }
+}
+
+
+
 
 /**
  * @brief Set the position of the devName esp
@@ -114,22 +125,54 @@ void DeviceFinder::pushRecord(Record r)
     writeLog("#DeviceFinder");
     writeLog("Received pkt\n" + r.toString());
     db.saveCsv(r);
-
+    records.push_back(r);
+    //TODO: RIPULIRE DAI COMMENTI
     // IPOTESI: un dispositivo non invia due volte
     // lo stesso pacchetto (secondo la definzione di operator==)
 
     // records.count(r) checks how many records are there in the list
     // that satisfies the operator== definition of Record
 
-    if( records.count(r) < ESPNo-1 ){
-        // we haven't reached yet all packets needed
-        records.push_back(r);
+        //QPointF p = calculatePosition(r);
+    //pushDevice(Device(r.sender_mac, p));
+}
+
+void DeviceFinder::addPacketsToDB()
+{
+    bool res = db.addPackets(records);
+    if(res){//if insertion in database was succesfull we can clear the vector
+        records.clear();
     }else{
-        // we have all packets needed to calculate the position
-        records.push_back(r);
-        QPointF p = calculatePosition(r);
-        pushDevice(Device(r.sender_mac, p));
+        writeLog("ERROR IN INSERTING " + QString::number(records.size()) + " RECORDS TO DATABASE. "
+                 "We keep them for the next try.", QtWarningMsg);
     }
+    //TODO:
+}
+//return true if it has been contacted by all the ESPs
+bool DeviceFinder::canStartProcessing()
+{
+    for(auto truth_value:ESPInteracted){
+        if(!truth_value)
+            return false;
+    }
+    return true;
+}
+
+void DeviceFinder::setContactedByID(QString ESPid)
+{
+    ESPInteracted[ESPid] = true;
+}
+
+void DeviceFinder::processData()
+{
+    writeLog("LOCATIONS PROCESSING FUNCTION CALLED! WORK IN PROGRESS...", QtInfoMsg);
+    //TODO: leggi dalla tabella 'Records' i dati, aggregali e inseriscili nella tabella 'Location'.
+    //Ricordati anche di aggiornare l'interfaccia grafica
+    //altro giro altra corsa:
+    resetContactsMap();
+    last_ts = QDateTime::currentDateTime().toTime_t();
+
+
 }
 
 /**

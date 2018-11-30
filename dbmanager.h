@@ -22,6 +22,7 @@ public:
     bool saveCsv(Record& record, const QString& path = "output.txt");
     void setPath(QString p);
     bool addPacket(Record r);
+    bool addPackets(QVector<Record> recordVector);
     bool calculateAvgRssi();
 private:
     QSqlDatabase db;

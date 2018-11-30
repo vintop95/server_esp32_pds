@@ -32,6 +32,7 @@ public:
    }
 signals:
    void error(QTcpSocket::SocketError socketerror);
+   void contactedByAllESPs();
 
 public slots:
    void readyRead();
@@ -50,7 +51,7 @@ private:
 
 
    void setSocketDescriptor(qintptr);
-   void pushRecord();
+   void pushRecords();
 };
 
 #endif // CLIENTHANDLER_H

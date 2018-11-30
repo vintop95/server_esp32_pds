@@ -18,6 +18,11 @@ ClientHandler::ClientHandler(qintptr s, QObject *parent) :
     QObject(parent), deviceFinder(DeviceFinder::getInstance())
 {
     setSocketDescriptor(s);
+    //bind the signal emitted when server has been contacted by all the ESPs
+    //to the appropriate callback
+    connect(this, &ClientHandler::contactedByAllESPs,
+            deviceFinder, &DeviceFinder::processData);
+
 }
 
 
@@ -84,10 +89,10 @@ void ClientHandler::readyRead()
 
     if(!data.isEmpty()){
         // There is a connection to conclude
-        data += socket->readAll();
         writeLog("INITIAL STATE OF DATA VARIABLE: " + data);
+        data += socket->readAll();
         writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
-        this->pushRecord();
+        this->pushRecords();//save the records
         return;
     }
 
@@ -135,7 +140,8 @@ void ClientHandler::readyRead()
         socket->skip(strlen("DATA "));
 
         data = socket->readAll();
-        this->pushRecord();
+        this->pushRecords();
+
     }
     else if(data.startsWith("END")){
         writeLog(QString::number(socketDescriptor) + " - END MESSAGE");
@@ -195,7 +201,7 @@ void ClientHandler::disconnected()
     //exit(0);
 }
 
-void ClientHandler::pushRecord()
+void ClientHandler::pushRecords()
 {
     writeLog("#ClientHandler");
     data = data.replace('\0', '\n');
@@ -204,7 +210,7 @@ void ClientHandler::pushRecord()
     QJsonDocument jDoc = QJsonDocument::fromJson(data);
     if(!jDoc.isNull() && jDoc.isArray()){
         // IF WE RECEIVED ALL THE JSON ARRAY
-        writeLog(QString::number(socketDescriptor) + " - RECORD RECEIVED", QtInfoMsg);
+        writeLog(QString::number(socketDescriptor) + " - RECORDS RECEIVED", QtInfoMsg);
 
         QJsonArray records = jDoc.array();
 
@@ -219,9 +225,14 @@ void ClientHandler::pushRecord()
             r.espName = this->espName;
             deviceFinder->pushRecord(r);
         }
-
+        //TODO: aggiungere metodo di device finder che aggiunga i record accumulati nel database
+        deviceFinder->addPacketsToDB();
+        deviceFinder->setContactedByID(espName);
         socket->write("OK\r\n");
         data.clear();
+        if(deviceFinder->canStartProcessing()){
+            emit contactedByAllESPs();//emit a signal in order to invoke processData()
+        }
     }else{
         writeLog(QString::number(socketDescriptor) + " - ERROR GETTING RECORD, it may arrive later the rest", QtWarningMsg);
         //socket->write("ERR\r\n");
