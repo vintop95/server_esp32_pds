@@ -25,6 +25,20 @@ Logger *Logger::getInstance()
     return instance;
 }
 
+bool Logger::saveCsv(Packet &r, const QString &path)
+{
+    QFile file(path);
+
+    if(file.open(QFile::WriteOnly | QIODevice::Append)) {
+        QTextStream stream(&file);
+        stream << r.toString() << endl;
+        file.close();
+        return true;
+    }else{
+        return false;
+    }
+}
+
 /**
  * @brief Writes the log message in the correct way depending of the type
  * We are sure that this call is thread-safe (even if we did not use

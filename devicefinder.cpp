@@ -120,7 +120,7 @@ void DeviceFinder::pushPacket(Packet p)
 {
     writeLog("#DeviceFinder");
     writeLog("Received pkt\n" + p.toString());
-    db.saveCsv(p);
+    Logger::saveCsv(p);
     packets.push_back(p);
     //TODO: RIPULIRE DAI COMMENTI
     // IPOTESI: un dispositivo non invia due volte
@@ -141,7 +141,7 @@ bool DeviceFinder::insertPacketsIntoDB(QString espName)
         processLocationsFromPackets();
     }
 
-    bool res = db.addPackets(packets);
+    bool res = db.insertPackets(packets);
     if(res){//if insertion in database was succesfull we can clear the vector
         packets.clear();
         return true;

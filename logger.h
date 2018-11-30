@@ -30,6 +30,7 @@ public slots:
 
 public:
     static Logger* getInstance();
+    static bool saveCsv(Packet& p, const QString& path = "output.txt");
 };
 
 void writeLog(const QString &text, QtMsgType type = QtDebugMsg);

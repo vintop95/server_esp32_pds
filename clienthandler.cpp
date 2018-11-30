@@ -52,11 +52,11 @@ void ClientHandler::handle()
     // (and when it disconnects)
     // note - Qt::DirectConnection
     //        This makes the slot to be invoked immediately, when the signal is emitted.
-    connect(socket, SIGNAL(readyRead()),
-            this, SLOT(readyRead()),
+    connect(socket, SIGNAL(readFromSocket()),
+            this, SLOT(readFromSocket()),
             Qt::DirectConnection);
-    connect(socket, SIGNAL(disconnected()),
-            this, SLOT(disconnected()));
+    connect(socket, SIGNAL(closeClientHandler()),
+            this, SLOT(closeClientHandler()));
 
     // alternative connect syntax with lambda
     //    connect(socket, &QTcpSocket::readyRead,
@@ -73,7 +73,7 @@ void ClientHandler::handle()
  *
  * @todo: add catch for runtime exceptions (like the socket already closed)
  */
-void ClientHandler::readyRead()
+void ClientHandler::readFromSocket()
 {
     writeLog("#ClientHandler");
     // get the information
@@ -177,7 +177,7 @@ void ClientHandler::readyRead()
 /**
  * @brief Callback called when the client disconnects
  */
-void ClientHandler::disconnected()
+void ClientHandler::closeClientHandler()
 {
     writeLog("#ClientHandler");
     writeLog(QString::number(socketDescriptor) + " Disconnected.");

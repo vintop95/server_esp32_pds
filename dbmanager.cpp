@@ -98,7 +98,7 @@ bool DbManager::createTables()
 /**
  * @brief Add a packet in the db
  */
-bool DbManager::addPacket(Packet r)
+bool DbManager::addPacket(Packet p)
 {
     writeLog("#DbManager");
     QSqlQuery query;
@@ -116,12 +116,12 @@ bool DbManager::addPacket(Packet r)
                   "VALUES (:id, :sender_mac, :timestamp, :rssi, :hashed_pkt,"
                   ":ssid, :espName)");
     query.bindValue(":id", id);
-    query.bindValue(":sender_mac", r.sender_mac);
-    query.bindValue(":timestamp", r.timestamp);
-    query.bindValue(":rssi", r.rssi);
-    query.bindValue(":hashed_pkt", r.hashed_pkt);
-    query.bindValue(":ssid", r.ssid);
-    query.bindValue(":espName", r.espName);
+    query.bindValue(":sender_mac", p.sender_mac);
+    query.bindValue(":timestamp", p.timestamp);
+    query.bindValue(":rssi", p.rssi);
+    query.bindValue(":hashed_pkt", p.hashed_pkt);
+    query.bindValue(":ssid", p.ssid);
+    query.bindValue(":espName", p.espName);
 
     res = query.exec();
     writeLog("Packet inserted: " + QString::number(res) + "/1" );
@@ -129,7 +129,7 @@ bool DbManager::addPacket(Packet r)
     return res;
 }
 
-bool DbManager::addPackets(QVector<Packet> packets)
+bool DbManager::insertPackets(QVector<Packet> packets)
 {
     writeLog("#DbManager");
     QSqlQuery query;
@@ -217,20 +217,6 @@ void DbManager::test()
         writeLog("id: " + QString::number(id));
         QString sender_mac = query.value(1).toString();
         writeLog("sender_mac: " + sender_mac);  
-    }
-}
-
-bool DbManager::saveCsv(Packet &r, const QString& path)
-{
-    QFile file(path);
-
-    if(file.open(QFile::WriteOnly | QIODevice::Append)) {
-        QTextStream stream(&file);
-        stream << r.toString() << endl;
-        file.close();
-        return true;
-    }else{
-        return false;
     }
 }
 

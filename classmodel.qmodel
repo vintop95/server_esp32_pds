@@ -136,8 +136,8 @@
                          </base-DElement>
                          <object>{0584c37b-06f0-4fac-9194-9dbd3d4bce01}</object>
                          <name>DbManager</name>
-                         <pos>x:140;y:635</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <pos>x:120;y:700</pos>
+                         <rect>x:-70;y:-55;w:140;h:110</rect>
                          <visual-role>5</visual-role>
                          <stereotype-display>3</stereotype-display>
                         </DObject>
@@ -402,7 +402,7 @@
                          </base-DElement>
                          <object>{631b9434-1e39-41fa-8456-a2d4cce62e5f}</object>
                          <name>DeviceFinder</name>
-                         <pos>x:290;y:730</pos>
+                         <pos>x:305;y:720</pos>
                          <rect>x:-75;y:-105;w:150;h:210</rect>
                          <visual-role>7</visual-role>
                          <visual-role2>1</visual-role2>
@@ -453,11 +453,12 @@
                          </base-DElement>
                          <object>{e64a0ce6-28bc-44fc-9c0a-c67a332d5255}</object>
                          <name>ClientHandler</name>
-                         <pos>x:455;y:720</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <pos>x:480;y:710</pos>
+                         <rect>x:-65;y:-70;w:130;h:140</rect>
                          <visual-role>8</visual-role>
                         </DObject>
                        </base-DObject>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -491,8 +492,8 @@
                          </base-DElement>
                          <object>{1b9efb0d-0b6f-4afe-9e69-ad563f0a3545}</object>
                          <name>Server</name>
-                         <pos>x:595;y:720</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <pos>x:665;y:715</pos>
+                         <rect>x:-75;y:-60;w:150;h:120</rect>
                          <visual-role>9</visual-role>
                         </DObject>
                        </base-DObject>
@@ -501,6 +502,7 @@
                          <item>QTcpServer</item>
                         </qlist>
                        </template>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -574,7 +576,7 @@
                        </base-DElement>
                        <text>----&gt; MEANS THAT I NEED TO USE THE CLASS
 POINTED BY THE ARROW</text>
-                       <pos>x:85;y:875</pos>
+                       <pos>x:60;y:830</pos>
                        <rect>x:0;y:0;w:237;h:42</rect>
                       </DAnnotation>
                      </instance>
@@ -609,8 +611,9 @@ POINTED BY THE ARROW</text>
                          </base-DElement>
                          <object>{476f98ac-22ed-4edb-8ecb-17c7fc94244d}</object>
                          <name>CLIENT ESP32</name>
-                         <pos>x:535;y:830</pos>
+                         <pos>x:580;y:850</pos>
                          <rect>x:-45;y:-15;w:90;h:30</rect>
+                         <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
@@ -809,14 +812,14 @@ POINTED BY THE ARROW</text>
                         </DElement>
                        </base-DElement>
                        <text>PROCESSING THREAD</text>
-                       <pos>x:395;y:720</pos>
-                       <rect>x:-330;y:-150;w:660;h:300</rect>
+                       <pos>x:395;y:725</pos>
+                       <rect>x:-365;y:-160;w:730;h:320</rect>
                       </DBoundary>
                      </instance>
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1543617998683</last-modified>
+                  <last-modified>1543619039833</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -1183,6 +1186,38 @@ POINTED BY THE ARROW</text>
                   <item>QSqlDatabase</item>
                  </qlist>
                 </template>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{bff0e1c3-8cff-4d14-90de-42d96c23941f}</uid>
+                    <type>2</type>
+                    <declaration>-- DEVICE_FINDER ()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{f8b15e25-7df7-49a1-aa58-1fa0029aec05}</uid>
+                    <type>2</type>
+                    <declaration>+ setPath(path)</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{07fd4375-ea76-4615-aa8a-4beeaf2a9fb0}</uid>
+                    <type>2</type>
+                    <declaration>+ insertPackets(packets)</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{c4d09af0-0aeb-4eec-9e35-e6a721c34da6}</uid>
+                    <type>2</type>
+                    <declaration>+ calculateAvgRssi()</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1502,84 +1537,84 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{68523285-ba12-4578-9cbe-9adc1c8349bf}</uid>
+                    <uid>{63cdbfdb-6ce4-4e8c-bf45-02b21359c42d}</uid>
                     <type>2</type>
                     <declaration>-- MAINWINDOW()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{c1ace3b2-4fa0-4d4d-998b-ae2c88269ffc}</uid>
+                    <uid>{065fded6-36ea-445f-8f25-7b35a6356fc7}</uid>
                     <type>2</type>
                     <declaration>(s) logCurrentDevices()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{78715030-030e-49b3-98ad-7c2c3677e9e4}</uid>
+                    <uid>{b614b804-6722-47e3-9f8c-68c08c691201}</uid>
                     <type>2</type>
                     <declaration>-- EVERYONE()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{b279d2b2-1678-4401-912f-01a0c3b0dbc7}</uid>
+                    <uid>{87be1de6-1798-4526-9c2a-5bf2536174de}</uid>
                     <type>2</type>
                     <declaration>+ getInstance()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{5f5cd80e-6c06-4e9f-ad48-c3a7d6de9e87}</uid>
+                    <uid>{9c3b87d1-2935-4ab0-9455-76ebb2713e65}</uid>
                     <type>2</type>
                     <declaration>+ calculateDistance(rssi)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{a0d45183-0607-4667-9001-1d15f98d328b}</uid>
+                    <uid>{84d246da-670a-46f7-ab16-4e5fd66f95ff}</uid>
                     <type>2</type>
                     <declaration>+ getEspNo()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{fdd175d6-811a-482d-acfb-04cffd202aca}</uid>
+                    <uid>{01ede307-d743-476e-a8c9-4364ab67f976}</uid>
                     <type>2</type>
                     <declaration>+ countCurrentDevices()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{1ab3d566-9806-4762-949a-6b6e39df403a}</uid>
+                    <uid>{a0616b43-9184-4908-9fb0-85b311e9dec4}</uid>
                     <type>2</type>
                     <declaration>-- MAIN.C()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{24c16dc4-8aeb-4b9a-9e21-fef008a88179}</uid>
+                    <uid>{4d4593f5-d398-4d82-a7d6-017c286334e5}</uid>
                     <type>2</type>
                     <declaration>+ addEsp(espdata)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{1b4837bd-cf3b-44b1-9a84-c2cd3b46f009}</uid>
+                    <uid>{292234db-dc76-436e-8dce-5fa110d9a0dc}</uid>
                     <type>2</type>
                     <declaration>-- CLIENT_HANDLER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{b16a8f26-0457-4516-963f-bc60bd5ca877}</uid>
+                    <uid>{59363013-9dc6-41bd-9935-2e12ed621906}</uid>
                     <type>2</type>
                     <declaration>+ pushPacket(packet)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{adb1bae4-8003-427f-800b-5a6cd891c168}</uid>
+                    <uid>{190e115f-656b-4a26-89e1-8781a800447b}</uid>
                     <type>2</type>
                     <declaration>+ insertPacketsIntoDB(esp)</declaration>
                    </MClassMember>
@@ -1637,6 +1672,52 @@ POINTED BY THE ARROW</text>
                   </relations>
                  </MObject>
                 </base-MObject>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{2b97dd6f-4af5-4b89-bbe6-0502bbb726f1}</uid>
+                    <type>2</type>
+                    <declaration>-- CLIENT ESP32 ()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{e3ab3c0d-0af9-40a7-9b59-499ac71768f5}</uid>
+                    <type>2</type>
+                    <declaration>+ readFromSocket()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{050305c0-e7ad-4dbb-b7ac-51bd7a49c1b9}</uid>
+                    <type>2</type>
+                    <declaration>+ closeClientHandler()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{924aab9c-2637-4ab9-abe1-9c6d4fe86fbc}</uid>
+                    <type>2</type>
+                    <declaration>-- SERVER ()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{5d18892b-b6e6-4e5c-9692-7d42b00f8801}</uid>
+                    <type>2</type>
+                    <declaration>+ ClientHandler(socket)</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{696002d3-bfc9-4a05-8322-eb136fb8ed0d}</uid>
+                    <type>2</type>
+                    <declaration>+ handle()</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1721,6 +1802,45 @@ POINTED BY THE ARROW</text>
                   <item>QTcpServer</item>
                  </qlist>
                 </template>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{9cf760c8-72f5-4589-bb9b-1b23f5770829}</uid>
+                    <type>2</type>
+                    <declaration>-- MAIN.C ()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{d3ac9490-4094-4937-a58e-0707a771d369}</uid>
+                    <type>2</type>
+                    <declaration>+ getInstance([port])</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{e0f71c8f-b3ff-4aec-b67d-8a08854eba7f}</uid>
+                    <type>2</type>
+                    <declaration>+ start()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{6b6316ae-961e-4f77-a5a2-b76eaa4805f3}</uid>
+                    <type>2</type>
+                    <declaration>-- SERVER ()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{775a2094-9b1b-49a3-b8bb-e5459d6cc976}</uid>
+                    <type>2</type>
+                    <declaration>(s) incomingConnection(skt)</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>

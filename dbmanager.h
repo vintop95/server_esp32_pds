@@ -21,15 +21,15 @@ class DbManager
 private:
     QSqlDatabase db;
     bool createTables();
+    bool addPacket(Packet p); //INEFFICIENT
     void test();
 
 public:
+    //DEVICE_FINDER
     DbManager(const QString& path);
-    bool saveCsv(Packet& packet, const QString& path = "output.txt");
     void setPath(QString p);
-    bool addPacket(Packet r);
-    bool addPackets(QVector<Packet> packets);
-    bool calculateAvgRssi();
+    bool insertPackets(QVector<Packet> packets);
+    bool calculateAvgRssi(); //to calculate position of devices
 };
 
 

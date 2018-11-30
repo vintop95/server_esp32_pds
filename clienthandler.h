@@ -33,13 +33,14 @@ private:
 
 signals:
    void error(QTcpSocket::SocketError socketerror);
-   void contactedByAllESPs();
 
 public slots:
-   void readyRead();
-   void disconnected();
+   // CLIENT ESP32
+   void readFromSocket();
+   void closeClientHandler();
 
 public:
+   // SERVER
    explicit ClientHandler(qintptr s, QObject *parent = nullptr);
    void handle();
 };

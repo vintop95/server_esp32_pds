@@ -32,6 +32,7 @@ protected:
     void incomingConnection(qintptr socketDescriptor) override;
 
 public:
+    // MAIN.C
     static Server* getInstance(quint16 p);
     bool start();
 };
