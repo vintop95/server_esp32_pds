@@ -17,6 +17,7 @@
  */
 class Logger : public QObject{
     Q_OBJECT
+
 private:
     static Logger* instance;
     MainWindow* pWin;
@@ -26,6 +27,7 @@ signals:
     void writeLogInMainWindow(const QString &text, const QColor& = Qt::black);
 
 public slots:
+    // EVERYONE
     void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
 
 public:

@@ -50,7 +50,7 @@ void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
     if(! qset->contains("ESP32_NO")){
         //qDebug() << qset->applicationName();
 
-        qset->setValue("CHART_PERIOD", CHART_PERIOD);
+        qset->setValue("CHART_PERIOD", CHART_PERIOD_MS);
         qset->setValue("ESP32_NO", ESP32_NO);
 
         for(int i=0; i < ESP32_NO; ++i){
@@ -69,7 +69,7 @@ void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
         }
 
     }else{
-        CHART_PERIOD = qset->value("CHART_PERIOD", 1000).toInt();
+        CHART_PERIOD_MS = qset->value("CHART_PERIOD", 1000).toInt();
         ESP32_NO = qset->value("ESP32_NO").toInt();
 
         for(int i=0; i < ESP32_NO; ++i){

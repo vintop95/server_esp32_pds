@@ -66,7 +66,7 @@ void DeviceFinder::setChartUpdateTimer()
             pWin->getChart()->updateChart(this->countCurrentDevices());
         }
     });
-    chartUpdateTimer.setInterval(CHART_PERIOD);
+    chartUpdateTimer.setInterval(CHART_PERIOD_MS);
     chartUpdateTimer.start();
 }
 

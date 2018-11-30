@@ -98,11 +98,12 @@
                          </base-DElement>
                          <object>{811278fc-fd85-4ccf-a111-92e1e6ad271f}</object>
                          <name>Logger</name>
-                         <pos>x:290;y:345</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <pos>x:230;y:345</pos>
+                         <rect>x:-40;y:-40;w:80;h:80</rect>
                          <visual-role>6</visual-role>
                         </DObject>
                        </base-DObject>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -320,7 +321,7 @@
                          <object>{6dbfce82-4c56-454e-a63b-f433b4aa0723}</object>
                          <name>Settings</name>
                          <pos>x:525;y:330</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <rect>x:-65;y:-60;w:130;h:120</rect>
                          <visual-role>5</visual-role>
                         </DObject>
                        </base-DObject>
@@ -329,6 +330,7 @@
                          <item>QSettings</item>
                         </qlist>
                        </template>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -363,7 +365,7 @@
                          <object>{3c71834d-0b52-47f1-9d4e-861d2baab746}</object>
                          <name>datastructures.h</name>
                          <pos>x:585;y:470</pos>
-                         <rect>x:-60;y:-60;w:120;h:120</rect>
+                         <rect>x:-50;y:-50;w:100;h:100</rect>
                          <visual-role>0</visual-role>
                          <visual-role2>1</visual-role2>
                         </DObject>
@@ -819,7 +821,7 @@ POINTED BY THE ARROW</text>
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1543619039833</last-modified>
+                  <last-modified>1543619391628</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -1130,6 +1132,24 @@ POINTED BY THE ARROW</text>
                   </relations>
                  </MObject>
                 </base-MObject>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{add4f120-8345-4097-98d1-31b64d7fe8c1}</uid>
+                    <type>2</type>
+                    <declaration>+ writeLog()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{45e8a952-c19a-42e0-b96d-60a16bec5427}</uid>
+                    <type>2</type>
+                    <declaration>+ saveCsv()</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1389,6 +1409,38 @@ POINTED BY THE ARROW</text>
                   <item>QSettings</item>
                  </qlist>
                 </template>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{5e6269d8-4e00-4d0d-ac69-4038ac304e16}</uid>
+                    <type>1</type>
+                    <declaration>+ espList</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{9b771073-0a03-4eef-8c6f-04efa4a1bb3f}</uid>
+                    <type>2</type>
+                    <declaration>-- MAIN.C ()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{a2156677-6d39-4b87-88db-a9e7b6e5e879}</uid>
+                    <type>2</type>
+                    <declaration>+ getInstance()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{39497565-70cd-4ea7-9c5e-84e257aff589}</uid>
+                    <type>2</type>
+                    <declaration>+ loadSettings(espList)</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1414,35 +1466,21 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{787ef3c8-a298-4ce5-847e-570b041abd91}</uid>
-                    <type>1</type>
-                    <declaration>#include &lt;QObject&gt;</declaration>
-                   </MClassMember>
-                  </item>
-                  <item>
-                   <MClassMember>
-                    <uid>{fd8529e4-f33e-4e89-83c4-682581fbf9a6}</uid>
-                    <type>1</type>
-                    <declaration>#include &lt;QPointF&gt;</declaration>
-                   </MClassMember>
-                  </item>
-                  <item>
-                   <MClassMember>
-                    <uid>{a9d89fc8-9f48-49e8-8402-1508358cd3b2}</uid>
+                    <uid>{1d3c0ce0-7cce-4617-b704-66e7318122c9}</uid>
                     <type>1</type>
                     <declaration>class Packet</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{fcbfd37a-d1cd-45e0-b23c-ca95c9cf04bb}</uid>
+                    <uid>{0ba267d3-ebf7-49c8-8fe9-d4ed0e8e3a3c}</uid>
                     <type>1</type>
                     <declaration>class Device</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{02714f66-7c77-47ce-81d8-3d132c33a8eb}</uid>
+                    <uid>{a200cc41-0647-42c2-8055-8a930c615f3f}</uid>
                     <type>1</type>
                     <declaration>class ESP32</declaration>
                    </MClassMember>
