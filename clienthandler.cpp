@@ -18,11 +18,6 @@ ClientHandler::ClientHandler(qintptr s, QObject *parent) :
     QObject(parent), deviceFinder(DeviceFinder::getInstance())
 {
     setSocketDescriptor(s);
-    //bind the signal emitted when server has been contacted by all the ESPs
-    //to the appropriate callback
-    connect(this, &ClientHandler::contactedByAllESPs,
-            deviceFinder, &DeviceFinder::processLocationsFromPackets);
-
 }
 
 
@@ -229,9 +224,7 @@ void ClientHandler::pushPacketsToDeviceFinder()
         deviceFinder->insertPacketsIntoDB(espName);
         socket->write("OK\r\n");
         dataReceived.clear();
-        if(deviceFinder->canStartPacketProcessing()){
-            emit contactedByAllESPs();//emit a signal in order to invoke processData()
-        }
+
     }else{
         writeLog(QString::number(socketDescriptor) + " - ERROR GETTING PACKET, it may arrive later the rest", QtWarningMsg);
         //socket->write("ERR\r\n");

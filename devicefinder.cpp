@@ -50,7 +50,7 @@ void DeviceFinder::init(QString dbPath)
 
     }
     //setta per la prima volta il timestamp che definisce l'inizio della finestra di ascolto
-    last_ts = QDateTime::currentDateTime().toTime_t();
+    lastTimestamp = QDateTime::currentDateTime().toTime_t();
 }
 
 /**
@@ -58,14 +58,16 @@ void DeviceFinder::init(QString dbPath)
  * Sets a timer that is called every chartPeriod
  * and calls updateChart()
  */
-void DeviceFinder::initChart()
+void DeviceFinder::setChartUpdateTimer()
 {
-    connect(&timer, &QTimer::timeout,
-    [&](){
-        pWin->getChart()->updateChart(this->countCurrentDevices());
+    connect(&chartUpdateTimer, &QTimer::timeout,
+    [=](){
+        if(pWin != nullptr){
+            pWin->getChart()->updateChart(this->countCurrentDevices());
+        }
     });
-    timer.setInterval(CHART_PERIOD);
-    timer.start();
+    chartUpdateTimer.setInterval(CHART_PERIOD);
+    chartUpdateTimer.start();
 }
 
 /**
@@ -75,7 +77,7 @@ void DeviceFinder::initChart()
 void DeviceFinder::setWindow(MainWindow *w)
 {
     pWin = w;
-    initChart();
+    setChartUpdateTimer();
 }
 
 void DeviceFinder::resetInteractionsWithEsp()
@@ -114,34 +116,40 @@ void DeviceFinder::addEsp(QString espName, double xpos, double ypos)
  * lo stesso pacchetto (secondo la definzione di operator==)
  * correggere eventualmente
  */
-void DeviceFinder::pushPacket(Packet r)
+void DeviceFinder::pushPacket(Packet p)
 {
     writeLog("#DeviceFinder");
-    writeLog("Received pkt\n" + r.toString());
-    db.saveCsv(r);
-    packets.push_back(r);
+    writeLog("Received pkt\n" + p.toString());
+    db.saveCsv(p);
+    packets.push_back(p);
     //TODO: RIPULIRE DAI COMMENTI
     // IPOTESI: un dispositivo non invia due volte
     // lo stesso pacchetto (secondo la definzione di operator==)
 
-    // packets.count(r) checks how many packets are there in the list
+    // packets.count(p) checks how many packets are there in the list
     // that satisfies the operator== definition of Packet
 
-        //QPointF p = calculatePosition(r);
-    //pushDevice(Device(r.sender_mac, p));
+        //QPointF point = calculatePosition(p);
+    //pushDevice(Device(r.sender_mac, point));
 }
 
-void DeviceFinder::insertPacketsIntoDB(QString espName)
+//TODO: finire
+bool DeviceFinder::insertPacketsIntoDB(QString espName)
 {
-    setInteractionWithEsp(espName);
+    setEspInteracted(espName);
+    if(canStartPacketProcessing()){
+        processLocationsFromPackets();
+    }
+
     bool res = db.addPackets(packets);
     if(res){//if insertion in database was succesfull we can clear the vector
         packets.clear();
+        return true;
     }else{
         writeLog("ERROR IN INSERTING " + QString::number(packets.size()) + " PACKETS TO DATABASE. "
                  "We keep them for the next try.", QtWarningMsg);
+        return false;
     }
-    //TODO:
 }
 //return true if it has been contacted by all the ESPs
 bool DeviceFinder::canStartPacketProcessing()
@@ -153,7 +161,7 @@ bool DeviceFinder::canStartPacketProcessing()
     return true;
 }
 
-void DeviceFinder::setInteractionWithEsp(QString espName)
+void DeviceFinder::setEspInteracted(QString espName)
 {
     espInteracted[espName] = true;
 }
@@ -165,7 +173,8 @@ void DeviceFinder::processLocationsFromPackets()
     //Ricordati anche di aggiornare l'interfaccia grafica
     //altro giro altra corsa:
     resetInteractionsWithEsp();
-    last_ts = QDateTime::currentDateTime().toTime_t();
+
+    lastTimestamp = QDateTime::currentDateTime().toTime_t();
 
 
 }
@@ -355,7 +364,7 @@ QPointF DeviceFinder::calculatePosition(Packet lastPacket)
     // delete the existing packet used for find the position
     packets.removeAll(lastPacket);
 
-    last_ts = QDateTime::currentDateTime().toTime_t();
+    lastTimestamp = QDateTime::currentDateTime().toTime_t();
 
     return pos;
 }
