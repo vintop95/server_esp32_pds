@@ -59,7 +59,6 @@ int main(int argc, char *argv[])
     // Initializes the server that listens for the
     // esp devices to send the packets
     Server* s = Server::getInstance(SERVER_PORT);
-    s->setMultithread(false);
     s->start();
 
 

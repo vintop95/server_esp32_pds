@@ -11,7 +11,6 @@
 #include <QObject>
 #include <QPointF>
 
-
 /**
  * Record received from the ESP32 devices
  * rssi: -35 MOLTO VICINO, -100 MOLTO LONTANO

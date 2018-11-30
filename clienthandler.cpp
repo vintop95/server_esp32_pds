@@ -35,14 +35,14 @@ void ClientHandler::handle()
 {
     writeLog("#ClientHandler");
     // after waitPeriod close the connection
-    connect(&timer, &QTimer::timeout,
+    connect(&timeoutDisconnect, &QTimer::timeout,
     [=](){
         if (socket->isValid())
             socket->disconnectFromHost();
         writeLog("Timeout expired.", QtWarningMsg);
     });
-    timer.setInterval(waitPeriod);
-    timer.start();
+    timeoutDisconnect.setInterval(timeoutPeriod);
+    timeoutDisconnect.start();
 
     socket = new QTcpSocket(this);
 
@@ -55,7 +55,7 @@ void ClientHandler::handle()
 
     // Assign the callback to call when data is received from the client
     // (and when it disconnects)
-    // note - Qt::DirectConnection is used because it's multithreaded
+    // note - Qt::DirectConnection
     //        This makes the slot to be invoked immediately, when the signal is emitted.
     connect(socket, SIGNAL(readyRead()),
             this, SLOT(readyRead()),
@@ -87,19 +87,19 @@ void ClientHandler::readyRead()
     // per essere sicuro di aver ricevuto tutti i dati
 
 
-    if(!data.isEmpty()){
+    if(!dataReceived.isEmpty()){
         // There is a connection to conclude
-        writeLog("INITIAL STATE OF DATA VARIABLE: " + data);
-        data += socket->readAll();
-        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
-        this->pushRecords();//save the records
+        writeLog("INITIAL STATE OF DATA VARIABLE: " + dataReceived);
+        dataReceived += socket->readAll();
+        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + dataReceived);
+        this->pushRecordsToDeviceFinder();//save the records
         return;
     }
 
-    data = socket->peek(10);
+    dataReceived = socket->peek(10);
 
     // AGGIUNGERE IF INIT, DATA, END (chiudi)
-    if(data.startsWith("INIT ")){
+    if(dataReceived.startsWith("INIT ")){
         QByteArray msg;
         socket->skip(strlen("INIT "));
         msg = socket->readAll();
@@ -122,16 +122,16 @@ void ClientHandler::readyRead()
 
         socket->flush();
         //socket->waitForBytesWritten();
-        data.clear();
+        dataReceived.clear();
     }
-    else if(data.startsWith("DATA ")){
+    else if(dataReceived.startsWith("DATA ")){
 
         if(espName == "UNKNOWN"){
             writeLog(QString::number(socketDescriptor) + " - ESPNAME UNKNOWN", QtCriticalMsg);
             socket->write("ERR\r\n");
             socket->flush();
             //socket->waitForBytesWritten();
-            data.clear();
+            dataReceived.clear();
             return;
         }
 
@@ -139,11 +139,11 @@ void ClientHandler::readyRead()
 
         socket->skip(strlen("DATA "));
 
-        data = socket->readAll();
-        this->pushRecords();
+        dataReceived = socket->readAll();
+        this->pushRecordsToDeviceFinder();
 
     }
-    else if(data.startsWith("END")){
+    else if(dataReceived.startsWith("END")){
         writeLog(QString::number(socketDescriptor) + " - END MESSAGE");
 
         // Acknowledge the client
@@ -160,7 +160,7 @@ void ClientHandler::readyRead()
         socket->flush();
         //socket->waitForBytesWritten();
 
-        data.clear();
+        dataReceived.clear();
 
         // Close the connection emitting the disconnected signal
         if (socket->isValid())
@@ -168,12 +168,12 @@ void ClientHandler::readyRead()
 
     }else{
         writeLog(QString::number(socketDescriptor) + " - FORMAT NOT RECOGNIZED");
-        data = socket->readAll();
-        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
+        dataReceived = socket->readAll();
+        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + dataReceived);
         socket->write("ERR\r\n");
         socket->flush();
         //socket->waitForBytesWritten();
-        data.clear();
+        dataReceived.clear();
     }
 
 
@@ -187,7 +187,7 @@ void ClientHandler::disconnected()
     writeLog("#ClientHandler");
     writeLog(QString::number(socketDescriptor) + " Disconnected.");
 
-    timer.stop();
+    timeoutDisconnect.stop();
 
     if (socket->isValid())
         socket->disconnectFromHost();
@@ -201,13 +201,13 @@ void ClientHandler::disconnected()
     //exit(0);
 }
 
-void ClientHandler::pushRecords()
+void ClientHandler::pushRecordsToDeviceFinder()
 {
     writeLog("#ClientHandler");
-    data = data.replace('\0', '\n');
+    dataReceived = dataReceived.replace('\0', '\n');
 
     // Deserialize data received
-    QJsonDocument jDoc = QJsonDocument::fromJson(data);
+    QJsonDocument jDoc = QJsonDocument::fromJson(dataReceived);
     if(!jDoc.isNull() && jDoc.isArray()){
         // IF WE RECEIVED ALL THE JSON ARRAY
         writeLog(QString::number(socketDescriptor) + " - RECORDS RECEIVED", QtInfoMsg);
@@ -229,7 +229,7 @@ void ClientHandler::pushRecords()
         deviceFinder->addPacketsToDB();
         deviceFinder->setContactedByID(espName);
         socket->write("OK\r\n");
-        data.clear();
+        dataReceived.clear();
         if(deviceFinder->canStartProcessing()){
             emit contactedByAllESPs();//emit a signal in order to invoke processData()
         }

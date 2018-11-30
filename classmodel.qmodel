@@ -48,12 +48,15 @@
                           </DElement>
                          </base-DElement>
                          <object>{c9e7eb55-68e9-4103-8097-97c75298be30}</object>
-                         <name>main</name>
-                         <pos>x:650;y:290</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
-                         <visual-role>0</visual-role>
+                         <name>main.h</name>
+                         <pos>x:445;y:325</pos>
+                         <rect>x:-70;y:-40;w:140;h:80</rect>
+                         <auto-sized>false</auto-sized>
+                         <visual-role>6</visual-role>
+                         <visual-role2>2</visual-role2>
                         </DObject>
                        </base-DObject>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -69,7 +72,7 @@
                          </base-DElement>
                          <object>{2522ccf8-fbe8-4f78-8d95-02eb891f5ef5}</object>
                          <name>MainWindow</name>
-                         <pos>x:645;y:170</pos>
+                         <pos>x:445;y:115</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -89,7 +92,7 @@
                          </base-DElement>
                          <object>{811278fc-fd85-4ccf-a111-92e1e6ad271f}</object>
                          <name>Logger</name>
-                         <pos>x:430;y:230</pos>
+                         <pos>x:285;y:260</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -127,7 +130,7 @@
                          </base-DElement>
                          <object>{0584c37b-06f0-4fac-9194-9dbd3d4bce01}</object>
                          <name>DbManager</name>
-                         <pos>x:255;y:305</pos>
+                         <pos>x:75;y:340</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -201,7 +204,7 @@
                          </base-DElement>
                          <object>{9df8309b-154a-454e-a7e0-1a613ea7c3bc}</object>
                          <name>Chart</name>
-                         <pos>x:440;y:70</pos>
+                         <pos>x:100;y:85</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -239,7 +242,7 @@
                          </base-DElement>
                          <object>{2e566075-2371-4803-99da-478f21086398}</object>
                          <name>SettingsForm</name>
-                         <pos>x:855;y:70</pos>
+                         <pos>x:635;y:140</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -277,7 +280,7 @@
                          </base-DElement>
                          <object>{8d37785e-93d6-4ab5-be13-3a3f8cedba42}</object>
                          <name>ESPWidget</name>
-                         <pos>x:975;y:70</pos>
+                         <pos>x:770;y:135</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -315,11 +318,16 @@
                          </base-DElement>
                          <object>{6dbfce82-4c56-454e-a63b-f433b4aa0723}</object>
                          <name>Settings</name>
-                         <pos>x:855;y:290</pos>
+                         <pos>x:785;y:325</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
+                       <template>
+                        <qlist>
+                         <item>QTcpServer</item>
+                        </qlist>
+                       </template>
                       </DClass>
                      </instance>
                     </item>
@@ -371,11 +379,13 @@
                          </base-DElement>
                          <object>{3c71834d-0b52-47f1-9d4e-861d2baab746}</object>
                          <name>Record</name>
-                         <pos>x:650;y:375</pos>
-                         <rect>x:-40;y:-30;w:80;h:60</rect>
+                         <pos>x:435;y:470</pos>
+                         <rect>x:-60;y:-60;w:120;h:120</rect>
                          <visual-role>0</visual-role>
+                         <visual-role2>1</visual-role2>
                         </DObject>
                        </base-DObject>
+                       <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
                     </item>
@@ -409,9 +419,9 @@
                          </base-DElement>
                          <object>{631b9434-1e39-41fa-8456-a2d4cce62e5f}</object>
                          <name>DeviceFinder</name>
-                         <pos>x:450;y:395</pos>
+                         <pos>x:255;y:480</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
-                         <visual-role>0</visual-role>
+                         <visual-role>7</visual-role>
                         </DObject>
                        </base-DObject>
                       </DClass>
@@ -447,9 +457,9 @@
                          </base-DElement>
                          <object>{e64a0ce6-28bc-44fc-9c0a-c67a332d5255}</object>
                          <name>ClientHandler</name>
-                         <pos>x:645;y:495</pos>
+                         <pos>x:440;y:615</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
-                         <visual-role>0</visual-role>
+                         <visual-role>8</visual-role>
                         </DObject>
                        </base-DObject>
                       </DClass>
@@ -485,9 +495,9 @@
                          </base-DElement>
                          <object>{1b9efb0d-0b6f-4afe-9e69-ad563f0a3545}</object>
                          <name>Server</name>
-                         <pos>x:825;y:395</pos>
+                         <pos>x:595;y:480</pos>
                          <rect>x:-40;y:-30;w:80;h:60</rect>
-                         <visual-role>0</visual-role>
+                         <visual-role>9</visual-role>
                         </DObject>
                        </base-DObject>
                       </DClass>
@@ -549,7 +559,7 @@
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1537730016346</last-modified>
+                  <last-modified>1543608883962</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -571,7 +581,7 @@
                     <uid>{c9e7eb55-68e9-4103-8097-97c75298be30}</uid>
                    </MElement>
                   </base-MElement>
-                  <name>main</name>
+                  <name>main.h</name>
                   <relations>
                    <handles>
                     <handles>
@@ -670,6 +680,17 @@
                   </relations>
                  </MObject>
                 </base-MObject>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{9590e2d7-e1e6-412e-8c4e-2eb21752239d}</uid>
+                    <type>1</type>
+                    <declaration>#include &quot;global_libraries&quot;</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -981,6 +1002,11 @@
                   <name>Settings</name>
                  </MObject>
                 </base-MObject>
+                <template>
+                 <qlist>
+                  <item>QTcpServer</item>
+                 </qlist>
+                </template>
                </MClass>
               </instance>
              </target>
@@ -1002,6 +1028,45 @@
                   <name>Record</name>
                  </MObject>
                 </base-MObject>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{7e5da65b-c326-4531-9480-76335179e264}</uid>
+                    <type>1</type>
+                    <declaration>#include &lt;QObject&gt;</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{3ab88731-3060-4afe-ab10-5bb862f24832}</uid>
+                    <type>1</type>
+                    <declaration>#include &lt;QPointF&gt;</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{df9df77d-c2f3-43c3-a191-f72f786391f7}</uid>
+                    <type>1</type>
+                    <declaration>class Record</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{3b7df1de-8eb6-4962-b601-f888956ef96b}</uid>
+                    <type>1</type>
+                    <declaration>class Device</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{f2c6356d-e8e1-473f-9036-de9819295290}</uid>
+                    <type>1</type>
+                    <declaration>class ESP32</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>
@@ -1200,6 +1265,58 @@
                  </MObject>
                 </base-MObject>
                </MClass>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{cd438bf5-365c-4db3-928c-bec88b1c0c7b}</uid>
+             <target>
+              <instance type="MPackage">
+               <MPackage>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{cd438bf5-365c-4db3-928c-bec88b1c0c7b}</uid>
+                    <flags>1</flags>
+                   </MElement>
+                  </base-MElement>
+                  <name>Server Esp32 Pds</name>
+                  <children>
+                   <handles>
+                    <handles>
+                     <qlist>
+                      <item>
+                       <handle>
+                        <uid>{758d3d3c-ae6a-4971-88a2-28ca62761153}</uid>
+                        <target>
+                         <instance type="MComponent">
+                          <MComponent>
+                           <base-MObject>
+                            <MObject>
+                             <base-MElement>
+                              <MElement>
+                               <uid>{758d3d3c-ae6a-4971-88a2-28ca62761153}</uid>
+                               <flags>1</flags>
+                              </MElement>
+                             </base-MElement>
+                             <name>Main</name>
+                            </MObject>
+                           </base-MObject>
+                          </MComponent>
+                         </instance>
+                        </target>
+                       </handle>
+                      </item>
+                     </qlist>
+                    </handles>
+                   </handles>
+                  </children>
+                 </MObject>
+                </base-MObject>
+               </MPackage>
               </instance>
              </target>
             </handle>
