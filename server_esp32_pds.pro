@@ -36,7 +36,8 @@ SOURCES += \
     server.cpp \
     clienthandler.cpp \
     chart.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    areaplot.cpp
 
 HEADERS += \
         main.h \
@@ -51,7 +52,8 @@ HEADERS += \
     clienthandler.h \
     chart.h \
     qcustomplot.h \
-    datastructures.h
+    datastructures.h \
+    areaplot.h
 
 FORMS += \
         mainwindow.ui \

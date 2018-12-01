@@ -44,10 +44,12 @@ void DeviceFinder::init(espMapPtr_t list, QString dbPath)
     if(dbPath != "server_esp32_pds.sqlite3"){
         db.setPath(dbPath);
     }
+    if(esp32s.isNull()){
+        esp32s = list;
+    }
 
-    esp32s = list;
-
-    //setta per la prima volta il timestamp che definisce l'inizio della finestra di ascolto
+    // setta per la prima volta il timestamp che definisce
+    // l'inizio della finestra di ascolto
     lastTimestamp = QDateTime::currentDateTime().toTime_t();
 }
 
@@ -85,25 +87,6 @@ void DeviceFinder::resetInteractionsWithEsp()
     }
 }
 
-
-/**
- * @brief Set the position of the devName esp
- *
- * @param name of the esp32 device
- * @param x position
- * @param y position
- */
-void DeviceFinder::addEsp(QString espName, double xpos, double ypos)
-{
-    writeLog("#DeviceFinder", QtInfoMsg);
-    writeLog("Set " + espName + " pos: ("
-             + QString::number(xpos) +  ","
-             + QString::number(ypos) + ")", QtInfoMsg);
-    // TODO: add setEspPos
-    //esp32s->find(espName).value().setPos(xpos, ypos);
-    esp32s->insert(espName, ESP32(espName,QPointF(xpos,ypos)));
-    espInteracted.insert(espName, false);
-}
 
 /**
  * @brief Pushes the packets received from ClientHandler in a list
@@ -197,7 +180,7 @@ void DeviceFinder::pushDevice(Device d)
     // If there is already an item with the key, that
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
-    pWin->addDevice(d.pos.x(),d.pos.y());
+    pWin->getAreaPlot()->addDevice(d.pos.x(),d.pos.y());
 
     // TODO: remove device after a timeout?
 }

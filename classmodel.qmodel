@@ -72,8 +72,8 @@
                          </base-DElement>
                          <object>{2522ccf8-fbe8-4f78-8d95-02eb891f5ef5}</object>
                          <name>MainWindow</name>
-                         <pos>x:365;y:200</pos>
-                         <rect>x:-65;y:-85;w:130;h:170</rect>
+                         <pos>x:355;y:210</pos>
+                         <rect>x:-65;y:-70;w:130;h:140</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>8</visual-role>
                         </DObject>
@@ -201,7 +201,7 @@
                          </base-DElement>
                          <object>{9df8309b-154a-454e-a7e0-1a613ea7c3bc}</object>
                          <name>Chart</name>
-                         <pos>x:175;y:140</pos>
+                         <pos>x:160;y:105</pos>
                          <rect>x:-75;y:-40;w:150;h:80</rect>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -402,8 +402,8 @@
                          </base-DElement>
                          <object>{631b9434-1e39-41fa-8456-a2d4cce62e5f}</object>
                          <name>DeviceFinder</name>
-                         <pos>x:310;y:775</pos>
-                         <rect>x:-75;y:-105;w:150;h:210</rect>
+                         <pos>x:315;y:765</pos>
+                         <rect>x:-75;y:-95;w:150;h:190</rect>
                          <visual-role>7</visual-role>
                          <visual-role2>1</visual-role2>
                         </DObject>
@@ -817,9 +817,49 @@ POINTED BY THE ARROW</text>
                       </DBoundary>
                      </instance>
                     </item>
+                    <item>
+                     <instance type="DClass">
+                      <DClass>
+                       <base-DObject>
+                        <DObject>
+                         <base-DElement>
+                          <DElement>
+                           <uid>{25f9b0bc-3574-461f-90c6-b7140f04920c}</uid>
+                          </DElement>
+                         </base-DElement>
+                         <object>{5754c228-7a1c-4c86-89aa-7f69bf4df9ed}</object>
+                         <name>AreaPlot</name>
+                         <pos>x:150;y:225</pos>
+                         <rect>x:-65;y:-60;w:130;h:120</rect>
+                         <auto-sized>false</auto-sized>
+                         <visual-role>0</visual-role>
+                        </DObject>
+                       </base-DObject>
+                       <show-all-members>true</show-all-members>
+                      </DClass>
+                     </instance>
+                    </item>
+                    <item>
+                     <instance type="DDependency">
+                      <DDependency>
+                       <base-DRelation>
+                        <DRelation>
+                         <base-DElement>
+                          <DElement>
+                           <uid>{0c7a812a-0744-4e95-bae7-43cfc87bb2ee}</uid>
+                          </DElement>
+                         </base-DElement>
+                         <object>{ad9fd32b-7c49-4bd0-99b3-07ce1cc17717}</object>
+                         <a>{ee3ce9fc-b620-4241-886e-53098a2b6c07}</a>
+                         <b>{25f9b0bc-3574-461f-90c6-b7140f04920c}</b>
+                        </DRelation>
+                       </base-DRelation>
+                      </DDependency>
+                     </instance>
+                    </item>
                    </qlist>
                   </elements>
-                  <last-modified>1543623837010</last-modified>
+                  <last-modified>1543626527241</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -1062,6 +1102,28 @@ POINTED BY THE ARROW</text>
                         </target>
                        </handle>
                       </item>
+                      <item>
+                       <handle>
+                        <uid>{ad9fd32b-7c49-4bd0-99b3-07ce1cc17717}</uid>
+                        <target>
+                         <instance type="MDependency">
+                          <MDependency>
+                           <base-MRelation>
+                            <MRelation>
+                             <base-MElement>
+                              <MElement>
+                               <uid>{ad9fd32b-7c49-4bd0-99b3-07ce1cc17717}</uid>
+                              </MElement>
+                             </base-MElement>
+                             <a>{2522ccf8-fbe8-4f78-8d95-02eb891f5ef5}</a>
+                             <b>{5754c228-7a1c-4c86-89aa-7f69bf4df9ed}</b>
+                            </MRelation>
+                           </base-MRelation>
+                          </MDependency>
+                         </instance>
+                        </target>
+                       </handle>
+                      </item>
                      </qlist>
                     </handles>
                    </handles>
@@ -1077,58 +1139,44 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{3398ebfc-4a7e-4e41-98f6-2da894de5c8a}</uid>
+                    <uid>{91d99dc2-970a-4484-a639-f0b96fe3a323}</uid>
                     <type>2</type>
                     <declaration>-- LOGGER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{14b83f80-7e05-41fb-90b9-a566b6e7c2c7}</uid>
+                    <uid>{7ee61fb3-9a34-4bbf-a563-43b471c68534}</uid>
                     <type>2</type>
                     <declaration>(s) writeLogInUi()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{b32caef7-afd2-4f6b-aeed-653e33aee3d2}</uid>
+                    <uid>{9f1daa16-f2d4-4c50-93f8-251142cd86dd}</uid>
                     <type>2</type>
                     <declaration>-- EVERYONE()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{e9f998a7-ecbe-495a-9e57-2e4c3bb62a52}</uid>
+                    <uid>{b95def77-0c70-4555-91ac-355a869a0594}</uid>
                     <type>2</type>
                     <declaration>+ getInstance()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{220a3ead-e729-4f86-b843-89b8fc329203}</uid>
+                    <uid>{ffe50b95-b031-48f4-8624-aad8dd70ef5b}</uid>
                     <type>2</type>
                     <declaration>-- DEVICE_FINDER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{54296fb2-3505-4853-bde2-476bf7787f20}</uid>
+                    <uid>{714046ef-6e2b-42ab-b4b9-cf699b3b3867}</uid>
                     <type>2</type>
                     <declaration>+ getChart()</declaration>
-                   </MClassMember>
-                  </item>
-                  <item>
-                   <MClassMember>
-                    <uid>{dd08f969-ca54-4506-9694-ba11c5900377}</uid>
-                    <type>1</type>
-                    <declaration>+ add/remove</declaration>
-                   </MClassMember>
-                  </item>
-                  <item>
-                   <MClassMember>
-                    <uid>{2d2dbdad-48c9-4a4b-b242-864c255fa062}</uid>
-                    <type>1</type>
-                    <declaration>Device/ESP32 in plot</declaration>
                    </MClassMember>
                   </item>
                  </qlist>
@@ -1315,14 +1363,14 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{3217acc3-7fd4-46c4-a065-e2b219e0dedc}</uid>
+                    <uid>{c711e96a-a04f-4dc4-8145-d2bf46d7efc4}</uid>
                     <type>2</type>
                     <declaration>-- DEVICE_FINDER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{492496c7-3dfd-4d66-85ae-29c8b123ed4d}</uid>
+                    <uid>{566054e3-598b-4b74-a252-feaabdcae9b4}</uid>
                     <type>2</type>
                     <declaration>(s) updateChart(#currDev)</declaration>
                    </MClassMember>
@@ -1681,84 +1729,70 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{0421284d-1334-45dc-bc03-f61b728a2cc7}</uid>
+                    <uid>{b204ac14-5b98-4832-813f-2342e0c7710f}</uid>
                     <type>2</type>
                     <declaration>-- MAINWINDOW()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{7a15e06a-0a21-4aaa-aeab-d4a797f80c49}</uid>
+                    <uid>{73363dba-08c7-4b6a-a376-428e87f73c75}</uid>
                     <type>2</type>
                     <declaration>(s) logCurrentDevices()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{1f07fd4b-da87-4d47-b05d-e0251487435c}</uid>
+                    <uid>{8f7fdd75-fcd4-41be-9959-e889f7734bf6}</uid>
                     <type>2</type>
                     <declaration>-- EVERYONE()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{8b8cc998-7473-40c8-ae67-182c01e97c50}</uid>
+                    <uid>{0403b921-1637-4e78-8f2a-4409659e7f58}</uid>
                     <type>2</type>
-                    <declaration>+ getInstance()</declaration>
+                    <declaration>+ getInstance([esp32s])</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{253db948-c71b-4dfd-8c7b-df3c71961fb2}</uid>
+                    <uid>{510e6623-f52f-47de-95ed-411647db57a1}</uid>
                     <type>2</type>
                     <declaration>+ calculateDistance(rssi)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{b358ac81-911d-44b8-bd6c-6a71d8b7ef4e}</uid>
+                    <uid>{eaef1199-5dea-464b-88a8-bae01f13f9bc}</uid>
                     <type>2</type>
                     <declaration>+ getEspNo()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{f90f6053-60b5-47b2-b124-b298619b20bb}</uid>
+                    <uid>{51516a90-06f0-442a-8288-91c09fb82b95}</uid>
                     <type>2</type>
                     <declaration>+ countCurrentDevices()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{be31bd51-8da1-483e-8654-60a7811bf067}</uid>
-                    <type>2</type>
-                    <declaration>-- MAIN.C()</declaration>
-                   </MClassMember>
-                  </item>
-                  <item>
-                   <MClassMember>
-                    <uid>{7a7566ef-2fab-4449-8018-555b14296f61}</uid>
-                    <type>2</type>
-                    <declaration>+ addEsp(espdata)</declaration>
-                   </MClassMember>
-                  </item>
-                  <item>
-                   <MClassMember>
-                    <uid>{ee5f6b35-0832-4526-a992-b2366b1323ff}</uid>
+                    <uid>{79bf1a53-72b4-49d6-b9b9-779d6e5de5e8}</uid>
                     <type>2</type>
                     <declaration>-- CLIENT_HANDLER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{8108c352-2840-4bf8-aba3-dad79f2fe214}</uid>
+                    <uid>{51933058-1e43-46d5-a7e9-1cfadd7ae9e9}</uid>
                     <type>2</type>
                     <declaration>+ pushPacket(packet)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{bba91606-892e-4d8c-a023-09598b7deadb}</uid>
+                    <uid>{b56c3b4f-d80a-4eb7-b010-6e47b2becdf2}</uid>
                     <type>2</type>
                     <declaration>+ insertPacketsIntoDB(esp)</declaration>
                    </MClassMember>
@@ -2345,6 +2379,59 @@ POINTED BY THE ARROW</text>
                   </relations>
                  </MObject>
                 </base-MObject>
+               </MClass>
+              </instance>
+             </target>
+            </handle>
+           </item>
+           <item>
+            <handle>
+             <uid>{5754c228-7a1c-4c86-89aa-7f69bf4df9ed}</uid>
+             <target>
+              <instance type="MClass">
+               <MClass>
+                <base-MObject>
+                 <MObject>
+                  <base-MElement>
+                   <MElement>
+                    <uid>{5754c228-7a1c-4c86-89aa-7f69bf4df9ed}</uid>
+                   </MElement>
+                  </base-MElement>
+                  <name>AreaPlot</name>
+                 </MObject>
+                </base-MObject>
+                <members>
+                 <qlist>
+                  <item>
+                   <MClassMember>
+                    <uid>{91a5b0ba-aeca-4efd-a49d-9c4016f4d8e4}</uid>
+                    <type>1</type>
+                    <declaration>+ add/remove</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{1c05b7e6-ad1f-422c-912f-4748203f9e54}</uid>
+                    <type>1</type>
+                    <declaration>Device/ESP32 in plot</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{bad6bf30-338d-495e-8c85-a6c69b31923e}</uid>
+                    <type>2</type>
+                    <declaration>+ replot()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{0b0b1264-6bc0-4f49-adcf-79a79aa0bbd1}</uid>
+                    <type>2</type>
+                    <declaration>+ clearPlot()</declaration>
+                   </MClassMember>
+                  </item>
+                 </qlist>
+                </members>
                </MClass>
               </instance>
              </target>

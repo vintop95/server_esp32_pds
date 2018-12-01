@@ -9,6 +9,7 @@
 #define MAINWINDOW_H
 
 #include "chart.h"
+#include "areaplot.h"
 #include "settingsform.h"
 
 #include <QMainWindow>
@@ -29,15 +30,12 @@ class MainWindow : public QMainWindow
 
 private:
     static MainWindow* instance;
-    Ui::MainWindow *ui;
-    Chart *chart;
-
-    QVector<double> vecDevX, vecDevY, vecEspX, vecEspY;
+    Ui::MainWindow* ui;
+    Chart* chart;
+    AreaPlot* areaPlot;
 
     explicit MainWindow(QWidget *parent = nullptr);
     void initChart();
-
-    void plot();
 
 signals:
     void logCurrDev();
@@ -57,13 +55,7 @@ public:
     ~MainWindow();
     static MainWindow* getInstance();
     Chart* getChart();
-
-    // Plot management
-    void addDevice(double x, double y);
-    void removeDevice(double x, double y);
-    void addESP32(double x, double y);
-    void removeESP32(double x, double y);
-    void clearPlot();
+    AreaPlot* getAreaPlot();
 };
 
 #endif // MAINWINDOW_H

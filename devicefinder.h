@@ -63,9 +63,6 @@ public:
     int getEspNo();
     int countCurrentDevices();
 
-    // MAIN.C
-    void addEsp(QString espName, double xpos, double ypos);
-
     // CLIENT_HANDLER
     void pushPacket(Packet p);
     bool insertPacketsIntoDB(QString espName);
