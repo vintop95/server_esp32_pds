@@ -16,10 +16,6 @@ private:
 signals:
 
 public slots:
-
-public:
-    explicit AreaPlot(QCustomPlot* customPlot, QObject *parent = nullptr);
-
     // Plot management
     void replot();
     void addDevice(double x, double y);
@@ -27,6 +23,9 @@ public:
     void addESP32(double x, double y);
     void removeESP32(double x, double y);
     void clearPlot();
+public:
+    explicit AreaPlot(QCustomPlot* customPlot, QObject *parent = nullptr);
+
 };
 
 #endif // AREAPLOT_H

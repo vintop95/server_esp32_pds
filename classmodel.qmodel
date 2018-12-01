@@ -829,8 +829,8 @@ POINTED BY THE ARROW</text>
                          </base-DElement>
                          <object>{5754c228-7a1c-4c86-89aa-7f69bf4df9ed}</object>
                          <name>AreaPlot</name>
-                         <pos>x:150;y:225</pos>
-                         <rect>x:-65;y:-60;w:130;h:120</rect>
+                         <pos>x:165;y:230</pos>
+                         <rect>x:-65;y:-65;w:130;h:130</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
                         </DObject>
@@ -859,7 +859,7 @@ POINTED BY THE ARROW</text>
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1543626527241</last-modified>
+                  <last-modified>1543628325227</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -2404,30 +2404,37 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{91a5b0ba-aeca-4efd-a49d-9c4016f4d8e4}</uid>
+                    <uid>{98b9de94-80ba-474f-8864-ec2963994768}</uid>
                     <type>1</type>
-                    <declaration>+ add/remove</declaration>
+                    <declaration>-- DEVICE_FINDER</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{1c05b7e6-ad1f-422c-912f-4748203f9e54}</uid>
+                    <uid>{fa9dc778-b33d-4658-a65d-f09a80cb803d}</uid>
+                    <type>1</type>
+                    <declaration>(s) add/remove</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{5cf80761-ef67-4778-bfc6-4f2bb6bc2f0b}</uid>
                     <type>1</type>
                     <declaration>Device/ESP32 in plot</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{bad6bf30-338d-495e-8c85-a6c69b31923e}</uid>
+                    <uid>{754b5158-296a-49e6-b1b0-785ff2bfaf29}</uid>
                     <type>2</type>
-                    <declaration>+ replot()</declaration>
+                    <declaration>(s) replot()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{0b0b1264-6bc0-4f49-adcf-79a79aa0bbd1}</uid>
+                    <uid>{3d1137af-a1ee-4413-9368-b0af2760d759}</uid>
                     <type>2</type>
-                    <declaration>+ clearPlot()</declaration>
+                    <declaration>(s) clearPlot()</declaration>
                    </MClassMember>
                   </item>
                  </qlist>
