@@ -21,19 +21,20 @@ private:
     static DeviceFinder* instance;
     MainWindow* pWin;
     DbManager db;
-    // A vector that holds true in position i if ESP32#i already connected to
-    // server during the listening window
+    // A vector that holds true in position i if ESP32#i
+    // already connected to server during the listening window
     QMap<QString, bool> espInteracted;
     QVector<Packet> packets;
-    QMap<QString, ESP32> esp32s;
-    QHash<QString, Device> devices;
+    espMapPtr_t esp32s;
+    QMap<QString, Device> devices;
 
     QTimer chartUpdateTimer;
     uint lastTimestamp;
 
     DeviceFinder();
     void setWindow(MainWindow *);
-    void init(QString dbPath="server_esp32_pds.sqlite3");
+    void init(espMapPtr_t list = nullptr,
+              QString dbPath="server_esp32_pds.sqlite3");
     void setChartUpdateTimer();
 
     bool canStartPacketProcessing();
@@ -43,8 +44,10 @@ private:
     void pushDevice(Device d);
 
     QPointF calculatePosition(Packet r);
-    static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3);
-    static std::pair<QPointF, QPointF> bilateration(QPointF p1, QPointF p2, double r1, double r2);
+    static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3,
+                                 double r1, double r2, double r3);
+    static std::pair<QPointF, QPointF> bilateration(
+            QPointF p1, QPointF p2, double r1, double r2);
 
 public slots:
     // MAINWINDOW
@@ -54,7 +57,7 @@ public:
     //void run() override;
 
     // EVERYONE
-    static DeviceFinder* getInstance(
+    static DeviceFinder* getInstance(espMapPtr_t list = nullptr,
             QString dbPath="server_esp32_pds.sqlite3");
     static double calculateDistance(int rssi);
     int getEspNo();

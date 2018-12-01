@@ -72,8 +72,8 @@
                          </base-DElement>
                          <object>{2522ccf8-fbe8-4f78-8d95-02eb891f5ef5}</object>
                          <name>MainWindow</name>
-                         <pos>x:360;y:200</pos>
-                         <rect>x:-75;y:-85;w:150;h:170</rect>
+                         <pos>x:365;y:200</pos>
+                         <rect>x:-65;y:-85;w:130;h:170</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>8</visual-role>
                         </DObject>
@@ -164,16 +164,10 @@
                           </DElement>
                          </base-DElement>
                          <object>{9ee3e690-1273-4c4d-843b-256395caf5d6}</object>
-                         <stereotypes>
-                          <qlist>
-                           <item>mainwindow.c INCL L.h</item>
-                          </qlist>
-                         </stereotypes>
                          <a>{0429bdf2-b114-4963-84f5-41258f4ce2f2}</a>
                          <b>{ee3ce9fc-b620-4241-886e-53098a2b6c07}</b>
                         </DRelation>
                        </base-DRelation>
-                       <direction>2</direction>
                       </DDependency>
                      </instance>
                     </item>
@@ -825,7 +819,7 @@ POINTED BY THE ARROW</text>
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1543620867350</last-modified>
+                  <last-modified>1543623837010</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -1083,58 +1077,58 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{88eead6d-fb70-492b-880c-8f0915361015}</uid>
+                    <uid>{3398ebfc-4a7e-4e41-98f6-2da894de5c8a}</uid>
                     <type>2</type>
                     <declaration>-- LOGGER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{f775d745-973d-45b4-ba7c-04b487cc8926}</uid>
+                    <uid>{14b83f80-7e05-41fb-90b9-a566b6e7c2c7}</uid>
                     <type>2</type>
                     <declaration>(s) writeLogInUi()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{5d80a99b-eb9e-4adf-a3b4-8a1d1830d2e7}</uid>
+                    <uid>{b32caef7-afd2-4f6b-aeed-653e33aee3d2}</uid>
                     <type>2</type>
                     <declaration>-- EVERYONE()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{d757444d-b933-480b-b13d-8e7c669be360}</uid>
+                    <uid>{e9f998a7-ecbe-495a-9e57-2e4c3bb62a52}</uid>
                     <type>2</type>
                     <declaration>+ getInstance()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{a408c75d-cb02-490f-a36d-d9229ca9584d}</uid>
+                    <uid>{220a3ead-e729-4f86-b843-89b8fc329203}</uid>
                     <type>2</type>
                     <declaration>-- DEVICE_FINDER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{49c82101-d4d6-4a9a-8c11-86536fb81d94}</uid>
+                    <uid>{54296fb2-3505-4853-bde2-476bf7787f20}</uid>
                     <type>2</type>
                     <declaration>+ getChart()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{064f7012-6853-4912-84b5-98ab41e54236}</uid>
+                    <uid>{dd08f969-ca54-4506-9694-ba11c5900377}</uid>
                     <type>1</type>
                     <declaration>+ add/remove</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{6c8b1e94-0e5b-488c-8ff6-27dc62da4a03}</uid>
+                    <uid>{2d2dbdad-48c9-4a4b-b242-864c255fa062}</uid>
                     <type>1</type>
-                    <declaration>Device/ESP32</declaration>
+                    <declaration>Device/ESP32 in plot</declaration>
                    </MClassMember>
                   </item>
                  </qlist>
@@ -1173,18 +1167,12 @@ POINTED BY THE ARROW</text>
                              <base-MElement>
                               <MElement>
                                <uid>{9ee3e690-1273-4c4d-843b-256395caf5d6}</uid>
-                               <stereotypes>
-                                <qlist>
-                                 <item>mainwindow.c INCL L.h</item>
-                                </qlist>
-                               </stereotypes>
                               </MElement>
                              </base-MElement>
                              <a>{811278fc-fd85-4ccf-a111-92e1e6ad271f}</a>
                              <b>{2522ccf8-fbe8-4f78-8d95-02eb891f5ef5}</b>
                             </MRelation>
                            </base-MRelation>
-                           <direction>2</direction>
                           </MDependency>
                          </instance>
                         </target>
@@ -1531,28 +1519,28 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{907f5a78-a9af-40fc-9ee7-1ff928287ece}</uid>
+                    <uid>{1a4ec95b-9882-4252-a9e3-37c9beae8caf}</uid>
                     <type>1</type>
-                    <declaration>+ espList</declaration>
+                    <declaration>+ esp32s</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{d8b2dd1e-7bd8-4787-b566-e0e7cc3f195b}</uid>
+                    <uid>{77f53534-dfd7-4b83-a5ad-87ee328df475}</uid>
                     <type>2</type>
                     <declaration>-- MAIN.C ()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{2118f7bf-d448-4fd2-863d-4f05ad0e451a}</uid>
+                    <uid>{128b1493-a6cb-490c-97c2-832b0141412a}</uid>
                     <type>2</type>
                     <declaration>+ getInstance()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{297eec6e-178e-4a8a-96e0-934c60e49b7f}</uid>
+                    <uid>{753c1570-1de2-4e2e-8bee-f9bbd8d88dfa}</uid>
                     <type>2</type>
                     <declaration>+ loadSettings(espList)</declaration>
                    </MClassMember>
@@ -1693,84 +1681,84 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{63cdbfdb-6ce4-4e8c-bf45-02b21359c42d}</uid>
+                    <uid>{0421284d-1334-45dc-bc03-f61b728a2cc7}</uid>
                     <type>2</type>
                     <declaration>-- MAINWINDOW()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{065fded6-36ea-445f-8f25-7b35a6356fc7}</uid>
+                    <uid>{7a15e06a-0a21-4aaa-aeab-d4a797f80c49}</uid>
                     <type>2</type>
                     <declaration>(s) logCurrentDevices()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{b614b804-6722-47e3-9f8c-68c08c691201}</uid>
+                    <uid>{1f07fd4b-da87-4d47-b05d-e0251487435c}</uid>
                     <type>2</type>
                     <declaration>-- EVERYONE()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{87be1de6-1798-4526-9c2a-5bf2536174de}</uid>
+                    <uid>{8b8cc998-7473-40c8-ae67-182c01e97c50}</uid>
                     <type>2</type>
                     <declaration>+ getInstance()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{9c3b87d1-2935-4ab0-9455-76ebb2713e65}</uid>
+                    <uid>{253db948-c71b-4dfd-8c7b-df3c71961fb2}</uid>
                     <type>2</type>
                     <declaration>+ calculateDistance(rssi)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{84d246da-670a-46f7-ab16-4e5fd66f95ff}</uid>
+                    <uid>{b358ac81-911d-44b8-bd6c-6a71d8b7ef4e}</uid>
                     <type>2</type>
                     <declaration>+ getEspNo()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{01ede307-d743-476e-a8c9-4364ab67f976}</uid>
+                    <uid>{f90f6053-60b5-47b2-b124-b298619b20bb}</uid>
                     <type>2</type>
                     <declaration>+ countCurrentDevices()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{a0616b43-9184-4908-9fb0-85b311e9dec4}</uid>
+                    <uid>{be31bd51-8da1-483e-8654-60a7811bf067}</uid>
                     <type>2</type>
                     <declaration>-- MAIN.C()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{4d4593f5-d398-4d82-a7d6-017c286334e5}</uid>
+                    <uid>{7a7566ef-2fab-4449-8018-555b14296f61}</uid>
                     <type>2</type>
                     <declaration>+ addEsp(espdata)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{292234db-dc76-436e-8dce-5fa110d9a0dc}</uid>
+                    <uid>{ee5f6b35-0832-4526-a992-b2366b1323ff}</uid>
                     <type>2</type>
                     <declaration>-- CLIENT_HANDLER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{59363013-9dc6-41bd-9935-2e12ed621906}</uid>
+                    <uid>{8108c352-2840-4bf8-aba3-dad79f2fe214}</uid>
                     <type>2</type>
                     <declaration>+ pushPacket(packet)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{190e115f-656b-4a26-89e1-8781a800447b}</uid>
+                    <uid>{bba91606-892e-4d8c-a023-09598b7deadb}</uid>
                     <type>2</type>
                     <declaration>+ insertPacketsIntoDB(esp)</declaration>
                    </MClassMember>

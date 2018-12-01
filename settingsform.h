@@ -22,15 +22,22 @@ class SettingsForm;
 /**
  * This class models the graphical form
  * for changing the settings (preferences)
+ * LIFECYCLE OF SETTINGS:
+ * At start call loadSettingsFromIni() and use it for the rest of
+ * the program
+ * If you want to change the settings, change it from the ui
+ * and restart, because we do:
+ *  loadValuesFromIniToWidget()
+ *  saveValuesFromWidgetToIni()
  */
 class SettingsForm : public QDialog
 {
     Q_OBJECT
 
 private:
-    void addESPWidget(QString name, double x, double y, bool modified = true);
-    void loadValues();
-    void saveValues();
+    void addEspWidget(QString name, double x, double y, bool modified = true);
+    void loadValuesFromIniToWidget();
+    void saveValuesFromWidgetToIni();
     Ui::SettingsForm *ui;
     QString settingsPath;
 

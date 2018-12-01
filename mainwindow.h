@@ -32,7 +32,7 @@ private:
     Ui::MainWindow *ui;
     Chart *chart;
 
-    QVector<double> qv_x, qv_y, qvs_x, qvs_y;
+    QVector<double> vecDevX, vecDevY, vecEspX, vecEspY;
 
     explicit MainWindow(QWidget *parent = nullptr);
     void initChart();

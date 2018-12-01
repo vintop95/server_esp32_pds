@@ -26,6 +26,13 @@ static int ESP32_NO_LIMIT = 15;
 
 /**
  * This class models the settings of the application
+ * LIFECYCLE OF SETTINGS:
+ * At start call loadSettingsFromIni() and use it for the rest of
+ * the program
+ * If you want to change the settings, change it from the ui
+ * and restart, because we do:
+ *  loadValuesFromIniToWidget()
+ *  saveValuesFromWidgetToIni()
  *
  * Singleton pattern is applied
  */
@@ -37,13 +44,15 @@ private:
     static Settings* instance;
     Settings();
     ~Settings();
+    bool writeSettingsToIni(); //da non usare
+
     void test();
 public:
     // EVERYONE
-    QSharedPointer<QList<ESP32>> espList;
+    espMapPtr_t esp32s = espMapPtr_t::create();
     // MAIN.C
     static Settings* getInstance();
-    void loadSettings(QSharedPointer<QList<ESP32>>);
+    void loadSettingsFromIni();
 };
 
 #endif // SETTINGS_H

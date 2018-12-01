@@ -32,12 +32,10 @@ int main(int argc, char *argv[])
 {
     // Necessary in order to make the program work
     QApplication a(argc, argv);
-    //writeLog("SIZE OF UINT: " + QString::number(sizeof(uint)));
+
     Settings* settings = Settings::getInstance();
-    // Retrieve the list of esp32 devices
-    QSharedPointer<QList<ESP32>> espList = QSharedPointer<QList<ESP32>>::create();
-    settings->loadSettings(espList);
-    ESP32_NO = espList->size();
+    settings->loadSettingsFromIni();
+
     writeLog("NUM OF ESPs: " + QString::number(ESP32_NO));
 
     MainWindow* w = MainWindow::getInstance();
@@ -47,13 +45,10 @@ int main(int argc, char *argv[])
 
     printMainRssiMeasures();
 
-
     // Initializes the object that handles the packets
     // to find the devices in the area
-    DeviceFinder* deviceFinder = DeviceFinder::getInstance();
-    for(auto e : *espList){
-        deviceFinder->addEsp(e.getName(), e.getX(), e.getY());
-    }
+    DeviceFinder* deviceFinder =
+            DeviceFinder::getInstance(settings->esp32s);
     deviceFinder->test();
 
     // Initializes the server that listens for the

@@ -19,7 +19,7 @@ DeviceFinder* DeviceFinder::instance;
 DeviceFinder::DeviceFinder():
     db("server_esp32_pds.sqlite3")
 {
-    init();
+    init(nullptr);
 
     // in order to let the command of printing
     // from the gui
@@ -30,25 +30,23 @@ DeviceFinder::DeviceFinder():
 
 }
 
-DeviceFinder* DeviceFinder::getInstance(QString dbPath)
+DeviceFinder* DeviceFinder::getInstance(espMapPtr_t list, QString dbPath)
 {
     if (instance == nullptr){
         instance = new DeviceFinder();
     }
-    instance->init(dbPath);
+    instance->init(list, dbPath);
     return instance;
 }
 
-void DeviceFinder::init(QString dbPath)
+void DeviceFinder::init(espMapPtr_t list, QString dbPath)
 {
     if(dbPath != "server_esp32_pds.sqlite3"){
         db.setPath(dbPath);
     }
 
+    esp32s = list;
 
-    for(int i=0; esp32s.size()<getEspNo(); ++i){
-
-    }
     //setta per la prima volta il timestamp che definisce l'inizio della finestra di ascolto
     lastTimestamp = QDateTime::currentDateTime().toTime_t();
 }
@@ -101,7 +99,9 @@ void DeviceFinder::addEsp(QString espName, double xpos, double ypos)
     writeLog("Set " + espName + " pos: ("
              + QString::number(xpos) +  ","
              + QString::number(ypos) + ")", QtInfoMsg);
-    esp32s.find(espName).value().setPos(xpos, ypos);
+    // TODO: add setEspPos
+    //esp32s->find(espName).value().setPos(xpos, ypos);
+    esp32s->insert(espName, ESP32(espName,QPointF(xpos,ypos)));
     espInteracted.insert(espName, false);
 }
 
@@ -197,7 +197,7 @@ void DeviceFinder::pushDevice(Device d)
     // If there is already an item with the key, that
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
-    pWin->addPoint(d.pos.x(),d.pos.y());
+    pWin->addDevice(d.pos.x(),d.pos.y());
 
     // TODO: remove device after a timeout?
 }
@@ -233,7 +233,7 @@ int DeviceFinder::countCurrentDevices()
 
 int DeviceFinder::getEspNo()
 {
-    return esp32s.size();
+    return esp32s->size();
 }
 
 
@@ -310,8 +310,8 @@ QPointF DeviceFinder::calculatePosition(Packet lastPacket)
 
     QVector<Packet> packetsOrdered;
     for(Packet genericPacket : packets){
-        auto it = esp32s.find(genericPacket.espName);
-        bool exists = (it != esp32s.end());
+        auto it = esp32s->find(genericPacket.espName);
+        bool exists = (it != esp32s->end());
         if(exists && genericPacket == lastPacket){
             packetsOrdered.push_back(genericPacket);
         }
@@ -326,10 +326,10 @@ QPointF DeviceFinder::calculatePosition(Packet lastPacket)
         writeLog(packetOrdered.toString());
 
         ESP32 espToPush("");
-        auto it = esp32s.find(packetOrdered.espName);
-        bool exists = (it != esp32s.end());
+        auto it = esp32s->find(packetOrdered.espName);
+        bool exists = (it != esp32s->end());
         if(exists){
-            espToPush = esp32s.value(packetOrdered.espName, ESP32(""));
+            espToPush = esp32s->value(packetOrdered.espName, ESP32(""));
             espChosen.push_back(espToPush);
         }
     }

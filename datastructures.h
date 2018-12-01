@@ -5,8 +5,8 @@
  * Giorgio Pizzuto
  * Vincenzo Topazio
  */
-#ifndef PACKET_H
-#define PACKET_H
+#ifndef DATASTRUCTURES_H
+#define DATASTRUCTURES_H
 
 #include <QObject>
 #include <QPointF>
@@ -111,5 +111,7 @@ public:
         pos = QPointF(xpos, ypos);
     }
 };
+
+typedef QSharedPointer<QMap<QString, ESP32>> espMapPtr_t;
 
 #endif // RECORD_H
