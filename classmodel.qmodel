@@ -241,7 +241,7 @@
                          <object>{2e566075-2371-4803-99da-478f21086398}</object>
                          <name>SettingsForm</name>
                          <pos>x:535;y:140</pos>
-                         <rect>x:-60;y:-35;w:120;h:70</rect>
+                         <rect>x:-60;y:-40;w:120;h:80</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
@@ -280,7 +280,7 @@
                          <object>{8d37785e-93d6-4ab5-be13-3a3f8cedba42}</object>
                          <name>ESPWidget</name>
                          <pos>x:685;y:155</pos>
-                         <rect>x:-65;y:-50;w:130;h:100</rect>
+                         <rect>x:-65;y:-55;w:130;h:110</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
@@ -1454,7 +1454,14 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{da820f8d-055e-4cc8-92a7-96f8ffd1edc0}</uid>
+                    <uid>{15073af4-23ad-464c-b434-70d2d1f6ecd0}</uid>
+                    <type>2</type>
+                    <declaration>-- MAIN_WINDOW()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{e80d6be6-0e62-452d-b4be-44531565b6a7}</uid>
                     <type>2</type>
                     <declaration>+ SettingsForm(path)</declaration>
                    </MClassMember>
@@ -1486,21 +1493,28 @@ POINTED BY THE ARROW</text>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{d9fba17a-4b8a-4957-8672-df2ae8ef631a}</uid>
+                    <uid>{0f6c4694-da92-44d2-ace4-56d969717d2a}</uid>
+                    <type>2</type>
+                    <declaration>-- SETTINGS_FORM()</declaration>
+                   </MClassMember>
+                  </item>
+                  <item>
+                   <MClassMember>
+                    <uid>{aa43a908-577c-441c-a262-3407d62f7b54}</uid>
                     <type>2</type>
                     <declaration>+ set/getName(name)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{61b6ee5e-5d83-4fb8-a65b-cc91207196fb}</uid>
+                    <uid>{b41a3312-30ba-41c8-9ae0-1aa2953c30b1}</uid>
                     <type>2</type>
                     <declaration>+ set/getPoint(x,y)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{5678f99c-455b-47b1-8dc1-82bd80042cfb}</uid>
+                    <uid>{d7785293-1696-40f2-ac19-58a7086ebb37}</uid>
                     <type>2</type>
                     <declaration>+ set/getModified(m)</declaration>
                    </MClassMember>
