@@ -19,8 +19,8 @@ class ClientHandler : public QObject
     Q_OBJECT
 
 private:
-   DeviceFinder *deviceFinder;
    QTcpSocket *socket;
+   DeviceFinder *deviceFinder;
 
    qintptr socketDescriptor;
    QString espName = nullptr;

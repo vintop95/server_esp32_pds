@@ -104,6 +104,11 @@
                          <visual-role>6</visual-role>
                         </DObject>
                        </base-DObject>
+                       <template>
+                        <qlist>
+                         <item>QObject</item>
+                        </qlist>
+                       </template>
                        <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
@@ -206,6 +211,11 @@
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
+                       <template>
+                        <qlist>
+                         <item>QChart</item>
+                        </qlist>
+                       </template>
                        <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
@@ -245,6 +255,11 @@
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
+                       <template>
+                        <qlist>
+                         <item>QDialog</item>
+                        </qlist>
+                       </template>
                        <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
@@ -278,12 +293,17 @@
                           </DElement>
                          </base-DElement>
                          <object>{8d37785e-93d6-4ab5-be13-3a3f8cedba42}</object>
-                         <name>ESPWidget</name>
-                         <pos>x:685;y:155</pos>
+                         <name>EspWidget</name>
+                         <pos>x:685;y:145</pos>
                          <rect>x:-65;y:-55;w:130;h:110</rect>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
+                       <template>
+                        <qlist>
+                         <item>QWidget</item>
+                        </qlist>
+                       </template>
                        <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
@@ -458,6 +478,11 @@
                          <visual-role>8</visual-role>
                         </DObject>
                        </base-DObject>
+                       <template>
+                        <qlist>
+                         <item>QTcpSocket</item>
+                        </qlist>
+                       </template>
                        <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
@@ -829,12 +854,17 @@ POINTED BY THE ARROW</text>
                          </base-DElement>
                          <object>{5754c228-7a1c-4c86-89aa-7f69bf4df9ed}</object>
                          <name>AreaPlot</name>
-                         <pos>x:165;y:230</pos>
+                         <pos>x:155;y:230</pos>
                          <rect>x:-65;y:-65;w:130;h:130</rect>
                          <auto-sized>false</auto-sized>
                          <visual-role>0</visual-role>
                         </DObject>
                        </base-DObject>
+                       <template>
+                        <qlist>
+                         <item>QCustomPlot</item>
+                        </qlist>
+                       </template>
                        <show-all-members>true</show-all-members>
                       </DClass>
                      </instance>
@@ -859,7 +889,7 @@ POINTED BY THE ARROW</text>
                     </item>
                    </qlist>
                   </elements>
-                  <last-modified>1543628325227</last-modified>
+                  <last-modified>1543629495617</last-modified>
                   <toolbarid>General</toolbarid>
                  </MDiagram>
                 </base-MDiagram>
@@ -1232,18 +1262,23 @@ POINTED BY THE ARROW</text>
                   </relations>
                  </MObject>
                 </base-MObject>
+                <template>
+                 <qlist>
+                  <item>QObject</item>
+                 </qlist>
+                </template>
                 <members>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{7f120d98-a8f8-4de9-94c3-816800922696}</uid>
+                    <uid>{845c492c-54fc-4588-9d82-5c6ce141a813}</uid>
                     <type>2</type>
                     <declaration>+ writeLog()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{77bf8f5b-4659-4d16-b864-034ecc2e1b40}</uid>
+                    <uid>{a64ec5fa-3734-45f5-b354-9e6caf463fd8}</uid>
                     <type>2</type>
                     <declaration>+ saveCsv()</declaration>
                    </MClassMember>
@@ -1359,18 +1394,23 @@ POINTED BY THE ARROW</text>
                   <name>Chart</name>
                  </MObject>
                 </base-MObject>
+                <template>
+                 <qlist>
+                  <item>QChart</item>
+                 </qlist>
+                </template>
                 <members>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{c711e96a-a04f-4dc4-8145-d2bf46d7efc4}</uid>
+                    <uid>{d5be3f7f-664e-4716-9733-ce1667048db5}</uid>
                     <type>2</type>
                     <declaration>-- DEVICE_FINDER()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{566054e3-598b-4b74-a252-feaabdcae9b4}</uid>
+                    <uid>{05160b7a-d5cc-414a-be74-376f29387dc4}</uid>
                     <type>2</type>
                     <declaration>(s) updateChart(#currDev)</declaration>
                    </MClassMember>
@@ -1450,18 +1490,23 @@ POINTED BY THE ARROW</text>
                   </relations>
                  </MObject>
                 </base-MObject>
+                <template>
+                 <qlist>
+                  <item>QDialog</item>
+                 </qlist>
+                </template>
                 <members>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{15073af4-23ad-464c-b434-70d2d1f6ecd0}</uid>
+                    <uid>{e1c77c2d-639e-493b-87f1-1e5fd76af27b}</uid>
                     <type>2</type>
                     <declaration>-- MAIN_WINDOW()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{e80d6be6-0e62-452d-b4be-44531565b6a7}</uid>
+                    <uid>{d1d1d9e9-3eec-4035-9b9c-eab5a7074119}</uid>
                     <type>2</type>
                     <declaration>+ SettingsForm(path)</declaration>
                    </MClassMember>
@@ -1486,35 +1531,40 @@ POINTED BY THE ARROW</text>
                     <uid>{8d37785e-93d6-4ab5-be13-3a3f8cedba42}</uid>
                    </MElement>
                   </base-MElement>
-                  <name>ESPWidget</name>
+                  <name>EspWidget</name>
                  </MObject>
                 </base-MObject>
+                <template>
+                 <qlist>
+                  <item>QWidget</item>
+                 </qlist>
+                </template>
                 <members>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{0f6c4694-da92-44d2-ace4-56d969717d2a}</uid>
+                    <uid>{415a7178-e046-4e91-a27c-2556259996c7}</uid>
                     <type>2</type>
                     <declaration>-- SETTINGS_FORM()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{aa43a908-577c-441c-a262-3407d62f7b54}</uid>
+                    <uid>{dc47a328-052e-42c5-87e2-d79d81497d9e}</uid>
                     <type>2</type>
                     <declaration>+ set/getName(name)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{b41a3312-30ba-41c8-9ae0-1aa2953c30b1}</uid>
+                    <uid>{c83d6608-15b6-4023-b657-2519b467fb7c}</uid>
                     <type>2</type>
                     <declaration>+ set/getPoint(x,y)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{d7785293-1696-40f2-ac19-58a7086ebb37}</uid>
+                    <uid>{2fd8a339-a05b-4555-8f11-ee70e7546953}</uid>
                     <type>2</type>
                     <declaration>+ set/getModified(m)</declaration>
                    </MClassMember>
@@ -1864,46 +1914,51 @@ POINTED BY THE ARROW</text>
                   </relations>
                  </MObject>
                 </base-MObject>
+                <template>
+                 <qlist>
+                  <item>QTcpSocket</item>
+                 </qlist>
+                </template>
                 <members>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{2b97dd6f-4af5-4b89-bbe6-0502bbb726f1}</uid>
+                    <uid>{a0277e73-e20d-4ee2-ad9b-b8e96cd1c9c9}</uid>
                     <type>2</type>
                     <declaration>-- CLIENT ESP32 ()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{e3ab3c0d-0af9-40a7-9b59-499ac71768f5}</uid>
+                    <uid>{77d3cb5f-99d9-48bd-8a5f-7324331dbbcd}</uid>
                     <type>2</type>
                     <declaration>+ readFromSocket()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{050305c0-e7ad-4dbb-b7ac-51bd7a49c1b9}</uid>
+                    <uid>{8837e16a-3635-4dae-918d-9feec64f6e6e}</uid>
                     <type>2</type>
                     <declaration>+ closeClientHandler()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{924aab9c-2637-4ab9-abe1-9c6d4fe86fbc}</uid>
+                    <uid>{f6671479-b2d7-4fa6-aa3e-16d05bf85712}</uid>
                     <type>2</type>
                     <declaration>-- SERVER ()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{5d18892b-b6e6-4e5c-9692-7d42b00f8801}</uid>
+                    <uid>{bbc1714e-b2fc-4a62-a1a0-e906b7a66e13}</uid>
                     <type>2</type>
                     <declaration>+ ClientHandler(socket)</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{696002d3-bfc9-4a05-8322-eb136fb8ed0d}</uid>
+                    <uid>{59c7df32-f22e-45b0-aed0-62a0bf19f670}</uid>
                     <type>2</type>
                     <declaration>+ handle()</declaration>
                    </MClassMember>
@@ -2414,39 +2469,44 @@ POINTED BY THE ARROW</text>
                   <name>AreaPlot</name>
                  </MObject>
                 </base-MObject>
+                <template>
+                 <qlist>
+                  <item>QCustomPlot</item>
+                 </qlist>
+                </template>
                 <members>
                  <qlist>
                   <item>
                    <MClassMember>
-                    <uid>{98b9de94-80ba-474f-8864-ec2963994768}</uid>
+                    <uid>{5bbf4ef2-48ac-4312-a901-66d4650c5205}</uid>
                     <type>1</type>
                     <declaration>-- DEVICE_FINDER</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{fa9dc778-b33d-4658-a65d-f09a80cb803d}</uid>
+                    <uid>{6d26b507-ea64-47ee-8dd1-4dcd17c2480e}</uid>
                     <type>1</type>
                     <declaration>(s) add/remove</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{5cf80761-ef67-4778-bfc6-4f2bb6bc2f0b}</uid>
+                    <uid>{2e84db95-465a-4500-9bf5-d2ba29c74e2f}</uid>
                     <type>1</type>
                     <declaration>Device/ESP32 in plot</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{754b5158-296a-49e6-b1b0-785ff2bfaf29}</uid>
+                    <uid>{2485f38e-a019-4297-8374-407036732d18}</uid>
                     <type>2</type>
                     <declaration>(s) replot()</declaration>
                    </MClassMember>
                   </item>
                   <item>
                    <MClassMember>
-                    <uid>{3d1137af-a1ee-4413-9368-b0af2760d759}</uid>
+                    <uid>{8aba001d-28b6-4124-a63c-cee181da845a}</uid>
                     <type>2</type>
                     <declaration>(s) clearPlot()</declaration>
                    </MClassMember>
