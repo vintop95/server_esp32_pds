@@ -137,7 +137,7 @@ void SettingsForm::on_btnDecreaseESP_clicked()
 
     // If we did not reach the limit, delete a row from the ESP32 devices list
     // and decrease the number of ESP32 devices
-    if(n >= 0){
+    if(n >= ESP32_NO_LIMIT_INF){
         ui->txtESP32No->setText(QString::number(n));
 
         //Delete selected item from the listWidget
@@ -154,7 +154,7 @@ void SettingsForm::on_btnIncreaseESP_clicked()
 
     // If we did not reach the limit, add a row in the ESP32 devices list
     // and increase the number of ESP32 devices
-    if(n < ESP32_NO_LIMIT){
+    if(n < ESP32_NO_LIMIT_SUP){
         addEspWidget("ESP" + QString::number(n), 0, 0);
         n++;
         ui->txtESP32No->setText(QString::number(n));

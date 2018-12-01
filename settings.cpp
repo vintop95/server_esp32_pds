@@ -79,6 +79,7 @@ void Settings::loadSettingsFromIni(){
             qset->sync();
         }
     }
+
 }
 
 bool Settings::writeSettingsToIni()

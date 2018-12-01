@@ -22,7 +22,8 @@ static int ESP32_NO = 4;
 // The application shows the devices in area each CHART_PERIOD ms
 static int CHART_PERIOD_MS = 5*1000; //TODO: 5*60*1000;
 static QDateTime START_TIME = QDateTime::currentDateTime();
-static int ESP32_NO_LIMIT = 15;
+static int ESP32_NO_LIMIT_SUP = 15;
+static int ESP32_NO_LIMIT_INF = 2;
 
 /**
  * This class models the settings of the application
