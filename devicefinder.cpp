@@ -95,9 +95,6 @@ void DeviceFinder::resetInteractionsWithEsp()
  *
  * @param Packet to push
  *
- * @todo IPOTESI: un dispositivo non invia due volte
- * lo stesso pacchetto (secondo la definzione di operator==)
- * correggere eventualmente
  */
 void DeviceFinder::pushPacket(Packet p)
 {
@@ -105,15 +102,6 @@ void DeviceFinder::pushPacket(Packet p)
     writeLog("Received pkt\n" + p.toString());
     Logger::saveCsv(p);
     packets.push_back(p);
-    //TODO: RIPULIRE DAI COMMENTI
-    // IPOTESI: un dispositivo non invia due volte
-    // lo stesso pacchetto (secondo la definzione di operator==)
-
-    // packets.count(p) checks how many packets are there in the list
-    // that satisfies the operator== definition of Packet
-
-        //QPointF point = calculatePosition(p);
-    //pushDevice(Device(r.sender_mac, point));
 }
 
 //TODO: finire
@@ -181,8 +169,6 @@ void DeviceFinder::pushDevice(Device d)
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
     pWin->getAreaPlot()->addDevice(d.pos.x(),d.pos.y());
-
-    // TODO: remove device after a timeout?
 }
 
 /**
@@ -288,7 +274,6 @@ struct sort_rssi_desc
  */
 QPointF DeviceFinder::calculatePosition(Packet lastPacket)
 {
-    //TODO: completare
     writeLog("#DeviceFinder");
 
     QVector<Packet> packetsOrdered;

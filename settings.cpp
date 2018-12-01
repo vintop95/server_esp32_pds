@@ -57,7 +57,6 @@ void Settings::loadSettingsFromIni(){
             qreal x = 0.0;
             qreal y = 0.0;
 
-            // TODO: fix the number representation in .ini file
             qset->setValue(QString("ESP%1/name").arg(i), name);
             qset->setValue(QString("ESP%1/pos_x").arg(i), QString::number(x,'f'));
             qset->setValue(QString("ESP%1/pos_y").arg(i), QString::number(y,'f'));

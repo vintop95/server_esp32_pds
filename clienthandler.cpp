@@ -50,13 +50,10 @@ void ClientHandler::handle()
 
     // Assign the callback to call when data is received from the client
     // (and when it disconnects)
-    // note - Qt::DirectConnection
-    //        This makes the slot to be invoked immediately, when the signal is emitted.
-    connect(socket, SIGNAL(readFromSocket()),
-            this, SLOT(readFromSocket()),
-            Qt::DirectConnection);
-    connect(socket, SIGNAL(closeClientHandler()),
-            this, SLOT(closeClientHandler()));
+    connect(socket, &QTcpSocket::readyRead,
+            this, &ClientHandler::readFromSocket);
+    connect(socket, &QTcpSocket::disconnected,
+            this, &ClientHandler::closeClientHandler);
 
     // alternative connect syntax with lambda
     //    connect(socket, &QTcpSocket::readyRead,
@@ -109,7 +106,16 @@ void ClientHandler::readFromSocket()
             QJsonObject jObj = jDoc.object();
             espName = jObj["name"].toString();
             writeLog(QString::number(socketDescriptor) + " - NAME OF ESP IS " + espName, QtInfoMsg);
-            socket->write("OK\r\n");
+
+            // AUTHENTICATION
+            if(Settings::getInstance()->esp32s->count(espName) != 0){
+                writeLog(QString::number(socketDescriptor) + " - " + espName + " AUTHENTICATED", QtInfoMsg);
+                socket->write("OK\r\n");
+            }else{
+                writeLog(QString::number(socketDescriptor) + " - " + espName + " NOT AUTHENTICATED", QtWarningMsg);
+                socket->write("ERR\r\n");
+            }
+
         }else{
             writeLog(QString::number(socketDescriptor) + " - ERROR IN GETTING ESPNAME", QtCriticalMsg);
             socket->write("ERR\r\n");
@@ -189,7 +195,6 @@ void ClientHandler::closeClientHandler()
 
     socket->deleteLater();
 
-    // TODO: check if it's ok
     this->deleteLater();
 
     // if it was a QThread
