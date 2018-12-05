@@ -42,7 +42,7 @@ public slots:
 public:
    // SERVER
    explicit ClientHandler(qintptr s, QObject *parent = nullptr);
-   void handle();
+   void init();
 };
 
 #endif // CLIENTHANDLER_H

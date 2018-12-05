@@ -26,7 +26,7 @@ void ClientHandler::setSocketDescriptor(qintptr id)
     this->socketDescriptor = id;
 }
 
-void ClientHandler::handle()
+void ClientHandler::init()
 {
     writeLog("#ClientHandler");
     // after waitPeriod close the connection

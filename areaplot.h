@@ -15,9 +15,10 @@ private:
 
 signals:
 
+private slots:
+    void replot();
 public slots:
     // Plot management
-    void replot();
     void addDevice(double x, double y);
     void removeDevice(double x, double y);
     void addESP32(double x, double y);
