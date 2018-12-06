@@ -108,13 +108,14 @@ void DeviceFinder::pushPacket(Packet p)
 bool DeviceFinder::insertPacketsIntoDB(QString espName)
 {
     setEspInteracted(espName);
-    if(canStartPacketProcessing()){
-        processLocationsFromPackets();
-    }
+
 
     bool res = db.insertPackets(packets);
     if(res){//if insertion in database was succesfull we can clear the vector
         packets.clear();
+        if(canStartPacketProcessing()){
+            processLocationsFromPackets();
+        }
         return true;
     }else{
         writeLog("ERROR IN INSERTING " + QString::number(packets.size()) + " PACKETS TO DATABASE. "
@@ -146,6 +147,7 @@ void DeviceFinder::processLocationsFromPackets()
     resetInteractionsWithEsp();
 
     lastTimestamp = QDateTime::currentDateTime().toTime_t();
+    db.test_2();
 
 
 }

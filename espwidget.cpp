@@ -85,6 +85,7 @@ float EspWidget::getY()
  */
 void EspWidget::on_txtX_textEdited(const QString &dummy)
 {
+    dummy;
      setModified(true);
 }
 

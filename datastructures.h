@@ -10,7 +10,7 @@
 
 #include <QObject>
 #include <QPointF>
-
+#include <QDateTime>
 /**
  * Packet received from the ESP32 devices
  * rssi: -35 MOLTO VICINO, -100 MOLTO LONTANO
@@ -36,7 +36,11 @@ public:
         str.append(", MAC: ");
         str.append(sender_mac);
         str.append(", timestamp: ");
-        str.append(QString::number(timestamp));
+        //TODO: Human readable timestamp
+        QDateTime hr_timestamp;
+        hr_timestamp.setTime_t(timestamp);
+        str.append(hr_timestamp.toString(Qt::SystemLocaleLongDate));
+        //str.append(QString::number(timestamp));
         str.append(", rssi: ");
         str.append(QString::number(rssi));
         str.append(", ssid: ");

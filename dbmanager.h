@@ -30,6 +30,8 @@ public:
     void setPath(QString p);
     bool insertPackets(QVector<Packet> packets);
     bool calculateAvgRssi(); //to calculate position of devices
+    void test_2();
+    uint lastTimestamp;
 };
 
 

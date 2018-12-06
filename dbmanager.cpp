@@ -41,7 +41,9 @@ DbManager::DbManager(const QString& path)
             createTables();
        };
    }
-   test();
+   //TODO: da togliere
+   lastTimestamp = QDateTime::currentDateTime().toTime_t();
+   //test();
 }
 
 /**
@@ -131,33 +133,38 @@ bool DbManager::addPacket(Packet p)
 
 bool DbManager::insertPackets(QVector<Packet> packets)
 {
-    writeLog("#DbManager");
-    QSqlQuery query;
-    query.prepare("SELECT MAX(id)+1 FROM packet;");
-    bool res = query.exec();
-    int id = 0;
-    query.next();
-    //writeLog("POS: " + QString::number(query.at()) );
-    //writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
-    id = query.value(0).toInt();
-    //Load all packets using a single query
-    QString queryString;
-    for(auto packet: packets){
-        queryString += "INSERT INTO packet"
-                       "(id,sender_mac,timestamp,rssi,hashed_pkt,ssid,espName) "
-                       "VALUES ("+ QString::number(id++) + ","
-                                 + packet.sender_mac + ","
-                                 + QString::number(packet.timestamp) + ","
-                                 + packet.rssi +","
-                                 + packet.hashed_pkt +","
-                                 + packet.ssid +","
-                                 + packet.espName + ");";
+    if(packets.size() > 0){
+        writeLog("#DbManager");
+        QSqlQuery query;
+        query.prepare("SELECT MAX(id)+1 FROM packet;");
+        bool res = query.exec();
+        int id = 0;
+        query.next();
+        //writeLog("POS: " + QString::number(query.at()) );
+        //writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
+        id = query.value(0).toInt();
+        //Load all packets using a single query
+        QString queryString = "INSERT INTO packet"
+                              "(id,sender_mac,timestamp,rssi,hashed_pkt,ssid,espName) "
+                              "VALUES ";
+        for(auto packet: packets){
+            queryString += "("+ QString::number(id++) + ","
+                                     + "'" + packet.sender_mac + "',"
+                                     + QString::number(packet.timestamp) + ","
+                                     + QString::number(packet.rssi) +","
+                                     + "'" + packet.hashed_pkt +"',"
+                                     + "'" + packet.ssid +"',"
+                                     + "'" + packet.espName + "'),";
+        }
+        //rimuoviamo l'ultimo carattere, cioè ',' , e aggiungiamo un ';'
+        queryString.chop(1);
+        queryString += ";";
+        query.prepare(queryString);
+        res = query.exec();
+        writeLog(QString::number(packets.size()) + " packets inserted: " + QString(res ? "yes" : "no") );
+        return res;
     }
-    query.prepare(queryString);
-    res = query.exec();
-    writeLog(QString::number(packets.size()) + " packets inserted: " + QString(res ? "yes" : "no") );
-
-    return res;
+    return false;
 }
 
 /**
@@ -218,6 +225,47 @@ void DbManager::test()
         QString sender_mac = query.value(1).toString();
         writeLog("sender_mac: " + sender_mac);  
     }
+}
+
+void DbManager::test_2()
+{
+    writeLog("#DbManager TEST 2");
+    QSqlQuery query;
+    bool res;
+
+    Packet r;
+    writeLog("TEST: read packets from db since " + QString::number(lastTimestamp) );
+
+
+
+    res = query.exec("SELECT "
+                     "id, "
+                     "sender_mac, "
+                     "timestamp, "
+                     "rssi, "
+                     "hashed_pkt, "
+                     "ssid, "
+                     "espName FROM packet WHERE timestamp > "+ QString::number(lastTimestamp) +
+                     " ORDER BY sender_mac, timestamp, hashed_pkt;");
+    writeLog("TEST: select result: " + QString::number(res) + "/1" );
+
+    while (query.next()) {
+        r.sender_mac = query.value(1).toString();
+        r.timestamp = query.value(2).toUInt();
+        r.rssi = static_cast<qint8>(query.value(3).toInt());
+        r.hashed_pkt = query.value(4).toString();
+        r.ssid = query.value(5).toString();
+        r.espName = query.value(6).toString();
+        writeLog("PACCHETTO "+ query.value(0).toString() +" LETTO: " + r.toString() );
+    }
+
+    res = query.exec("SELECT hashed_pkt, sender_mac, COUNT(*) FROM Packet GROUP BY hashed_pkt, sender_mac HAVING COUNT(*) > 1;");
+    writeLog("TEST: select result: " + QString::number(res) + "/1" );
+    while (query.next()) {
+        writeLog("HASH PACCHETTO: "+ query.value(0).toString() +" MAC: "+ query.value(1).toString() + " RICEVUTO: " + query.value(2).toString() + " VOLTE" );
+    }
+    //TODO: DA TOGLIERE
+    lastTimestamp = QDateTime::currentDateTime().toTime_t();
 }
 
 void DbManager::setPath(QString p)
