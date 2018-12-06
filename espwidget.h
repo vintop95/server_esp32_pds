@@ -14,7 +14,7 @@
 #include <QString>
 
 namespace Ui {
-class EspWidget;
+class ESPWidget;
 }
 
 /**
@@ -26,7 +26,7 @@ class EspWidget : public QWidget
     Q_OBJECT
 
 private:
-    Ui::EspWidget *ui;
+    Ui::ESPWidget *ui;
     bool modified = false;
 
 private slots:

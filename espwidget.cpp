@@ -13,7 +13,7 @@
  */
 EspWidget::EspWidget(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::EspWidget)
+    ui(new Ui::ESPWidget)
 {
     ui->setupUi(this);
     setModified(false);
