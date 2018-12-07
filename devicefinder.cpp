@@ -28,14 +28,16 @@ DeviceFinder::DeviceFinder():
     connect(pWin, &MainWindow::logCurrDev,
             this, &DeviceFinder::logCurrentDevices);
 
+
 }
 
 DeviceFinder* DeviceFinder::getInstance(espMapPtr_t list, QString dbPath)
 {
     if (instance == nullptr){
-        instance = new DeviceFinder();
+        instance = new DeviceFinder();  
     }
     instance->init(list, dbPath);
+
     return instance;
 }
 
@@ -44,13 +46,23 @@ void DeviceFinder::init(espMapPtr_t list, QString dbPath)
     if(dbPath != "server_esp32_pds.sqlite3"){
         db.setPath(dbPath);
     }
-    if(esp32s.isNull()){
+    if(!list.isNull() && esp32s.isNull()){
         esp32s = list;
+        //inizializza vettore interazioni
+        for(auto espName : esp32s->keys()){
+            espInteracted.insert(espName, false);
+
+        }
+        writeLog("HO INIZIALIZZATO VETTORE INTERAZIONI", QtWarningMsg);
+        for(auto esp:espInteracted.keys()){
+                writeLog("SCHEDA " + esp + " ha interagito: " + (espInteracted.value(esp) ? "true" : "false"), QtWarningMsg);
+        }
+
+        // setta per la prima volta il timestamp che definisce
+        // l'inizio della finestra di ascolto
+        lastTimestamp = QDateTime::currentDateTime().toTime_t();
     }
 
-    // setta per la prima volta il timestamp che definisce
-    // l'inizio della finestra di ascolto
-    lastTimestamp = QDateTime::currentDateTime().toTime_t();
 }
 
 /**
@@ -144,10 +156,17 @@ void DeviceFinder::processLocationsFromPackets()
     //TODO: leggi dalla tabella 'Packets' i dati, aggregali e inseriscili nella tabella 'Location'.
     //Ricordati anche di aggiornare l'interfaccia grafica
     //altro giro altra corsa:
+    for(auto esp:espInteracted.keys()){
+            writeLog("SCHEDA " + esp + " ha interagito: " + (espInteracted.value(esp) ? "true" : "false"), QtWarningMsg);
+    }
     resetInteractionsWithEsp();
-
+    writeLog("HO RESETTATO", QtWarningMsg);
+    for(auto esp:espInteracted.keys()){
+            writeLog("SCHEDA " + esp + " ha interagito: " + (espInteracted.value(esp) ? "true" : "false"), QtWarningMsg);
+    }
     lastTimestamp = QDateTime::currentDateTime().toTime_t();
     db.test_2();
+
 
 
 }
