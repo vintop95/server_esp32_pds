@@ -114,6 +114,12 @@ void ClientHandler::readFromSocket()
             }else{
                 writeLog(QString::number(socketDescriptor) + " - " + espName + " NOT AUTHENTICATED", QtWarningMsg);
                 socket->write("ERR\r\n");
+
+                dataReceived.clear();
+
+                // Close the connection emitting the disconnected signal
+                if (socket->isValid())
+                    socket->disconnectFromHost();
             }
 
         }else{
