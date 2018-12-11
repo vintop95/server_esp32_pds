@@ -19,16 +19,12 @@ DeviceFinder* DeviceFinder::instance;
 DeviceFinder::DeviceFinder():
     db("server_esp32_pds.sqlite3")
 {
-    init(nullptr);
-
     // in order to let the command of printing
     // from the gui
     setWindow(MainWindow::getInstance());
 
     connect(pWin, &MainWindow::logCurrDev,
             this, &DeviceFinder::logCurrentDevices);
-
-
 }
 
 DeviceFinder* DeviceFinder::getInstance(espMapPtr_t list, QString dbPath)
