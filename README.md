@@ -7,9 +7,6 @@
 
 **Client ESP32**: https://github.com/vintop95/client_esp32_pds  
 
-### TODO
-ICON TRAY: http://doc.qt.io/archives/qt-4.8/qt-desktop-systray-example.html
-
 ### ERRORI DI LINKING - Possibili cause
 - tasto dx su nome del progetto > Clean
 - tasto dx su nome del progetto > Run qmake
@@ -27,12 +24,24 @@ e installa **SOLO** i componenti:
 - Qt Charts
 - Qt Creator CDB Debugger Support
 
-Documentazione: http://doc.qt.io/qt-5/qtwidgets-index.html#  
-Qt Tutorial for beginners: https://www.youtube.com/watch?v=EkjaiDsiM-Q&list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
+## Documentazioni
+### DOCUMENTAZIONI
+* DOC_QT: http://doc.qt.io/qt-5/classes.html
+* THREAD_E_SEGNALI_QT: https://wiki.qt.io/Threads_Events_QObjects
+* USE_SOCKETS_WITH_QT: https://www.bogotobogo.com/cplusplus/sockets_server_client_QT.php
+* JSON_IN_QT: https://stackoverflow.com/questions/15893040/how-to-create-read-write-json-files-in-qt5#
+### POSITIONING ALGORITHMS
+* Iterative approach for anchor configuration of positioning systems:
+https://www.sciencedirect.com/science/article/pii/S2405959515300837
+### 4 DUMMIES
+* Qt Tutorial for beginners: https://www.youtube.com/watch?v=EkjaiDsiM-Q&list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA
+* QT_TUTORIAL_VARI: http://antoniotancredi.altervista.org/category/c/qt-c/
+* USARE_READALL_SOCKET_QT: https://forum.qt.io/topic/64706/qserialport-read-string-with-readall
+* ASYNC_READ_SOCKET_QT: https://stackoverflow.com/questions/28955961/qt-socket-does-no-read-all-data
 
 ## Classi principali
 Modello  
-![aaa](https://github.com/vintop95/server_esp32_pds/blob/master/classModel.PNG)
+![modelloUmlServerEsp32Pds](https://github.com/vintop95/server_esp32_pds/blob/develop/docs/classModelServerEsp32Pds.PNG)
 
  -------
 ```DeviceFinder```  
@@ -45,7 +54,7 @@ Inoltre usa ```DbManager``` per salvare i dati in modo persistente
 ```Server```  
 Resta in ascolto dei client in ingresso e richiama ```ClientHandler``` per la gestione dei client appena connessi
 
-```Record```  
+```datastructures.h```  
 Contiene le strutture dati per gestire i pacchetti e i dispositivi  
 
  -------
