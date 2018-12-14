@@ -7,6 +7,14 @@
 
 **Client ESP32**: https://github.com/vintop95/client_esp32_pds  
 
+## Configurazione ambiente di sviluppo
+Useremo qt per lo sviluppo del server con interfaccia grafica in C++
+Scarica la versione open-source da https://www.qt.io/download  
+e installa **SOLO** i componenti:
+- MSVC2017 64BIT 
+- Qt Charts
+- Qt Creator CDB Debugger Support
+
 ### ERRORI DI LINKING - Possibili cause
 - tasto dx su nome del progetto > Clean
 - tasto dx su nome del progetto > Run qmake
@@ -15,14 +23,6 @@
 - Contempla il codice nella speranza di una illuminazione divina
 - ???
 - Profit
-
-## Configurazione ambiente di sviluppo
-Useremo qt per lo sviluppo del server con interfaccia grafica in C++
-Scarica la versione open-source da https://www.qt.io/download  
-e installa **SOLO** i componenti:
-- MSVC2017 64BIT 
-- Qt Charts
-- Qt Creator CDB Debugger Support
 
 ## Documentazioni
 ### DOCUMENTAZIONI
