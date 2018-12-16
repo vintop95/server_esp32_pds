@@ -42,7 +42,7 @@ DbManager::DbManager(const QString& path)
        };
    }
    //TODO: da togliere
-   lastTimestamp = QDateTime::currentDateTime().toTime_t();
+   //lastTimestamp = QDateTime::currentDateTime().toTime_t();
    //test();
 }
 
@@ -192,8 +192,45 @@ WHERE		timestamp > LAST_TS
             HAVING COUNT(*) = N)
 GROUP BY	sender_mac, espName
  */
-bool DbManager::calculateAvgRssi(){
-    return false;
+//returns a map with the avg rssi for each device (see datastructures.h)
+//params: total number of ESP in the system, beginning of the time window in which we do the analysis
+avgRssiMap_t DbManager::calculateAvgRssi(int espNumber, unsigned int lastTimestamp){
+    avgRssiMap_t avgRssiMap;
+    QSqlQuery query;
+    //we execute the following query
+    QString queryStr = " SELECT    sender_mac, espName, AVG(rssi) AS avgRssi"
+              " FROM 		packet P "
+              " WHERE		timestamp > " + QString::number(lastTimestamp) +
+              " AND  hashed_pkt IN ("
+                          "  SELECT 		hashed_pkt "
+                          "  FROM 		packet P1"
+                          "  WHERE 		timestamp >" + QString::number(lastTimestamp) +
+                          "  GROUP BY	hashed_pkt"
+                          "  HAVING COUNT(*) ="+QString::number(espNumber) +")"
+              " GROUP BY	sender_mac, espName"
+              " ORDER BY    sender_mac, avgRssi;";
+
+    writeLog(queryStr, QtWarningMsg);
+    bool success = query.exec(queryStr);
+
+    if(!success){
+        throw std::runtime_error("Query to calculate average RSSI FAILED!");
+    }
+    while (query.next()) {
+        QString deviceMac = query.value("sender_mac").toString();
+        QString ESPName = query.value("espName").toString();
+        double avgRssi = query.value("avgRssi").toDouble();
+        writeLog("IL DISPOSITIVO "+ deviceMac +" RILEVATO DA " + ESPName
+                 + " CON UN RSSI MEDIO DI " + QString::number(avgRssi), QtWarningMsg);
+        //riempiamo la mappa
+
+       //aggiungiamo nel vector relativo a quel dispositivo
+       //una nuova entry contenente la coppia <Schedina, RssiMedio>
+       avgRssiMap[deviceMac].push_back(QPair<QString, double>(ESPName, avgRssi));
+    }
+
+    return avgRssiMap;
+
 }
 
 /**
@@ -234,7 +271,7 @@ void DbManager::test_2()
     bool res;
 
     Packet r;
-    writeLog("TEST: read packets from db since " + QString::number(lastTimestamp) );
+   // writeLog("TEST: read packets from db since " + QString::number(lastTimestamp) );
 
 
 
@@ -245,7 +282,7 @@ void DbManager::test_2()
                      "rssi, "
                      "hashed_pkt, "
                      "ssid, "
-                     "espName FROM packet WHERE timestamp > "+ QString::number(lastTimestamp) +
+     //                "espName FROM packet WHERE timestamp > "+ QString::number(lastTimestamp) +
                      " ORDER BY sender_mac, timestamp, hashed_pkt;");
     writeLog("TEST: select result: " + QString::number(res) + "/1" );
 
@@ -259,13 +296,36 @@ void DbManager::test_2()
         writeLog("PACCHETTO "+ query.value(0).toString() +" LETTO: " + r.toString() );
     }
 
-    res = query.exec("SELECT hashed_pkt, sender_mac, COUNT(*) FROM Packet GROUP BY hashed_pkt, sender_mac HAVING COUNT(*) > 1;");
+ /*   res = query.exec("SELECT hashed_pkt, sender_mac, COUNT(*) FROM Packet GROUP BY hashed_pkt, sender_mac HAVING COUNT(*) > 1;");
     writeLog("TEST: select result: " + QString::number(res) + "/1" );
     while (query.next()) {
         writeLog("HASH PACCHETTO: "+ query.value(0).toString() +" MAC: "+ query.value(1).toString() + " RICEVUTO: " + query.value(2).toString() + " VOLTE" );
+    } */
+    int N=2;
+    //query per ritornare i mac dei dispositivi rilevati, le schedine che li hanno rilevati
+    //e l'RSSI medio nell'ultimo intervallo temporale
+    QString prova = " SELECT    sender_mac, espName, AVG(rssi) AS avgRssi"
+              " FROM 		packet P "
+       //       " WHERE		timestamp > " + QString::number(lastTimestamp) +
+              " AND  hashed_pkt IN ("
+                          "  SELECT 		hashed_pkt "
+                          "  FROM 		packet P1"
+         //                 "  WHERE 		timestamp >" + QString::number(lastTimestamp) +
+                          "  GROUP BY	hashed_pkt"
+                         //TODO:
+                          "  HAVING COUNT(*) ="+QString::number(N) +")"
+              " GROUP BY	sender_mac, espName;";
+    writeLog(prova, QtWarningMsg);
+    res = query.exec(prova);
+    writeLog("TEST: select result: " + QString::number(res) + "/1" );
+    while (query.next()) {
+        QString device = query.value("sender_mac").toString();
+        QString ESPName = query.value("espName").toString();
+        double avgRssi = query.value("avgRssi").toDouble();
+        writeLog("IL DISPOSITIVO "+ device +" RILEVATO DA " + ESPName + " CON UN RSSI MEDIO DI " + QString::number(avgRssi), QtWarningMsg);
     }
     //TODO: DA TOGLIERE
-    lastTimestamp = QDateTime::currentDateTime().toTime_t();
+   // lastTimestamp = QDateTime::currentDateTime().toTime_t();
 }
 
 void DbManager::setPath(QString p)

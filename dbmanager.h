@@ -29,9 +29,9 @@ public:
     DbManager(const QString& path);
     void setPath(QString p);
     bool insertPackets(QVector<Packet> packets);
-    bool calculateAvgRssi(); //to calculate position of devices
+    avgRssiMap_t calculateAvgRssi(int espNumber, unsigned int lastTimestamp); //to calculate position of devices
     void test_2();
-    uint lastTimestamp;
+    //uint lastTimestamp;
 };
 
 

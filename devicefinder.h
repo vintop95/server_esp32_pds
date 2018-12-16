@@ -36,18 +36,20 @@ private:
     void init(espMapPtr_t list = nullptr,
               QString dbPath="server_esp32_pds.sqlite3");
     void setChartUpdateTimer();
-
+    bool isAllowedESPName(QString name);
     bool canStartPacketProcessing();
     void setEspInteracted(QString espName);
     void resetInteractionsWithEsp();
     void processLocationsFromPackets();
     void pushDevice(Device d);
 
-    QPointF calculatePosition(Packet r);
     static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3,
                                  double r1, double r2, double r3);
-    static std::pair<QPointF, QPointF> bilateration(
+    static QPair<QPointF, QPointF> bilateration(
             QPointF p1, QPointF p2, double r1, double r2);
+    //viene chiamato dentro init
+    void test();
+
 
 public slots:
     // MAINWINDOW
@@ -59,7 +61,7 @@ public:
     // EVERYONE
     static DeviceFinder* getInstance(espMapPtr_t list = nullptr,
             QString dbPath="server_esp32_pds.sqlite3");
-    static double calculateDistance(int rssi);
+    static double calculateDistance(double rssi);
     int getEspNo();
     int countCurrentDevices();
 
@@ -67,7 +69,7 @@ public:
     void pushPacket(Packet p);
     bool insertPacketsIntoDB(QString espName);
 
-    void test();
+
 };
 
 #endif // DEVICEFINDER_H

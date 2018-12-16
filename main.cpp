@@ -47,10 +47,7 @@ int main(int argc, char *argv[])
 
     // Initializes the object that handles the packets
     // to find the devices in the area
-    DeviceFinder* deviceFinder =
-            DeviceFinder::getInstance(settings->esp32s);
-    deviceFinder->test();
-
+    DeviceFinder::getInstance(settings->esp32s);
     // Initializes the server that listens for the
     // esp devices to send the packets
     Server* s = Server::getInstance(SERVER_PORT);

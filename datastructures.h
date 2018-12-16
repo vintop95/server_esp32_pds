@@ -11,6 +11,8 @@
 #include <QObject>
 #include <QPointF>
 #include <QDateTime>
+#include <QtSql>
+
 /**
  * Packet received from the ESP32 devices
  * rssi: -35 MOLTO VICINO, -100 MOLTO LONTANO
@@ -97,7 +99,7 @@ private:
 public:
     ESP32(QString n, QPointF p = QPointF(0,0)):
     name(n), pos(p){ }
-
+    ESP32(){;}
     QString getName() const{
         return name;
     }
@@ -117,5 +119,9 @@ public:
 };
 
 typedef QSharedPointer<QMap<QString, ESP32>> espMapPtr_t;
+//una mappa che conterrà per ogni MAC dispositivo (chiave)
+//un vector (valore) contenente le coppie (schedina, RSSI medio)
+//in ordine decrescente di RSSI medio
+typedef QMap<QString,QVector<QPair<QString, double>>> avgRssiMap_t;
 
 #endif // RECORD_H

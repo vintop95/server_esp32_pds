@@ -8,6 +8,7 @@
 #include "devicefinder.h"
 
 #include <limits>
+#include <cmath>
 
 DeviceFinder* DeviceFinder::instance;
 
@@ -57,6 +58,7 @@ void DeviceFinder::init(espMapPtr_t list, QString dbPath)
         // setta per la prima volta il timestamp che definisce
         // l'inizio della finestra di ascolto
         lastTimestamp = QDateTime::currentDateTime().toTime_t();
+        test();
     }
 
 }
@@ -76,6 +78,12 @@ void DeviceFinder::setChartUpdateTimer()
     });
     chartUpdateTimer.setInterval(CHART_PERIOD_MS);
     chartUpdateTimer.start();
+}
+//return true if the passed string is an allowed ESP name, specified in the settings file
+bool DeviceFinder::isAllowedESPName(QString name)
+{
+    auto it = esp32s->find(name);
+    return it!=esp32s->end();
 }
 
 /**
@@ -106,10 +114,13 @@ void DeviceFinder::resetInteractionsWithEsp()
  */
 void DeviceFinder::pushPacket(Packet p)
 {
+
     writeLog("#DeviceFinder");
     writeLog("Received pkt\n" + p.toString());
     Logger::saveCsv(p);
-    packets.push_back(p);
+    if(isAllowedESPName(p.espName)){
+        packets.push_back(p);
+    }
 }
 
 //TODO: finire
@@ -143,7 +154,9 @@ bool DeviceFinder::canStartPacketProcessing()
 
 void DeviceFinder::setEspInteracted(QString espName)
 {
-    espInteracted[espName] = true;
+    if(isAllowedESPName(espName)){
+        espInteracted[espName] = true;
+    }
 }
 
 void DeviceFinder::processLocationsFromPackets()
@@ -160,8 +173,60 @@ void DeviceFinder::processLocationsFromPackets()
     for(auto esp:espInteracted.keys()){
             writeLog("SCHEDA " + esp + " ha interagito: " + (espInteracted.value(esp) ? "true" : "false"), QtWarningMsg);
     }
+    //riempiamo la mappa tramite una query al database
+    avgRssiMap_t avgRssiMap = db.calculateAvgRssi(getEspNo(), lastTimestamp);
+    //iteriamo per ogni dispositivo
+    for(auto deviceMac:avgRssiMap.keys()){
+        //iteriamo per ogni entry (elemento del vector) relativa a quel dispositivo
+        //definiamo un riferimento al vector per avere un alias più semplice
+        const QVector<QPair<QString, double>>& avgRssiVector = avgRssiMap.value(deviceMac);
+        //if we have more than 2 boards
+        if(getEspNo() > 2){
+            //prendiamo le posizioni delle 3 schedine più vicine a quel dispositivo
+            QPointF first = esp32s->value(avgRssiVector[0].first).getPos();
+            QPointF second = esp32s->value(avgRssiVector[1].first).getPos();
+            QPointF third = esp32s->value(avgRssiVector[2].first).getPos();
+            //prendiamo le distanze stimate da quelle schedine al dispositivo
+            double firstDist = calculateDistance(avgRssiVector[0].second);
+            double secondDist = calculateDistance(avgRssiVector[1].second);
+            double thirdDist = calculateDistance(avgRssiVector[2].second);
+            writeLog("DISPOSITIVO " + deviceMac + " SI STIMA A:\n" +
+                     QString::number(firstDist) + " da (" + QString::number(first.rx()) + "; " + QString::number(first.ry()) + ")\n" +
+                     QString::number(secondDist) + " da (" + QString::number(second.rx()) + "; " + QString::number(second.ry()) + ")\n" +
+                     QString::number(thirdDist) + " da (" + QString::number(third.rx()) + "; " + QString::number(third.ry()) + ")\n",
+                     QtWarningMsg);
+            QPointF position = trilateration(first, second, third,
+                                                      firstDist, secondDist, thirdDist);
+            writeLog("POSSIBILE POSIZIONE: (" + QString::number(position.rx()) + "; " + QString::number(position.ry())+ ")",
+                     QtWarningMsg);
+        }else{//if we have 2 boards (MINIMUM ALLOWED)
+            //prendiamo le posizioni delle 3 schedine più vicine a quel dispositivo
+            QPointF first = esp32s->value(avgRssiVector[0].first).getPos();
+            QPointF second = esp32s->value(avgRssiVector[1].first).getPos();
+            //prendiamo le distanze stimate da quelle schedine al dispositivo
+            double firstDist = calculateDistance(avgRssiVector[0].second);
+            double secondDist = calculateDistance(avgRssiVector[1].second);
+            writeLog("DISPOSITIVO " + deviceMac + " SI STIMA A:\n" +
+                     QString::number(firstDist) + " da (" + QString::number(first.rx()) + "; " + QString::number(first.ry()) + ")\n" +
+                     QString::number(secondDist) + " da (" + QString::number(second.rx()) + "; " + QString::number(second.ry()) + ")\n",
+                     QtWarningMsg);
+            QPair<QPointF,QPointF> positions = bilateration(first, second,
+                                            firstDist, secondDist);
+
+            if(isnan(positions.first.rx()) || isnan(positions.second.rx())){
+                writeLog("Le due circonferenze non si intersecano", QtWarningMsg);
+            }
+            writeLog("POSSIBILI POSIZIONI: (" +
+                     QString::number(positions.first.rx()) + "; " + QString::number(positions.first.ry())+ ") E ("+
+                     QString::number(positions.second.rx()) + "; " + QString::number(positions.second.ry())+ ")",
+                     QtWarningMsg);
+        }
+
+    }
+
+    //aggiorniamo il timestamp per la prossima finestra
     lastTimestamp = QDateTime::currentDateTime().toTime_t();
-    db.test_2();
+    //db.test_2();
 
 
 
@@ -236,7 +301,7 @@ int DeviceFinder::getEspNo()
  *
  * @todo completare
  */
-double DeviceFinder::calculateDistance(int rssi) {
+double DeviceFinder::calculateDistance(double rssi) {
 
     // TX-power-level == RSSI at 1m distance
     // esp txPower
@@ -289,7 +354,7 @@ struct sort_rssi_desc
  *
  * @todo completare
  */
-QPointF DeviceFinder::calculatePosition(Packet lastPacket)
+/*QPointF DeviceFinder::calculatePosition(Packet lastPacket)
 {
     writeLog("#DeviceFinder");
 
@@ -352,7 +417,7 @@ QPointF DeviceFinder::calculatePosition(Packet lastPacket)
     lastTimestamp = QDateTime::currentDateTime().toTime_t();
 
     return pos;
-}
+}*/
 
 
 double norm (QPointF p) // get the norm of a vector
@@ -437,7 +502,7 @@ QPointF add(QPointF p1, QPointF p2) {
     return QPointF(p1.x() + p2.x(), p1.y() + p2.y());
 }
 
-std::pair<QPointF, QPointF> DeviceFinder::bilateration(QPointF p1, QPointF p2, double r1, double r2){
+QPair<QPointF, QPointF> DeviceFinder::bilateration(QPointF p1, QPointF p2, double r1, double r2){
     QPointF P0(p1.x(), p1.y());
     QPointF P1(p2.x(), p2.y());
 
@@ -453,28 +518,58 @@ std::pair<QPointF, QPointF> DeviceFinder::bilateration(QPointF p1, QPointF p2, d
     x4 = P2.x() - h*(P1.y() - P0.y())/d;
     y4 = P2.y() + h*(P1.x() - P0.x())/d;
 
-    return std::pair<QPointF, QPointF>(QPointF(x3, y3), QPointF(x4, y4));
+    return QPair<QPointF, QPointF>(QPointF(x3, y3), QPointF(x4, y4));
 }
 
 
 /**
  * @brief A test function
  */
+//genera dei pacchetti random
+//viene chiamato dentro init
 void DeviceFinder::test()
 {
+    //prima push packet e poi insert packets into DB
     Packet r;
-
-    for(int i=0; i<5; ++i){
-        if(i==0){
-            r.rssi = -50;
-        }else if(i>=1){
-            r.rssi = -70;
-        }
-        r.espName = "ESP" + QString::number(i);
-        r.sender_mac = "TEST";
-        r.timestamp = 10;
-        r.hashed_pkt = "123456";
-        pushPacket(r);
-        logCurrentDevices();
+    int numOfPackets = 10;
+    int numOfDevices = 3;
+    int numOfBoards = 5;
+    QVector<QVector<Packet>> vec;
+    for(int i=0; i<numOfBoards; i++){
+        vec.push_back(QVector<Packet>());
     }
+    QRandomGenerator rg(QTime::currentTime().msec());
+    for(int n=0; n< numOfDevices; n++){
+        //genero un mac fittizio
+        int macNum = rg.bounded(10, 99);
+        QString mac = QString::number(macNum);
+        for(int j= 0; j< numOfPackets; j++){
+            //genero un hash fittizio
+            int hashNum = rg.bounded(100000, 999999);
+            QString hash = QString::number(hashNum);
+            for(int i=0; i<numOfBoards; ++i){
+                //genero un rssi fittizio
+                int rssi = rg.bounded(-90, -30);
+                r.rssi = rssi;
+                r.espName = "ESP" + QString::number(i);
+                r.sender_mac = mac;
+                r.timestamp = QDateTime::currentDateTime().toTime_t()+30;
+                r.hashed_pkt = hash;
+                vec[i].push_back(r);
+                //pushPacket(r);
+                //logCurrentDevices();
+            }
+        }
+    }
+    packets.clear();
+    for(int i=0; i<numOfBoards; ++i){
+        for(int j=0; j<vec[i].size(); j++){
+            Packet p = vec[i][j];
+            pushPacket(p);
+        }
+        insertPacketsIntoDB("ESP"+QString::number(i));
+    }
+
+
+
 }
