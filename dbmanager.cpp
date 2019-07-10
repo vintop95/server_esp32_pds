@@ -131,6 +131,7 @@ bool DbManager::addPacket(Packet p)
     return res;
 }
 
+// AGGIUNGE PIÙ PACCHETTI CONTEMPORANEAMENTE
 bool DbManager::insertPackets(QVector<Packet> packets)
 {
     if(packets.size() > 0){
@@ -208,7 +209,7 @@ avgRssiMap_t DbManager::calculateAvgRssi(int espNumber, unsigned int lastTimesta
                           "  GROUP BY	hashed_pkt"
                           "  HAVING COUNT(*) ="+QString::number(espNumber) +")"
               " GROUP BY	sender_mac, espName"
-              " ORDER BY    sender_mac, avgRssi;";
+              " ORDER BY    sender_mac, avgRssi DESC;";
 
     writeLog(queryStr, QtWarningMsg);
     bool success = query.exec(queryStr);
@@ -231,37 +232,6 @@ avgRssiMap_t DbManager::calculateAvgRssi(int espNumber, unsigned int lastTimesta
 
     return avgRssiMap;
 
-}
-
-/**
- * @brief Test database functions
- */
-void DbManager::test()
-{
-    //writeLog("#DbManager");
-    QSqlQuery query;
-    bool res;
-
-    Packet r;
-    r.sender_mac="HEYNIGGAITSME";
-    r.timestamp=123456789;
-    r.rssi = -50;
-    r.hashed_pkt = "123456";
-    r.ssid = "fuori dalla mia wifi N3GR0";
-    r.espName = "ESP69";
-    writeLog("TEST: add packet");
-    addPacket(r);
-
-
-    res = query.exec("SELECT id, sender_mac FROM packet");
-    writeLog("TEST: select result: " + QString::number(res) + "/1" );
-
-    while (query.next()) {
-        int id = query.value(0).toInt();
-        writeLog("id: " + QString::number(id));
-        QString sender_mac = query.value(1).toString();
-        writeLog("sender_mac: " + sender_mac);  
-    }
 }
 
 void DbManager::test_2()

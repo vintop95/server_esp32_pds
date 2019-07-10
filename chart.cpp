@@ -29,7 +29,7 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
 {
     qDebug() << "#Chart";
     // The series of values
-    m_series = new QSplineSeries(this);
+    m_series = new QLineSeries(this);
 
     // Color the line in red
     QPen pen(Qt::red);

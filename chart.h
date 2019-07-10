@@ -22,7 +22,7 @@ class Chart: public QChart
     Q_OBJECT
 
 private:
-    QSplineSeries *m_series;
+    QLineSeries *m_series;
     QValueAxis *m_valueAxisY;
     QDateTimeAxis *m_timeAxisX;
     qreal m_step;

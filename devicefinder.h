@@ -45,7 +45,9 @@ private:
 
     static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3,
                                  double r1, double r2, double r3);
-    static QPair<QPointF, QPointF> bilateration(
+    static QPointF bilateration(
+            QPointF p1, QPointF p2, double r1, double r2);
+    static QPair<QPointF, QPointF> bilaterationThatReturnsTwoPoints(
             QPointF p1, QPointF p2, double r1, double r2);
     //viene chiamato dentro init
     void test();

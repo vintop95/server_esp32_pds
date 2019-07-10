@@ -74,6 +74,7 @@ void DeviceFinder::setChartUpdateTimer()
     [=](){
         if(pWin != nullptr){
             pWin->getChart()->updateChart(this->countCurrentDevices());
+            devices.clear();
         }
     });
     chartUpdateTimer.setInterval(CHART_PERIOD_MS);
@@ -128,7 +129,6 @@ bool DeviceFinder::insertPacketsIntoDB(QString espName)
 {
     setEspInteracted(espName);
 
-
     bool res = db.insertPackets(packets);
     if(res){//if insertion in database was succesfull we can clear the vector
         packets.clear();
@@ -181,46 +181,52 @@ void DeviceFinder::processLocationsFromPackets()
         //definiamo un riferimento al vector per avere un alias più semplice
         const QVector<QPair<QString, double>>& avgRssiVector = avgRssiMap.value(deviceMac);
         //if we have more than 2 boards
-        if(getEspNo() > 2){
+
+        QPointF position;
+
+        if(getEspNo() >= 3){
             //prendiamo le posizioni delle 3 schedine più vicine a quel dispositivo
-            QPointF first = esp32s->value(avgRssiVector[0].first).getPos();
-            QPointF second = esp32s->value(avgRssiVector[1].first).getPos();
-            QPointF third = esp32s->value(avgRssiVector[2].first).getPos();
+            QPointF firstEspPos = esp32s->value(avgRssiVector[0].first).getPos();
+            QPointF secondEspPos = esp32s->value(avgRssiVector[1].first).getPos();
+            QPointF thirdEspPos = esp32s->value(avgRssiVector[2].first).getPos();
             //prendiamo le distanze stimate da quelle schedine al dispositivo
-            double firstDist = calculateDistance(avgRssiVector[0].second);
-            double secondDist = calculateDistance(avgRssiVector[1].second);
-            double thirdDist = calculateDistance(avgRssiVector[2].second);
+            double distFromFirstEsp = calculateDistance(avgRssiVector[0].second);
+            double distFromSecondEsp = calculateDistance(avgRssiVector[1].second);
+            double distFromThirdEsp = calculateDistance(avgRssiVector[2].second);
             writeLog("DISPOSITIVO " + deviceMac + " SI STIMA A:\n" +
-                     QString::number(firstDist) + " da (" + QString::number(first.rx()) + "; " + QString::number(first.ry()) + ")\n" +
-                     QString::number(secondDist) + " da (" + QString::number(second.rx()) + "; " + QString::number(second.ry()) + ")\n" +
-                     QString::number(thirdDist) + " da (" + QString::number(third.rx()) + "; " + QString::number(third.ry()) + ")\n",
+                     QString::number(distFromFirstEsp) + " da (" + QString::number(firstEspPos.rx()) + "; " + QString::number(firstEspPos.ry()) + ")\n" +
+                     QString::number(distFromSecondEsp) + " da (" + QString::number(secondEspPos.rx()) + "; " + QString::number(secondEspPos.ry()) + ")\n" +
+                     QString::number(distFromThirdEsp) + " da (" + QString::number(thirdEspPos.rx()) + "; " + QString::number(thirdEspPos.ry()) + ")\n",
                      QtWarningMsg);
-            QPointF position = trilateration(first, second, third,
-                                                      firstDist, secondDist, thirdDist);
+            position = trilateration(firstEspPos, secondEspPos, thirdEspPos,
+                                                      distFromFirstEsp, distFromSecondEsp, distFromThirdEsp);
             writeLog("POSSIBILE POSIZIONE: (" + QString::number(position.rx()) + "; " + QString::number(position.ry())+ ")",
                      QtWarningMsg);
-        }else{//if we have 2 boards (MINIMUM ALLOWED)
-            //prendiamo le posizioni delle 3 schedine più vicine a quel dispositivo
-            QPointF first = esp32s->value(avgRssiVector[0].first).getPos();
-            QPointF second = esp32s->value(avgRssiVector[1].first).getPos();
-            //prendiamo le distanze stimate da quelle schedine al dispositivo
-            double firstDist = calculateDistance(avgRssiVector[0].second);
-            double secondDist = calculateDistance(avgRssiVector[1].second);
-            writeLog("DISPOSITIVO " + deviceMac + " SI STIMA A:\n" +
-                     QString::number(firstDist) + " da (" + QString::number(first.rx()) + "; " + QString::number(first.ry()) + ")\n" +
-                     QString::number(secondDist) + " da (" + QString::number(second.rx()) + "; " + QString::number(second.ry()) + ")\n",
-                     QtWarningMsg);
-            QPair<QPointF,QPointF> positions = bilateration(first, second,
-                                            firstDist, secondDist);
 
-            if(isnan(positions.first.rx()) || isnan(positions.second.rx())){
+
+        }else{//if we have 2 boards (MINIMUM ALLOWED)
+            //prendiamo le posizioni delle 2 schedine più vicine a quel dispositivo (cioè le uniche)
+            QPointF firstEspPos = esp32s->value(avgRssiVector[0].first).getPos();
+            QPointF secondEspPos = esp32s->value(avgRssiVector[1].first).getPos();
+            //prendiamo le distanze stimate da quelle schedine al dispositivo
+            double distFromFirstEsp = calculateDistance(avgRssiVector[0].second);
+            double distFromSecondEsp = calculateDistance(avgRssiVector[1].second);
+            writeLog("DISPOSITIVO " + deviceMac + " SI STIMA A:\n" +
+                     QString::number(distFromFirstEsp) + " da (" + QString::number(firstEspPos.rx()) + "; " + QString::number(firstEspPos.ry()) + ")\n" +
+                     QString::number(distFromSecondEsp) + " da (" + QString::number(secondEspPos.rx()) + "; " + QString::number(secondEspPos.ry()) + ")\n",
+                     QtWarningMsg);
+            position = bilateration(firstEspPos, secondEspPos,
+                                            distFromFirstEsp, distFromSecondEsp);
+            if(isnan(position.rx())){
                 writeLog("Le due circonferenze non si intersecano", QtWarningMsg);
             }
-            writeLog("POSSIBILI POSIZIONI: (" +
-                     QString::number(positions.first.rx()) + "; " + QString::number(positions.first.ry())+ ") E ("+
-                     QString::number(positions.second.rx()) + "; " + QString::number(positions.second.ry())+ ")",
+            writeLog("POSSIBILE POSIZIONE: (" +
+                     QString::number(position.rx()) + "; " + QString::number(position.ry())+ ")",
                      QtWarningMsg);
         }
+
+
+        pushDevice( Device(deviceMac,position) );
 
     }
 
@@ -438,12 +444,12 @@ void printValue(double v, QString name)
 
 QPointF DeviceFinder::trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3)
 {
-    printPoint(p1, "p1");
-    printPoint(p2, "p2");
-    printPoint(p3, "p3");
-    printValue(r1, "r1");
-    printValue(r2, "r2");
-    printValue(r3, "r3");
+//    printPoint(p1, "p1");
+//    printPoint(p2, "p2");
+//    printPoint(p3, "p3");
+//    printValue(r1, "r1");
+//    printValue(r2, "r2");
+//    printValue(r3, "r3");
 
     QPointF resultPose;
     //unit vector in a direction from point1 to point 2
@@ -502,7 +508,7 @@ QPointF add(QPointF p1, QPointF p2) {
     return QPointF(p1.x() + p2.x(), p1.y() + p2.y());
 }
 
-QPair<QPointF, QPointF> DeviceFinder::bilateration(QPointF p1, QPointF p2, double r1, double r2){
+QPair<QPointF, QPointF> DeviceFinder::bilaterationThatReturnsTwoPoints(QPointF p1, QPointF p2, double r1, double r2){
     QPointF P0(p1.x(), p1.y());
     QPointF P1(p2.x(), p2.y());
 
@@ -521,6 +527,29 @@ QPair<QPointF, QPointF> DeviceFinder::bilateration(QPointF p1, QPointF p2, doubl
     return QPair<QPointF, QPointF>(QPointF(x3, y3), QPointF(x4, y4));
 }
 
+
+// esempio:
+// p1: (0,0), p2:(0,5), r1:2.5m, r2:3m
+QPointF DeviceFinder::bilateration(QPointF p1, QPointF p2, double r1, double r2){
+    QPointF P0(p1.x(), p1.y());
+    QPointF P1(p2.x(), p2.y());
+
+    double d, a, h; //esempi nei commenti
+    d = distance(P0, P1); //5 metri
+    a = (r1*r1 - r2*r2 + d*d)/(2*d); //6.25m - 9m + 25m = 22.25m -> 22.25/10=2.225m
+    h = sqrt(r1*r1 - a*a);// ~2
+    QPointF P2 = add( scale( sub(P1, P0), a/d), P0);
+
+    // THIS is needed if we want to return 2 points
+//    double x3, y3, x4, y4;
+//    x3 = P2.x() + h*(P1.y() - P0.y())/d;
+//    y3 = P2.y() - h*(P1.x() - P0.x())/d;
+//    x4 = P2.x() - h*(P1.y() - P0.y())/d;
+//    y4 = P2.y() + h*(P1.x() - P0.x())/d;
+//    return QPair<QPointF, QPointF>(QPointF(x3, y3), QPointF(x4, y4));
+
+    return P2;
+}
 
 /**
  * @brief A test function
@@ -569,7 +598,4 @@ void DeviceFinder::test()
         }
         insertPacketsIntoDB("ESP"+QString::number(i));
     }
-
-
-
 }
