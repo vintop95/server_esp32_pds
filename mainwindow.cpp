@@ -7,7 +7,7 @@
  */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "devicefinder.h"
 
 MainWindow* MainWindow::instance;
 
@@ -217,4 +217,9 @@ void MainWindow::on_actionDebug_triggered()
         });
 
     debugWindow->show();
+}
+
+void MainWindow::on_generatePackets_clicked()
+{
+    DeviceFinder::getInstance()->generatePackets();
 }

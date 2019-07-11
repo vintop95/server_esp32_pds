@@ -58,7 +58,7 @@ void DeviceFinder::init(espMapPtr_t list, QString dbPath)
         // setta per la prima volta il timestamp che definisce
         // l'inizio della finestra di ascolto
         lastTimestamp = QDateTime::currentDateTime().toTime_t();
-        test();
+        // generatePackets();
     }
 
 }
@@ -72,9 +72,15 @@ void DeviceFinder::setChartUpdateTimer()
 {
     connect(&chartUpdateTimer, &QTimer::timeout,
     [=](){
-        if(pWin != nullptr){
-            pWin->getChart()->updateChart(this->countCurrentDevices());
-            devices.clear();
+        // The flag is used when devices_in_window is updated
+        // When the timer of 5 minutes is called, we must clear the
+        // devices continously found in the last 5 minutes
+        hasTimerReset = true;
+        int nOfDevices = this->countCurrentDevices();
+        devices_in_window.clear();
+
+        if (pWin != nullptr){
+            pWin->getChart()->updateChart(nOfDevices);
         }
     });
     chartUpdateTimer.setInterval(CHART_PERIOD_MS);
@@ -113,7 +119,7 @@ void DeviceFinder::resetInteractionsWithEsp()
  * @param Packet to push
  *
  */
-void DeviceFinder::pushPacket(Packet p)
+void DeviceFinder::pushPacketInBuffer(Packet p)
 {
 
     writeLog("#DeviceFinder");
@@ -125,7 +131,7 @@ void DeviceFinder::pushPacket(Packet p)
 }
 
 //TODO: finire
-bool DeviceFinder::insertPacketsIntoDB(QString espName)
+bool DeviceFinder::insertBufferedPacketsIntoDB(QString espName)
 {
     setEspInteracted(espName);
 
@@ -133,7 +139,10 @@ bool DeviceFinder::insertPacketsIntoDB(QString espName)
     if(res){//if insertion in database was succesfull we can clear the vector
         packets.clear();
         if(canStartPacketProcessing()){
-            processLocationsFromPackets();
+            writeLog("CLEAR PLOT");
+            pWin->getAreaPlot()->clearDevices();
+            processLocationsFromPackets();//and buffer devices
+            insertBufferedDevicesIntoDB();
         }
         return true;
     }else{
@@ -184,6 +193,7 @@ void DeviceFinder::processLocationsFromPackets()
 
         QPointF position;
 
+        // SE IL NUMERO DI ESP32 È ALMENO 3 FACCIAMO TRILATERAZIONE
         if(getEspNo() >= 3){
             //prendiamo le posizioni delle 3 schedine più vicine a quel dispositivo
             QPointF firstEspPos = esp32s->value(avgRssiVector[0].first).getPos();
@@ -226,16 +236,13 @@ void DeviceFinder::processLocationsFromPackets()
         }
 
 
-        pushDevice( Device(deviceMac,position) );
+        pushDeviceInBuffer( Device(deviceMac, position, lastTimestamp) );
 
     }
 
     //aggiorniamo il timestamp per la prossima finestra
     lastTimestamp = QDateTime::currentDateTime().toTime_t();
     //db.test_2();
-
-
-
 }
 
 /**
@@ -245,18 +252,77 @@ void DeviceFinder::processLocationsFromPackets()
  *
  * @todo save in packet the actual position device
  */
-void DeviceFinder::pushDevice(Device d)
+void DeviceFinder::pushDeviceInBuffer(Device d)
 {
     writeLog("#DeviceFinder");
     writeLog("Added/updated device " + d.sender_mac);
 
     // TODO: save in packet the actual position device
 
-    // devices.insert
     // If there is already an item with the key, that
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
     pWin->getAreaPlot()->addDevice(d.pos.x(),d.pos.y());
+}
+
+void DeviceFinder::updateDevicesInWindow() {
+    writeLog("Update Devices in window", QtInfoMsg);
+
+    // currentDevices contains all the mac of the devices detected
+    // in the last cycle of about 1 minute
+    QSet<QString> currentDevices;
+    for (auto device: devices) {
+        currentDevices.insert(device.sender_mac);
+    }
+
+    // Se il timer dei 5 minuti è appena scattato, dobbiamo riempire
+    // devices_in_window con tutti i device rilevati nell'ultimo ciclo di 1 minuto
+    if (hasTimerReset) {
+        writeLog("START POPULATE DEVICES_IN_WINDOW", QtInfoMsg);
+        // Aggiungiamo i device rilevati in un vettore temporaneo che
+        // contiene i device rilevati continuativamente nella finestra.
+        for (auto device: devices) {
+            devices_in_window.insert(device.sender_mac);
+        }
+        hasTimerReset = false;
+    } else {
+        // Nel prossimo ciclo avremo soltanto i device rilevati continuativamente
+        // a partire dall'ultima volta che il timer di 5 minuti è scattato
+        writeLog("INTERSECT", QtInfoMsg);
+        devices_in_window = devices_in_window.intersect(currentDevices);
+    }
+
+    writeLog("devices_in_window content:", QtDebugMsg);
+    for (auto device: devices_in_window) {
+        writeLog(device);
+    }
+
+
+    writeLog("devices content BEFORE:", QtDebugMsg);
+    for (auto device: devices) {
+        writeLog(device.sender_mac);
+    }
+
+    // Puliamo il buffer dei devices relativo al ciclo di 1 minuto appena terminato
+    devices.clear();
+
+    writeLog("devices content AFTER:", QtDebugMsg);
+    for (auto device: devices) {
+        writeLog(device.sender_mac);
+    }
+}
+
+bool DeviceFinder::insertBufferedDevicesIntoDB() {
+
+    bool res = db.insertDevices(devices.values());
+    if(res){//if insertion in database was succesfull we can clear the vector
+        updateDevicesInWindow();
+        return true;
+    }else{
+        writeLog("ERROR IN INSERTING " + QString::number(devices.size()) + " DEVICES TO DATABASE. "
+                 "We keep them for the next try.", QtWarningMsg);
+        return false;
+    }
 }
 
 /**
@@ -285,7 +351,7 @@ void DeviceFinder::logCurrentDevices()
  */
 int DeviceFinder::countCurrentDevices()
 {
-    return devices.size();
+    return devices_in_window.size();
 }
 
 int DeviceFinder::getEspNo()
@@ -556,7 +622,7 @@ QPointF DeviceFinder::bilateration(QPointF p1, QPointF p2, double r1, double r2)
  */
 //genera dei pacchetti random
 //viene chiamato dentro init
-void DeviceFinder::test()
+void DeviceFinder::generatePackets()
 {
     //prima push packet e poi insert packets into DB
     Packet r;
@@ -582,7 +648,7 @@ void DeviceFinder::test()
                 r.rssi = rssi;
                 r.espName = "ESP" + QString::number(i);
                 r.sender_mac = mac;
-                r.timestamp = QDateTime::currentDateTime().toTime_t()+30;
+                r.timestamp = QDateTime::currentDateTime().toTime_t();//+30;
                 r.hashed_pkt = hash;
                 vec[i].push_back(r);
                 //pushPacket(r);
@@ -590,12 +656,12 @@ void DeviceFinder::test()
             }
         }
     }
-    packets.clear();
+    // packets.clear();
     for(int i=0; i<numOfBoards; ++i){
         for(int j=0; j<vec[i].size(); j++){
             Packet p = vec[i][j];
-            pushPacket(p);
+            pushPacketInBuffer(p);
         }
-        insertPacketsIntoDB("ESP"+QString::number(i));
+        insertBufferedPacketsIntoDB("ESP"+QString::number(i));
     }
 }

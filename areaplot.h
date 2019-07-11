@@ -24,6 +24,7 @@ public slots:
     void addESP32(double x, double y);
     void removeESP32(double x, double y);
     void clearPlot();
+    void clearDevices();
 public:
     explicit AreaPlot(QCustomPlot* customPlot, QObject *parent = nullptr);
 

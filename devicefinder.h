@@ -28,8 +28,11 @@ private:
     espMapPtr_t esp32s;
     QMap<QString, Device> devices;
 
+    QSet<QString> devices_in_window;
+
     QTimer chartUpdateTimer;
     uint lastTimestamp;
+    bool hasTimerReset = true;
 
     DeviceFinder();
     void setWindow(MainWindow *);
@@ -41,7 +44,11 @@ private:
     void setEspInteracted(QString espName);
     void resetInteractionsWithEsp();
     void processLocationsFromPackets();
-    void pushDevice(Device d);
+
+    //DEVICE MANAGEMENT
+    void pushDeviceInBuffer(Device d);
+    bool insertBufferedDevicesIntoDB();
+    void updateDevicesInWindow();
 
     static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3,
                                  double r1, double r2, double r3);
@@ -49,8 +56,7 @@ private:
             QPointF p1, QPointF p2, double r1, double r2);
     static QPair<QPointF, QPointF> bilaterationThatReturnsTwoPoints(
             QPointF p1, QPointF p2, double r1, double r2);
-    //viene chiamato dentro init
-    void test();
+
 
 
 public slots:
@@ -68,9 +74,11 @@ public:
     int countCurrentDevices();
 
     // CLIENT_HANDLER
-    void pushPacket(Packet p);
-    bool insertPacketsIntoDB(QString espName);
+    void pushPacketInBuffer(Packet p);
+    bool insertBufferedPacketsIntoDB(QString espName);
 
+    //viene chiamato dentro init
+    void generatePackets();
 
 };
 

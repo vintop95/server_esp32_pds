@@ -57,6 +57,14 @@ void AreaPlot::clearPlot()//svuota il grafico
     replot();
 }
 
+void AreaPlot::clearDevices()//svuota il grafico dei device
+{
+    vecDevX.clear();
+    vecDevY.clear();
+    replot();
+}
+
+
 void AreaPlot::replot()//aggiorna il grafico
 {
     customPlot->graph(0)->setData(vecEspX, vecEspY);

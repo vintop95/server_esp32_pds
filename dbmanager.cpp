@@ -14,9 +14,6 @@
  */
 DbManager::DbManager(const QString& path)
 {
-    // TODO: calculate the nOfCols from the CREATE query
-    int nOfCols = 7;
-
    db = QSqlDatabase::addDatabase("QSQLITE");
    db.setDatabaseName(path);
 
@@ -30,29 +27,40 @@ DbManager::DbManager(const QString& path)
       writeLog("connection ok");
    }
 
-   if ( !db.tables().contains( "packet" ) ) {
-       createTables();
-   }else{
-       // it must contain all the attributes
-       // defined: the number of columns of the two
-       // version of packet must be equal
-       QSqlRecord cols = db.driver()->record("packet");
-       if (cols.count() != nOfCols){
-            createTables();
-       };
-   }
-   //TODO: da togliere
-   //lastTimestamp = QDateTime::currentDateTime().toTime_t();
-   //test();
+   createTablesIfNotExist();
 }
 
+// returns if the table has been correctly created  (if it was needed)
+void DbManager::checkConsistencyAndCreateTable(QString TABLE_NAME, int nOfCols, QString strQueryCreate ) {
+    // if table does not exist OR numero di colonne previste non corrisponde con il numero di colonne reali
+    if ( !db.tables().contains(TABLE_NAME) || db.driver()->record(TABLE_NAME).count() != nOfCols  ) {
+        QSqlQuery query;
+        QString strQuery2 = "DROP TABLE "+TABLE_NAME+"_old";
+        QString strQuery3 = "ALTER TABLE "+TABLE_NAME+" RENAME TO "+TABLE_NAME+"_old";
+        bool res = query.exec(strQuery2);
+        writeLog("if the table '"+TABLE_NAME+"' already exists but it has a different set of columns "
+                 "of the set that we defined, rename it in '"+TABLE_NAME+"_old' (after dropping "
+                 "whatever was the old '"+TABLE_NAME+"_old') and create again the '"+TABLE_NAME+"' table" );
+        writeLog("TABLE "+TABLE_NAME+"_old DELETED: " + QString::number(res) + "/1" );
+        res = query.exec(strQuery3);
+        writeLog("TABLE "+TABLE_NAME+" RENAMED TO "+TABLE_NAME+"_old: " + QString::number(res) + "/1" );
+
+
+        res = query.exec(strQueryCreate);
+        writeLog("TABLE "+TABLE_NAME+" CREATED: " + QString::number(res) + "/1" );
+
+        if (!res) {
+            throw std::runtime_error("FAIL TO CREATE TABLE");
+        }
+    }
+}
 /**
  * @brief Creates the needed tables
  * if the table 'packet' already exists but it has a different set of columns
  * of the set that we defined, rename it in 'packet_old' (after dropping
  * whatever was the old 'packet_old') and create again the 'packet' table
  */
-bool DbManager::createTables()
+void DbManager::createTablesIfNotExist()
 {
     /*
     QString sender_mac;
@@ -63,27 +71,16 @@ bool DbManager::createTables()
     QString espName;
     */
     writeLog("#DbManager");
-    QSqlQuery query;
+
     QString strQuery;
-    bool res;
 
+    int nOfCols;
+    QString TABLE_NAME;
 
-    // not needed
-    //strQuery = "DROP TABLE packet";
-    //res = query.exec(strQuery);
-    //writeLog("TABLE packet DELETED: " + QString::number(res) + "/1" );
-
-    QString strQuery2 = "DROP TABLE packet_old";
-    QString strQuery3 = "ALTER TABLE packet RENAME TO packet_old";
-    res = query.exec(strQuery2);
-    writeLog("if the table 'packet' already exists but it has a different set of columns "
-             "of the set that we defined, rename it in 'packet_old' (after dropping "
-             "whatever was the old 'packet_old') and create again the 'packet' table" );
-    writeLog("TABLE packet_old DELETED: " + QString::number(res) + "/1" );
-    res = query.exec(strQuery3);
-    writeLog("TABLE packet RENAMED TO packet_old: " + QString::number(res) + "/1" );
-
-    strQuery = "CREATE TABLE packet("
+    // TABELLA 1: PACCHETTI NON ELABORATI
+    TABLE_NAME = "packet";
+    nOfCols=7;
+    strQuery = "CREATE TABLE "+TABLE_NAME+"("
                "id integer primary key,"
                "sender_mac text,"
                "timestamp integer,"
@@ -91,20 +88,30 @@ bool DbManager::createTables()
                "hashed_pkt text,"
                "ssid text,"
                "espName text)";
-    res = query.exec(strQuery);
-    writeLog("TABLE packet CREATED: " + QString::number(res) + "/1" );
+    checkConsistencyAndCreateTable(TABLE_NAME, nOfCols, strQuery);
 
-    return res;
+
+    // TABELLA 2: DEVICE TROVATI NEL TEMPO
+    TABLE_NAME = "device_position_in_time";
+    nOfCols=5;
+    strQuery = "CREATE TABLE "+TABLE_NAME+"("
+               "id integer primary key,"
+               "sender_mac text,"
+               "timestamp integer,"
+               "x real,"
+               "y real)";
+    checkConsistencyAndCreateTable(TABLE_NAME, nOfCols, strQuery);
 }
 
 /**
- * @brief Add a packet in the db
+ * @brief Add a device in the db
  */
-bool DbManager::addPacket(Packet p)
+bool DbManager::addDevice(Device d)
 {
+    QString TABLE_NAME = "device_position_in_time";
     writeLog("#DbManager");
     QSqlQuery query;
-    query.prepare("SELECT MAX(id)+1 FROM packet;");
+    query.prepare("SELECT MAX(id)+1 FROM "+TABLE_NAME+";");
     bool res = query.exec();
     int id = 0;
 
@@ -113,22 +120,55 @@ bool DbManager::addPacket(Packet p)
     //writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
     id = query.value(0).toInt();
 
-    query.prepare("INSERT INTO packet"
-                  "(id,sender_mac,timestamp,rssi,hashed_pkt,ssid,espName) "
-                  "VALUES (:id, :sender_mac, :timestamp, :rssi, :hashed_pkt,"
-                  ":ssid, :espName)");
+    query.prepare("INSERT INTO " + TABLE_NAME +
+                  "(id,sender_mac,timestamp,x,y) "
+                  "VALUES (:id, :sender_mac, :timestamp, :x, :y)");
     query.bindValue(":id", id);
-    query.bindValue(":sender_mac", p.sender_mac);
-    query.bindValue(":timestamp", p.timestamp);
-    query.bindValue(":rssi", p.rssi);
-    query.bindValue(":hashed_pkt", p.hashed_pkt);
-    query.bindValue(":ssid", p.ssid);
-    query.bindValue(":espName", p.espName);
+    query.bindValue(":sender_mac", d.sender_mac);
+    query.bindValue(":timestamp", d.timestamp);
+    query.bindValue(":x", d.pos.x());
+    query.bindValue(":y", d.pos.y());
 
     res = query.exec();
-    writeLog("Packet inserted: " + QString::number(res) + "/1" );
+    writeLog("Device inserted: " + QString::number(res) + "/1" );
 
     return res;
+}
+
+// AGGIUNGE PIÙ DEVICE CONTEMPORANEAMENTE
+bool DbManager::insertDevices(QList<Device> devices)
+{
+    if(devices.size() > 0){
+        writeLog("#DbManager");
+        QSqlQuery query;
+        QString TABLE_NAME = "device_position_in_time";
+        query.prepare("SELECT MAX(id)+1 FROM "+TABLE_NAME+";");
+        bool res = query.exec();
+        int id = 0;
+        query.next();
+        //writeLog("POS: " + QString::number(query.at()) );
+        //writeLog("MAX(id)+1 calculated: " + QString::number(res) + "/1" );
+        id = query.value(0).toInt();
+        //Load all packets using a single query
+        QString queryString = "INSERT INTO " + TABLE_NAME +
+                               "(id,sender_mac,timestamp,x,y) "
+                              "VALUES ";
+        for(auto device: devices){
+            queryString += "("+ QString::number(id++) + ","
+                             + "'" + device.sender_mac + "',"
+                             + QString::number(device.timestamp) + ","
+                             + QString::number(device.pos.x()) + ","
+                             + QString::number(device.pos.y()) + "),";
+        }
+        //rimuoviamo l'ultimo carattere, cioè ',' , e aggiungiamo un ';'
+        queryString.chop(1);
+        queryString += ";";
+        query.prepare(queryString);
+        res = query.exec();
+        writeLog(QString::number(devices.size()) + " devices inserted: " + QString(res ? "yes" : "no") );
+        return res;
+    }
+    return false;
 }
 
 // AGGIUNGE PIÙ PACCHETTI CONTEMPORANEAMENTE

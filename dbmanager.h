@@ -20,8 +20,9 @@ class DbManager
 {
 private:
     QSqlDatabase db;
-    bool createTables();
-    bool addPacket(Packet p); //INEFFICIENT
+    void createTablesIfNotExist();
+    void checkConsistencyAndCreateTable(QString TABLE_NAME, int nOfCols, QString strQueryCreate );
+    bool addDevice(Device d);
     void test();
 
 public:
@@ -29,6 +30,7 @@ public:
     DbManager(const QString& path);
     void setPath(QString p);
     bool insertPackets(QVector<Packet> packets);
+    bool insertDevices(QList<Device> devices);
     avgRssiMap_t calculateAvgRssi(int espNumber, unsigned int lastTimestamp); //to calculate position of devices
     void test_2();
     //uint lastTimestamp;

@@ -36,8 +36,6 @@ int main(int argc, char *argv[])
     Settings* settings = Settings::getInstance();
     settings->loadSettingsFromIni();
 
-    writeLog("NUM OF ESPs: " + QString::number(ESP32_NO));
-
     MainWindow* w = MainWindow::getInstance();
     w->show();
 

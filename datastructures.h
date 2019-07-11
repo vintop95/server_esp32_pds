@@ -38,7 +38,7 @@ public:
         str.append(", MAC: ");
         str.append(sender_mac);
         str.append(", timestamp: ");
-        //TODO: Human readable timestamp
+        //Human readable timestamp
         QDateTime hr_timestamp;
         hr_timestamp.setTime_t(timestamp);
         str.append(hr_timestamp.toString(Qt::SystemLocaleLongDate));
@@ -71,8 +71,8 @@ public:
 class Device{
 public:
     Device():pos(0,0) {}
-    Device(QString mac, QPointF p):
-        sender_mac(mac), pos(p) {}
+    Device(QString mac, QPointF p, quint32 time):
+        sender_mac(mac), pos(p), timestamp(time) {}
 
     QString toString(){
         QString str = "MAC: ";
@@ -81,12 +81,18 @@ public:
         str.append(QString::number(pos.x()));
         str.append(", ");
         str.append(QString::number(pos.y()));
+        str.append(", timestamp: ");
+        //Human readable timestamp
+        QDateTime hr_timestamp;
+        hr_timestamp.setTime_t(timestamp);
+        str.append(hr_timestamp.toString(Qt::SystemLocaleLongDate));
         str.append(")");
         return str;
     }
 
     QString sender_mac; //id of device
     QPointF pos;
+    quint32 timestamp;
 };
 
 /**

@@ -47,6 +47,8 @@ private slots:
     void on_logCurrentDevices_clicked();
     void on_actionDebug_triggered();
 
+    void on_generatePackets_clicked();
+
 public slots:
     // LOGGER
     void writeLogInUi(const QString &text, const QColor& = Qt::white);

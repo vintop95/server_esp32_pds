@@ -229,10 +229,10 @@ void ClientHandler::pushPacketsToDeviceFinder()
             r.hashed_pkt = obj["hashed_pkt"].toString();
             r.ssid = obj["ssid"].toString();
             r.espName = this->espName;
-            deviceFinder->pushPacket(r);
+            deviceFinder->pushPacketInBuffer(r);
         }
         //TODO: aggiungere metodo di device finder che aggiunga i packets accumulati nel database
-        deviceFinder->insertPacketsIntoDB(espName);
+        deviceFinder->insertBufferedPacketsIntoDB(espName);
         socket->write("OK\r\n");
         dataReceived.clear();
 
