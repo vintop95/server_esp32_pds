@@ -81,9 +81,9 @@ void ClientHandler::readFromSocket()
 
     if(!dataReceived.isEmpty()){
         // There is a connection to conclude
-        writeLog("INITIAL STATE OF DATA VARIABLE: " + dataReceived);
+        // writeLog("INITIAL STATE OF DATA VARIABLE: " + dataReceived);
         dataReceived += socket->readAll();
-        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + dataReceived);
+        // writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + dataReceived);
         this->pushPacketsToDeviceFinder();//save the packets
         return;
     }

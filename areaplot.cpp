@@ -83,8 +83,13 @@ void AreaPlot::replot()//aggiorna il grafico
     double max_y = std::max(max_y_p, max_y_s);
     double min_y= std::min(min_y_p, min_y_s);
     //
-    customPlot->xAxis->setRange(min_x-1,max_x+1);
-    customPlot->yAxis->setRange(min_y -1,max_y+1);
+    // customPlot->xAxis->setRange(min_x-1,max_x+1);
+    // customPlot->yAxis->setRange(min_y -1,max_y+1);
+
+    customPlot->xAxis->setRange(-1,3);
+    customPlot->yAxis->setRange(-1,3);
+
+
     customPlot->replot();
     customPlot->update();
 }
