@@ -216,6 +216,20 @@ void DeviceFinder::processLocationsFromPackets()
 
         }else{//if we have 2 boards (MINIMUM ALLOWED)
             //prendiamo le posizioni delle 2 schedine più vicine a quel dispositivo (cioè le uniche)
+            if (avgRssiVector.size() == 0) {
+                writeLog("avgRssiVector HAS 0 ELEMENTS!",QtCriticalMsg);
+                return;
+            }
+            else if (avgRssiVector.size() == 1) {
+                writeLog("avgRssiVector HAS JUST 1 ELEMENT:(" + avgRssiVector[0].first
+                        + "," + QString::number(avgRssiVector[0].second) + ")"
+                        + " MAC:" + deviceMac,QtCriticalMsg);
+                return;
+            }
+            else if (avgRssiVector.size() > 2) {
+                writeLog("avgRssiVector HAS MORE THAN 2 ELEMENTS!",QtCriticalMsg);
+                return;
+            }
             QPointF firstEspPos = esp32s->value(avgRssiVector[0].first).getPos();
             QPointF secondEspPos = esp32s->value(avgRssiVector[1].first).getPos();
             //prendiamo le distanze stimate da quelle schedine al dispositivo
@@ -383,11 +397,14 @@ double DeviceFinder::calculateDistance(double rssi) {
         return -1.0;
     }
 
-    double txCalibratedPower = -59; //hard coded power value. Usually ranges between -59 to -65
-    double ratio_db = txCalibratedPower - rssi;
-    double ratio_linear =  pow(10, ratio_db / 10);
+//    double txCalibratedPower = -50; //hard coded power value. Usually ranges between -59 to -65
+//    double ratio_db = txCalibratedPower - rssi;
+//    double ratio_linear =  pow(10, ratio_db / 10);
 
-    double r = sqrt(ratio_linear);
+//    double r = sqrt(ratio_linear);
+
+    double r = 0.070871 * qExp(0.062578 * -rssi);
+
     return r;
 }
 

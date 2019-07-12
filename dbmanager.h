@@ -31,7 +31,10 @@ public:
     void setPath(QString p);
     bool insertPackets(QVector<Packet> packets);
     bool insertDevices(QList<Device> devices);
-    avgRssiMap_t calculateAvgRssi(int espNumber, unsigned int lastTimestamp); //to calculate position of devices
+    avgRssiMap_t calculateAvgRssi(int espNumber,
+                          unsigned int lastTimestamp); //to calculate position of devices
+    QList<DeviceFrequencyInWindow> computeDeviceFrequencies(
+            int start_window, int end_window);
     void test_2();
     //uint lastTimestamp;
 };

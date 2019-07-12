@@ -124,6 +124,14 @@ public:
     }
 };
 
+class DeviceFrequencyInWindow {
+public:
+    QString sender_mac;
+    int frequency;
+    int start_subwindow;
+    int end_subwindow;
+};
+
 typedef QSharedPointer<QMap<QString, ESP32>> espMapPtr_t;
 //una mappa che conterrà per ogni MAC dispositivo (chiave)
 //un vector (valore) contenente le coppie (schedina, RSSI medio)

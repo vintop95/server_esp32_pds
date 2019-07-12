@@ -22,7 +22,7 @@
       </property>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -100,9 +100,13 @@
        </widget>
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
-         <string>Work in progress</string>
+         <string>Long Term Statistics</string>
         </attribute>
-        <layout class="QGridLayout" name="gridLayout"/>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <layout class="QGridLayout" name="gridLayout_3"/>
+         </item>
+        </layout>
        </widget>
       </widget>
       <widget class="QTextEdit" name="txtLog">

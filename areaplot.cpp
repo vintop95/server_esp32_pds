@@ -86,8 +86,8 @@ void AreaPlot::replot()//aggiorna il grafico
     // customPlot->xAxis->setRange(min_x-1,max_x+1);
     // customPlot->yAxis->setRange(min_y -1,max_y+1);
 
-    customPlot->xAxis->setRange(-1,3);
-    customPlot->yAxis->setRange(-1,3);
+    customPlot->xAxis->setRange(-2,10);
+    customPlot->yAxis->setRange(-2,10);
 
 
     customPlot->replot();

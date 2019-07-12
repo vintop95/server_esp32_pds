@@ -28,6 +28,8 @@ DbManager::DbManager(const QString& path)
    }
 
    createTablesIfNotExist();
+
+   computeDeviceFrequencies(1562889600, 1562968740);
 }
 
 // returns if the table has been correctly created  (if it was needed)
@@ -273,6 +275,46 @@ avgRssiMap_t DbManager::calculateAvgRssi(int espNumber, unsigned int lastTimesta
     return avgRssiMap;
 
 }
+
+QList<DeviceFrequencyInWindow> DbManager::computeDeviceFrequencies(
+        int start_window, int end_window){
+    QList<DeviceFrequencyInWindow> deviceFrequencies;
+
+    QSqlQuery query;
+    //we execute the following query
+    QString queryStr = " SELECT  sender_mac, COUNT(*) AS frequency, "
+                       "MIN(timestamp) AS start_subwindow, MAX(timestamp) AS end_subwindow"
+              " FROM    device_position_in_time D "
+              " WHERE   timestamp >= "+QString::number(start_window)+
+              " AND timestamp <= "+QString::number(end_window)+" "
+              " GROUP BY sender_mac "
+              " ORDER BY COUNT(*) DESC; ";
+
+    writeLog(queryStr, QtWarningMsg);
+    bool success = query.exec(queryStr);
+
+    if(!success){
+        throw std::runtime_error("Query computeDeviceFrequencies FAILED!");
+    }
+    while (query.next()) {
+        DeviceFrequencyInWindow devFreq;
+        devFreq.sender_mac = query.value("sender_mac").toString();
+        devFreq.frequency = query.value("frequency").toInt();
+        devFreq.start_subwindow = query.value("start_subwindow").toInt();
+        devFreq.end_subwindow = query.value("end_subwindow").toInt();
+
+        writeLog("IL DISPOSITIVO "+ devFreq.sender_mac
+                 + " appare " + QString::number(devFreq.frequency)+ " volte. "
+                 + " finestra:( " + QString::number(devFreq.start_subwindow) + ", "
+                                  + QString::number(devFreq.end_subwindow) + ")"
+                 , QtWarningMsg);
+
+       deviceFrequencies.push_back(devFreq);
+    }
+
+    return deviceFrequencies;
+}
+
 
 void DbManager::test_2()
 {
