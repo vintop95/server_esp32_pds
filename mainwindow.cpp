@@ -109,8 +109,6 @@ void MainWindow::loadDeviceFrequenciesInTableView(quint32 start_window, quint32 
         deviceFrequenciesTableWidget->setItem(row, 2, i2);
         deviceFrequenciesTableWidget->setItem(row, 3, i3);
         row++;
-
-
     }
 
 }

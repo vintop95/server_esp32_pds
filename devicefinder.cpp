@@ -130,20 +130,113 @@ void DeviceFinder::pushPacketInBuffer(Packet p)
     }
 }
 
-//TODO: finire
+double DeviceFinder::correlation(Device d1, Device d2) {
+    //0) confrontare MAC
+    if (d1.sender_mac == d2.sender_mac) {
+        return 1.0;
+    }
+    //1) confrontare SSID
+
+    // indica quanti criteri stiamo considerando per la correlazione
+    int tot = 4;
+    double probSsid = 0.0;
+
+    if (d1.ssids.size() == 0 && d2.ssids.size() == 0)
+        tot--;
+    else if (d1.ssids.size() == 0 || d2.ssids.size() == 0){
+        probSsid = 0.0;
+    } else if (d1.ssids.intersect(d2.ssids).size() > 0) {
+        probSsid = 1.0;
+    }
+
+    //2) confrontare sequence number
+    quint32 min1 = *std::min_element(d1.seqNums.begin(), d1.seqNums.end());
+    quint32 max1 = *std::max_element(d1.seqNums.begin(), d1.seqNums.end());
+    quint32 min2 = *std::min_element(d2.seqNums.begin(), d2.seqNums.end());
+    quint32 max2 = *std::max_element(d2.seqNums.begin(), d2.seqNums.end());
+
+    int diff = -1;
+    double a = 0.02; // parametro della funzione esponenziale
+    double probSeqNum = 0.0;
+    if (max1 < min2) {
+        diff = min2 - max1;
+    } else if (max2 < min1) {
+        diff = min1 - max2;
+    } else {
+        // le due sequenze si intersecano
+        probSeqNum = 0.0;
+    }
+
+
+    if (diff > 0) {
+        // e^( a*(1-diff) )
+        probSeqNum = qExp(a*(1-diff));
+    }
+
+    //3) confrontare posizione
+    //4) confrontare timestamp
+}
+
+// EXT2: Riconoscimento di dispositivi con indirizzi nascosti
+void DeviceFinder::hiddenMacRecognition() {
+
+    //1) controllo se secondo bit del primo byte è posto a 1
+    for (auto d: devices) {
+        if (d.sender_mac.size() >= 2) {
+            // c is composed by the 4 bits that contains the bit to checks
+            QChar c = d.sender_mac.at(1);
+
+            // 2,3,6,7,a,b,e,f
+            bool isHidden = (c == '2' || c == '3' || c == '6' || c == '7'
+                || c == 'a' || c == 'b' || c == 'e' || c == 'f');
+
+            if (isHidden) {
+                hiddenDevices.push_back(d);
+            }
+        }
+    }
+
+    for (int i=0; i<hiddenDevices.size(); i++) {
+        for (int j=i+1; j<hiddenDevices.size(); j++) {
+
+        }
+    }
+
+
+
+    /*
+     * CORRELATION MATRIX BETWEEN HIDDEN DEVICES
+     *    M1  M2    M3
+     * M1 1   0.6  0.8
+     * M2      1   0.8
+     * M3           1
+     */
+    hiddenMacCorrelationMatrix;
+
+}
+
 bool DeviceFinder::insertBufferedPacketsIntoDB(QString espName)
 {
     setEspInteracted(espName);
 
     bool res = db.insertPackets(packets);
     if(res){//if insertion in database was succesfull we can clear the vector
-        packets.clear();
+
+
+
+
         if(canStartPacketProcessing()){
             writeLog("CLEAR PLOT");
             pWin->getAreaPlot()->clearDevices();
             processLocationsFromPackets();//and buffer devices
+
+            // EXT2: Riconoscimento di dispositivi con indirizzi nascosti
+            hiddenMacRecognition();
+
             insertBufferedDevicesIntoDB();
         }
+
+        packets.clear();
         return true;
     }else{
         writeLog("ERROR IN INSERTING " + QString::number(packets.size()) + " PACKETS TO DATABASE. "
@@ -252,6 +345,17 @@ void DeviceFinder::processLocationsFromPackets()
 
         pushDeviceInBuffer( Device(deviceMac, position, lastTimestamp) );
 
+    }
+
+    // AGGIUNGIAMO AI DEVICE le informazioni riguardanti ssid e sequence numbers
+    // per fare analisi dei dispositivi anonimi
+    for (auto packet: packets) {
+        if (devices.contains(packet.sender_mac)) {
+            if (!packet.ssid.isEmpty())
+                devices[packet.sender_mac].ssids.insert(packet.ssid);
+
+            devices[packet.sender_mac].seqNums.push_back(packet.seq_num);
+        }
     }
 
     //aggiorniamo il timestamp per la prossima finestra

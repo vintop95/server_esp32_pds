@@ -30,6 +30,17 @@ private:
 
     QSet<QString> devices_in_window;
 
+
+    QVector<Device> hiddenDevices;
+    /*
+     * CORRELATION MATRIX BETWEEN HIDDEN DEVICES
+     *    M1  M2    M3
+     * M1 1   0.6  0.8
+     * M2      1   0.8
+     * M3           1
+     */
+    QVector< QVector<int> > hiddenMacCorrelationMatrix;
+
     QTimer chartUpdateTimer;
     uint lastTimestamp;
     bool hasTimerReset = true;
@@ -59,6 +70,8 @@ private:
 
 
 
+    void hiddenMacRecognition();
+    static double correlation(Device d1, Device d2);
 public slots:
     // MAINWINDOW
     void logCurrentDevices();

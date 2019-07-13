@@ -228,6 +228,7 @@ void ClientHandler::pushPacketsToDeviceFinder()
             r.rssi = static_cast<qint8>(obj["rssi"].toInt());
             r.hashed_pkt = obj["hashed_pkt"].toString();
             r.ssid = obj["ssid"].toString();
+            r.seq_num = static_cast<quint32>(obj["seq_num"].toInt());
             r.espName = this->espName;
             deviceFinder->pushPacketInBuffer(r);
         }

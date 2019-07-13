@@ -240,16 +240,27 @@ GROUP BY	sender_mac, espName
 avgRssiMap_t DbManager::calculateAvgRssi(int espNumber, unsigned int lastTimestamp){
     avgRssiMap_t avgRssiMap;
     QSqlQuery query;
+
+    // questo serve per selezionare le coppie DISTINTE (hashed_packet, espName)
+    // così da contare quanti esp hanno ricevuto quell'hash, NON quante volte è stato
+    // ricevuto l'hash
+    // PERCHÉ una scheda ESP può mandare al server più volte lo stesso pacchetto (con stesso hash),
+    // falsando il calcolo di quanti ESP hanno mandato il pacchetto.
+    QString innerQueryStr = " SELECT    hashed_pkt, espName"
+                            "  FROM 	packet P2"
+                            "  WHERE 	timestamp >" + QString::number(lastTimestamp) +
+                            "  GROUP BY	 hashed_pkt, espName"
+                            "  HAVING COUNT(*) >=1";
+
     //we execute the following query
     QString queryStr = " SELECT    sender_mac, espName, AVG(rssi) AS avgRssi"
               " FROM 		packet P "
               " WHERE		timestamp > " + QString::number(lastTimestamp) +
               " AND  hashed_pkt IN ("
-                          "  SELECT 		hashed_pkt "
-                          "  FROM 		packet P1"
-                          "  WHERE 		timestamp >" + QString::number(lastTimestamp) +
+                          "  SELECT 	hashed_pkt "
+                          "  FROM 		(" + innerQueryStr + ") P1"
                           "  GROUP BY	hashed_pkt"
-                          "  HAVING COUNT(*) ="+QString::number(espNumber) +")"
+                          "  HAVING COUNT(*) >="+QString::number(espNumber) +")"
               " GROUP BY	sender_mac, espName"
               " ORDER BY    sender_mac, avgRssi DESC;";
 

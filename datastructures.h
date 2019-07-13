@@ -30,6 +30,7 @@ public:
     QString hashed_pkt;
     QString ssid;
     QString espName;
+    quint32 seq_num;
 
     QString toString(){
         QString str;
@@ -93,6 +94,9 @@ public:
     QString sender_mac; //id of device
     QPointF pos;
     quint32 timestamp;
+
+    QSet<QString> ssids;
+    QList<quint32> seqNums;
 };
 
 /**
