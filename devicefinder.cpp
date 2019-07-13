@@ -682,3 +682,8 @@ void DeviceFinder::generatePackets()
         insertBufferedPacketsIntoDB("ESP"+QString::number(i));
     }
 }
+
+DbManager *DeviceFinder::getDb()
+{
+    return &db;
+}

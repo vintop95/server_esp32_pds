@@ -80,6 +80,7 @@ public:
     //viene chiamato dentro init
     void generatePackets();
 
+    DbManager* getDb();
 };
 
 #endif // DEVICEFINDER_H

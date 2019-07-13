@@ -277,7 +277,7 @@ avgRssiMap_t DbManager::calculateAvgRssi(int espNumber, unsigned int lastTimesta
 }
 
 QList<DeviceFrequencyInWindow> DbManager::computeDeviceFrequencies(
-        int start_window, int end_window){
+        quint32 start_window, quint32 end_window){
     QList<DeviceFrequencyInWindow> deviceFrequencies;
 
     QSqlQuery query;

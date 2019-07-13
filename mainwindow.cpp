@@ -11,6 +11,8 @@
 
 MainWindow* MainWindow::instance;
 
+// HOW TF TO ADJUST TAB LAYOUT? https://www.youtube.com/watch?v=8JYEdXDhrTY
+
 /**
  * @brief Constructor
  *
@@ -22,13 +24,100 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    // init Ui
     ui->setupUi(this);
-    areaPlot = new AreaPlot(ui->plot);
 
+    initWindowDateTimeEdit();
+    initDeviceFrequenciesTableView();
+
+    setupLogWindow();
+
+    setupPlot();
+
+    initChart();
+}
+
+void MainWindow::setupLogWindow() {
     // Set the background of the log window black
     QPalette p = ui->txtLog->palette();
     p.setColor(QPalette::Base, QColor(20, 20, 20));
     ui->txtLog->setPalette(p);
+}
+
+void MainWindow::initWindowDateTimeEdit() {
+    startWindowDateTimeEdit = ui->startWindowDateTimeEdit;
+    startWindowDateTimeEdit->setDateTime(QDateTime::currentDateTime().addSecs(-3600));
+    startWindowDateTimeEdit->setDisplayFormat("yyyy/MM/dd hh:mm");
+    startWindowDateTimeEdit->setCalendarPopup(true);
+
+    endWindowDateTimeEdit = ui->endWindowDateTimeEdit;
+    endWindowDateTimeEdit->setDateTime(QDateTime::currentDateTime());
+    endWindowDateTimeEdit->setDisplayFormat("yyyy/MM/dd hh:mm");
+    endWindowDateTimeEdit->setCalendarPopup(true);
+
+    startWindowDateTimeEdit->setMinimumDate(QDate(2018,03,01));
+    endWindowDateTimeEdit->setMinimumDate(QDate(2018,03,01));
+
+    startWindowDateTimeEdit->setMaximumDate(endWindowDateTimeEdit->date());
+    endWindowDateTimeEdit->setMinimumDate(startWindowDateTimeEdit->date());
+    //endWindowDateTimeEdit->setMaximumDate(...);
+}
+
+/*
+sender_mac, COUNT(*) AS frequency, "
+"MIN(timestamp) AS start_subwindow, MAX(timestamp) AS end_subwindow"
+               */
+void MainWindow::initDeviceFrequenciesTableView() {
+    deviceFrequenciesTableWidget = ui->deviceFrequenciesTableWidget;
+    //deviceFrequenciesTableWidget->horizontalHeader()->setStretchLastSection(true);
+    deviceFrequenciesTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    deviceFrequenciesTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    deviceFrequenciesTableWidget->setRowCount(0);
+    deviceFrequenciesTableWidget->setColumnCount(4);
+
+    // Add headers to table widget
+    QStringList headers;
+    headers << "MAC" << "frequency" << "start_subwindow" << "end_subwindow";
+    deviceFrequenciesTableWidget->setHorizontalHeaderLabels(headers);
+}
+
+
+void MainWindow::loadDeviceFrequenciesInTableView(quint32 start_window, quint32 end_window) {
+    DbManager* db = DeviceFinder::getInstance()->getDb();
+    QList<DeviceFrequencyInWindow> deviceFrequencies = db->computeDeviceFrequencies(start_window, end_window);
+
+    deviceFrequenciesTableWidget->clearContents();
+    deviceFrequenciesTableWidget->setRowCount(deviceFrequencies.size());
+
+    int row = 0;
+    for (auto deviceFreq: deviceFrequencies) {
+        QTableWidgetItem* i0 = new QTableWidgetItem(deviceFreq.sender_mac);
+        i0->setTextAlignment(Qt::AlignHCenter);
+        QTableWidgetItem* i1 = new QTableWidgetItem(QString::number(deviceFreq.frequency));
+        i1->setTextAlignment(Qt::AlignHCenter);
+
+        QDateTime time;
+        time.setTime_t(deviceFreq.start_subwindow);
+        QTableWidgetItem* i2 = new QTableWidgetItem(time.toString(Qt::SystemLocaleLongDate));
+        i2->setTextAlignment(Qt::AlignHCenter);
+        time.setTime_t(deviceFreq.end_subwindow);
+        QTableWidgetItem* i3 = new QTableWidgetItem(time.toString(Qt::SystemLocaleLongDate));
+        i3->setTextAlignment(Qt::AlignHCenter);
+
+        deviceFrequenciesTableWidget->setItem(row, 0, i0);
+        deviceFrequenciesTableWidget->setItem(row, 1, i1);
+        deviceFrequenciesTableWidget->setItem(row, 2, i2);
+        deviceFrequenciesTableWidget->setItem(row, 3, i3);
+        row++;
+
+
+    }
+
+}
+
+void MainWindow::setupPlot() {
+    // init AreaPlot
+    areaPlot = new AreaPlot(ui->plot);
 
     // Setup the plot
     ui->plot->addGraph();
@@ -40,12 +129,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->plot->graph(1)->setPen(QPen(Qt::blue));//penna blu
     ui->plot->graph(1)->setLineStyle(QCPGraph::lsNone);//non connessi da nessuna linea
 
-    Settings* pSet = Settings::getInstance();
-    for (ESP32 e: *(pSet->esp32s)){
+    // Insert ESP32 in the plot from settings
+    for (ESP32 e: *(Settings::getInstance()->esp32s)){
         areaPlot->addESP32(e.getX(), e.getY());
     }
-
-    initChart();
 }
 
 MainWindow *MainWindow::getInstance()
@@ -222,4 +309,23 @@ void MainWindow::on_actionDebug_triggered()
 void MainWindow::on_generatePackets_clicked()
 {
     DeviceFinder::getInstance()->generatePackets();
+}
+
+void MainWindow::on_startWindowDateTimeEdit_dateTimeChanged(const QDateTime &dateTime)
+{
+    // Check if dateTime is less than endWindow
+    ui->endWindowDateTimeEdit->setMinimumDateTime(dateTime);
+}
+
+void MainWindow::on_endWindowDateTimeEdit_dateTimeChanged(const QDateTime &dateTime)
+{
+    // Check if dateTime is greater than startWindow
+    ui->startWindowDateTimeEdit->setMaximumDateTime(dateTime);
+}
+
+void MainWindow::on_ShowStatistics_clicked()
+{
+    quint32 startDateTimestamp = startWindowDateTimeEdit->dateTime().toTime_t();
+    quint32 endDateTimestamp = endWindowDateTimeEdit->dateTime().toTime_t();
+    loadDeviceFrequenciesInTableView(startDateTimestamp, endDateTimestamp);
 }

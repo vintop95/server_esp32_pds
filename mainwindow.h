@@ -33,10 +33,18 @@ private:
     Ui::MainWindow* ui;
     Chart* chart;
     AreaPlot* areaPlot;
+    QDateTimeEdit *startWindowDateTimeEdit = nullptr;
+    QDateTimeEdit *endWindowDateTimeEdit = nullptr;
+    QTableWidget *deviceFrequenciesTableWidget = nullptr;
 
     explicit MainWindow(QWidget *parent = nullptr);
     void initChart();
 
+    void initWindowDateTimeEdit();
+    void setupPlot();
+    void setupLogWindow();
+    void initDeviceFrequenciesTableView();
+    void loadDeviceFrequenciesInTableView(quint32 start_window, quint32 end_window);
 signals:
     void logCurrDev();
 
@@ -48,6 +56,12 @@ private slots:
     void on_actionDebug_triggered();
 
     void on_generatePackets_clicked();
+
+    void on_startWindowDateTimeEdit_dateTimeChanged(const QDateTime &dateTime);
+
+    void on_endWindowDateTimeEdit_dateTimeChanged(const QDateTime &dateTime);
+
+    void on_ShowStatistics_clicked();
 
 public slots:
     // LOGGER

@@ -34,7 +34,7 @@ public:
     avgRssiMap_t calculateAvgRssi(int espNumber,
                           unsigned int lastTimestamp); //to calculate position of devices
     QList<DeviceFrequencyInWindow> computeDeviceFrequencies(
-            int start_window, int end_window);
+            quint32 start_window, quint32 end_window);
     void test_2();
     //uint lastTimestamp;
 };
