@@ -39,8 +39,9 @@ private:
      * M2      1   0.8
      * M3           1
      */
-    QVector< QVector<int> > hiddenMacCorrelationMatrix;
-
+    QVector< QVector<double> > hiddenMacCorrelationMatrix;
+    double correlationThreshold = 0.5;
+    QVector< QVector<Device>> correlatedDevices;
     QTimer chartUpdateTimer;
     uint lastTimestamp;
     bool hasTimerReset = true;

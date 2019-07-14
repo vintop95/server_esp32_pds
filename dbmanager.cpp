@@ -28,8 +28,6 @@ DbManager::DbManager(const QString& path)
    }
 
    createTablesIfNotExist();
-
-   computeDeviceFrequencies(1562889600, 1562968740);
 }
 
 // returns if the table has been correctly created  (if it was needed)

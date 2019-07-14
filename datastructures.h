@@ -97,6 +97,11 @@ public:
 
     QSet<QString> ssids;
     QList<quint32> seqNums;
+
+    bool operator== (Device &d2) {
+        return (this->sender_mac == d2.sender_mac
+                && this->timestamp == d2.timestamp);
+    }
 };
 
 /**

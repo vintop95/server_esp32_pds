@@ -140,6 +140,9 @@ double DeviceFinder::correlation(Device d1, Device d2) {
     // indica quanti criteri stiamo considerando per la correlazione
     int tot = 4;
     double probSsid = 0.0;
+    double probSeqNum = 0.0;
+    double probPos = 0.0;
+    double probTime = 0.0;
 
     if (d1.ssids.size() == 0 && d2.ssids.size() == 0)
         tot--;
@@ -157,11 +160,24 @@ double DeviceFinder::correlation(Device d1, Device d2) {
 
     int diff = -1;
     double a = 0.02; // parametro della funzione esponenziale
-    double probSeqNum = 0.0;
+
+    quint32 t1=d1.timestamp,t2=d2.timestamp;
+
     if (max1 < min2) {
-        diff = min2 - max1;
+        if(d1.timestamp <d2.timestamp){ //anche il timestamp deve essere sequenziale
+            diff = min2 - max1;
+        }
+        else {
+            return 0.0;
+        }
     } else if (max2 < min1) {
-        diff = min1 - max2;
+        if(d2.timestamp <d1.timestamp){ //anche il timestamp deve essere sequenziale
+            diff = min1 - max2;
+        }
+        else {
+            return 0.0;
+        }
+
     } else {
         // le due sequenze si intersecano
         probSeqNum = 0.0;
@@ -174,11 +190,42 @@ double DeviceFinder::correlation(Device d1, Device d2) {
     }
 
     //3) confrontare posizione
+    // distanza tra 2 posizioni
+    double distance= sqrt(qPow((d1.pos.x()-d2.pos.x()),2)+ qPow((d1.pos.y()-d2.pos.y()),2));
+    double b=0.4; // parametro della funzione esponenziale
+    probPos = qExp(b*(-distance));
+
     //4) confrontare timestamp
+    double c=0.005; // parametro della funzione esponenziale
+    if (t1!=t2) {
+        writeLog("t1:" + QString::number(t1), QtCriticalMsg);
+        writeLog("t2:" + QString::number(t2), QtCriticalMsg);
+        double w = (int)t1-(int)t2;
+        if (w<0) w=-w;
+
+        writeLog("abs(t1-t2):" + QString::number(w), QtCriticalMsg);
+        probTime = qExp(c*(1-w));
+    } else {
+        probTime=1.0;
+    }
+    writeLog("probPos:" + QString::number(probPos), QtCriticalMsg);
+    writeLog("probSsid:" + QString::number(probSsid), QtCriticalMsg);
+    writeLog("probTime:" + QString::number(probTime), QtCriticalMsg);
+
+
+    writeLog("probSeqNum:" + QString::number(probSeqNum), QtCriticalMsg);
+    writeLog("tot:" + QString::number(tot), QtCriticalMsg);
+    return (probPos+probSsid+probTime+probSeqNum)/(tot);
 }
 
 // EXT2: Riconoscimento di dispositivi con indirizzi nascosti
+
+/*
+ * Le matrici cresceranno sempre, ad un certo punto dovremmo pulirle
+ */
 void DeviceFinder::hiddenMacRecognition() {
+
+    int hidDevOldSize = hiddenDevices.size();
 
     //1) controllo se secondo bit del primo byte è posto a 1
     for (auto d: devices) {
@@ -196,13 +243,8 @@ void DeviceFinder::hiddenMacRecognition() {
         }
     }
 
-    for (int i=0; i<hiddenDevices.size(); i++) {
-        for (int j=i+1; j<hiddenDevices.size(); j++) {
 
-        }
-    }
-
-
+    int hidDevNewSize = hiddenDevices.size();
 
     /*
      * CORRELATION MATRIX BETWEEN HIDDEN DEVICES
@@ -211,7 +253,115 @@ void DeviceFinder::hiddenMacRecognition() {
      * M2      1   0.8
      * M3           1
      */
-    hiddenMacCorrelationMatrix;
+
+
+
+    // aggiungi nuove righe per nuovi elementi
+    for (int i=hidDevOldSize; i<hidDevNewSize; i++) {
+        // aggiungi una riga
+        hiddenMacCorrelationMatrix.push_back(QVector<double>());
+        for (int j=0; j<hidDevNewSize; j++) {
+            hiddenMacCorrelationMatrix[i].push_back(0.0);
+        }
+    }
+
+    // aggiungi ultime colonne
+    for (int i=0; i<hidDevOldSize; i++) {
+        // aggiungi una riga
+        hiddenMacCorrelationMatrix.push_back(QVector<double>());
+        for (int j=hidDevOldSize; j<hidDevNewSize; j++) {
+            hiddenMacCorrelationMatrix[i].push_back(0.0);
+        }
+    }
+
+    ////////////////////////////////////////////////
+
+    // aggiungere correlazione righe
+    for (int i=hidDevOldSize; i<hidDevNewSize; i++) {
+        for (int j=0; j<hidDevNewSize; j++) {
+            hiddenMacCorrelationMatrix[i][j] =
+                    correlation(hiddenDevices[i], hiddenDevices[j]);
+            writeLog(hiddenDevices[i].sender_mac + " " + hiddenDevices[j].sender_mac + ": " +
+                     QString::number(hiddenMacCorrelationMatrix[i][j]), QtCriticalMsg);
+        }
+    }
+
+    // aggiungere correlazione colonne
+    for (int i=0; i<hidDevOldSize; i++) {
+        for (int j=hidDevOldSize; j<hidDevNewSize; j++) {
+            hiddenMacCorrelationMatrix[i][j] =
+                    correlation(hiddenDevices[i], hiddenDevices[j]);
+            writeLog(hiddenDevices[i].sender_mac + " " + hiddenDevices[j].sender_mac + ": " +
+                     QString::number(hiddenMacCorrelationMatrix[i][j]), QtCriticalMsg);
+        }
+    }
+
+    int correlatedDevicesOldSize = correlatedDevices.size();
+
+    for (int i=hidDevOldSize; i<hidDevNewSize; i++) {
+        QVector<Device> vectDev;
+        vectDev.push_back(hiddenDevices[i]); //new row
+        correlatedDevices.push_back(vectDev);
+    }
+
+    int correlatedDevicesNewSize = correlatedDevices.size();
+
+    double maxCorrelation = 0.0;
+    // TODO: considerare di aggiungere il confronto di bucket con più di un elemento
+    // leggiamo riga hiddenMacCorrelationMatrix da 0 a quell'elemento
+    for (int i=correlatedDevicesOldSize; i<correlatedDevicesNewSize; i++) {
+        int j = 0;
+        for (; j<correlatedDevicesOldSize; j++) {
+
+            // metto 0 perché l'elemtno è uno solo visto che lo abbiamo appena
+            // inserito
+            // cerco l'indice j corrispondente al device selezionato
+            if (correlatedDevices[i][0] == hiddenDevices[j]) {
+                break;
+            }
+        }
+
+        int maxIndex=0;
+        int k=0;
+        for (; k<hidDevNewSize; k++) {
+
+            if (maxCorrelation < hiddenMacCorrelationMatrix[j][k]) {
+                maxCorrelation = hiddenMacCorrelationMatrix[j][k];
+                maxIndex = k;
+            }
+        }
+
+        if (maxCorrelation > correlationThreshold) {
+
+            // spostare elemento in nuovo "bucket"
+
+            // cerchiamo hiddenDevices[maxIndex] nei bucket vecchi e spostiamo
+            // il nuovo elemento in quel bucket
+
+            // da 0 a correlatedDevicesOldSize
+            int l = 0;
+            for (; l<correlatedDevicesOldSize; l++) {
+
+                for (int m=0;m<correlatedDevices[l].size();m++) {
+                    // hiddenDevices[k] È
+                    if (correlatedDevices[l][m] == hiddenDevices[maxIndex]) {
+                         // spostare tutti i correlatedDevices[i] in correlatedDevices[l][m]
+
+                        for (int n=0; n<correlatedDevices[i].size(); n++) {
+                            correlatedDevices[l].push_back(correlatedDevices[i][n]);
+                        }
+
+                        correlatedDevices[i].clear(); // svuoto
+
+                    }
+                }
+
+            }
+
+
+        }
+    }
+
 
 }
 
@@ -221,9 +371,6 @@ bool DeviceFinder::insertBufferedPacketsIntoDB(QString espName)
 
     bool res = db.insertPackets(packets);
     if(res){//if insertion in database was succesfull we can clear the vector
-
-
-
 
         if(canStartPacketProcessing()){
             writeLog("CLEAR PLOT");
