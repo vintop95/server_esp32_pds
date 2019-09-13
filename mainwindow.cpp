@@ -117,7 +117,7 @@ void MainWindow::setupPlot() {
     // init AreaPlot
     areaPlot = new AreaPlot(ui->plot);
 
-    // Setup the plot
+    // Setup the 1st plot
     ui->plot->addGraph();
     ui->plot->graph(0)->setScatterStyle(QCPScatterStyle::ssCross);//stampa delle croci
     ui->plot->graph(0)->setPen(QPen(Qt::red));//penna rossa
@@ -127,9 +127,26 @@ void MainWindow::setupPlot() {
     ui->plot->graph(1)->setPen(QPen(Qt::blue));//penna blu
     ui->plot->graph(1)->setLineStyle(QCPGraph::lsNone);//non connessi da nessuna linea
 
-    // Insert ESP32 in the plot from settings
+    // Setup the 2nd plot
+    ui->plot_movements->addGraph();
+    ui->plot_movements->graph(0)->setScatterStyle(QCPScatterStyle::ssCross);//stampa delle croci
+    ui->plot_movements->graph(0)->setPen(QPen(Qt::red));//penna rossa
+    ui->plot_movements->graph(0)->setLineStyle(QCPGraph::lsNone);//non connessi da nessuna linea
+    ui->plot_movements->addGraph();
+    ui->plot_movements->graph(1)->setScatterStyle(QCPScatterStyle::ssCircle);//stampa dei cerchietti
+    ui->plot_movements->graph(1)->setPen(QPen(Qt::blue));//penna blu
+    ui->plot_movements->graph(1)->setLineStyle(QCPGraph::lsNone);//non connessi da nessuna linea
+
+    // Insert ESP32 in the 1st plot from settings
     for (ESP32 e: *(Settings::getInstance()->esp32s)){
         areaPlot->addESP32(e.getX(), e.getY());
+    }
+
+    AreaPlot* plotMovements = new AreaPlot(ui->plot_movements);
+
+    // Insert ESP32 in the 2nd plot from settings
+    for (ESP32 e: *(Settings::getInstance()->esp32s)){
+        plotMovements->addESP32(e.getX(), e.getY());
     }
 }
 
@@ -170,6 +187,11 @@ Chart* MainWindow::getChart()
 AreaPlot *MainWindow::getAreaPlot()
 {
     return areaPlot;
+}
+
+AreaPlot *MainWindow::getAreaPlotMovements()
+{
+    return (AreaPlot*) ui->plot_movements;
 }
 
 /**

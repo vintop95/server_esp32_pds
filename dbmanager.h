@@ -37,6 +37,8 @@ public:
             quint32 start_window, quint32 end_window);
     void test_2();
     //uint lastTimestamp;
+protected:
+    QList<Device> getDevicePositionsInWindow(quint32 start_window, quint32 end_window);
 };
 
 

@@ -324,6 +324,47 @@ QList<DeviceFrequencyInWindow> DbManager::computeDeviceFrequencies(
     return deviceFrequencies;
 }
 
+/*
+ * 2019-09-13 Query SQL per prendere sender mac e posizione dei device
+ * presenti nell'intervallo di tempo dato in ingresso
+ *
+ * "CREATE TABLE "+TABLE_NAME+"("
+               "id integer primary key,"
+               "sender_mac text,"
+               "timestamp integer,"
+               "x real,"
+               "y real)";
+ */
+QList<Device> DbManager::getDevicePositionsInWindow(
+        quint32 start_window, quint32 end_window){
+    QList<Device> devicePositionsInWindow;
+
+    QSqlQuery query;
+    //we execute the following query
+    QString queryStr = " SELECT  sender_mac, timestamp, x, y"
+              " FROM    device_position_in_time D "
+              " WHERE   timestamp >= "+QString::number(start_window)+
+              " AND timestamp <= "+QString::number(end_window);
+
+    writeLog(queryStr, QtWarningMsg);
+    bool success = query.exec(queryStr);
+
+    if(!success){
+        throw std::runtime_error("Query computeDeviceFrequencies FAILED!");
+    }
+    while (query.next()) {
+        Device devicePositionInTime;
+        devicePositionInTime.sender_mac = query.value("sender_mac").toString();
+        devicePositionInTime.timestamp = query.value("timestamp").toInt();
+        devicePositionInTime.pos = QPointF(query.value("x").toFloat(), query.value("y").toFloat());
+
+        writeLog(devicePositionInTime.toString(), QtWarningMsg);
+
+       devicePositionsInWindow.push_back(devicePositionInTime);
+    }
+
+    return devicePositionsInWindow;
+}
 
 void DbManager::test_2()
 {

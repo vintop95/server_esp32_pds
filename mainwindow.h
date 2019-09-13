@@ -72,6 +72,7 @@ public:
     static MainWindow* getInstance();
     Chart* getChart();
     AreaPlot* getAreaPlot();
+    AreaPlot *getAreaPlotMovements();
 };
 
 #endif // MAINWINDOW_H
