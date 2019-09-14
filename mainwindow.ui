@@ -213,11 +213,11 @@
           </item>
          </layout>
         </widget>
-        <widget class="QPushButton" name="btn_back">
+        <widget class="QPushButton" name="btnBack">
          <property name="geometry">
           <rect>
            <x>620</x>
-           <y>80</y>
+           <y>300</y>
            <width>51</width>
            <height>41</height>
           </rect>
@@ -226,11 +226,11 @@
           <string>&lt;</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="btn_forward">
+        <widget class="QPushButton" name="btnForward">
          <property name="geometry">
           <rect>
            <x>620</x>
-           <y>140</y>
+           <y>360</y>
            <width>51</width>
            <height>41</height>
           </rect>
@@ -239,11 +239,11 @@
           <string>&gt;</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="btn_end">
+        <widget class="QPushButton" name="btnFastForward">
          <property name="geometry">
           <rect>
            <x>620</x>
-           <y>200</y>
+           <y>420</y>
            <width>51</width>
            <height>41</height>
           </rect>
@@ -252,17 +252,53 @@
           <string>&gt;&gt;</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="btn_start">
+        <widget class="QPushButton" name="btnFastBack">
          <property name="geometry">
           <rect>
            <x>620</x>
-           <y>20</y>
+           <y>240</y>
            <width>51</width>
            <height>41</height>
           </rect>
          </property>
          <property name="text">
           <string>&lt;&lt;</string>
+         </property>
+        </widget>
+        <widget class="QDateTimeEdit" name="startTimeEdit">
+         <property name="geometry">
+          <rect>
+           <x>620</x>
+           <y>60</y>
+           <width>112</width>
+           <height>20</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_4">
+         <property name="geometry">
+          <rect>
+           <x>620</x>
+           <y>10</y>
+           <width>131</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select a time and change it&lt;/p&gt;&lt;p&gt;with direction buttons&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="btnPlot">
+         <property name="geometry">
+          <rect>
+           <x>620</x>
+           <y>90</y>
+           <width>111</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Plot</string>
          </property>
         </widget>
        </widget>

@@ -527,7 +527,7 @@ void DeviceFinder::pushDeviceInBuffer(Device d)
     // If there is already an item with the key, that
     // item's value is replaced with value.
     devices.insert(d.sender_mac, d);
-    pWin->getAreaPlot()->addDevice(d.pos.x(),d.pos.y());
+    pWin->getAreaPlot()->addDevice(d.pos.x(),d.pos.y(), d.sender_mac);
 }
 
 void DeviceFinder::updateDevicesInWindow() {

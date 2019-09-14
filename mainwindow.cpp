@@ -55,6 +55,10 @@ void MainWindow::initWindowDateTimeEdit() {
     endWindowDateTimeEdit->setDisplayFormat("yyyy/MM/dd hh:mm");
     endWindowDateTimeEdit->setCalendarPopup(true);
 
+    ui->startTimeEdit->setDateTime(QDateTime::currentDateTime().addSecs(-3600));
+    ui->startTimeEdit->setDisplayFormat("yyyy/MM/dd hh:mm");
+    ui->startTimeEdit->setCalendarPopup(true);
+
     startWindowDateTimeEdit->setMinimumDate(QDate(2018,03,01));
     endWindowDateTimeEdit->setMinimumDate(QDate(2018,03,01));
 
@@ -116,6 +120,7 @@ void MainWindow::loadDeviceFrequenciesInTableView(quint32 start_window, quint32 
 void MainWindow::setupPlot() {
     // init AreaPlot
     areaPlot = new AreaPlot(ui->plot);
+    areaPlotMovements = new AreaPlot(ui->plot_movements);
 
     // Setup the 1st plot
     ui->plot->addGraph();
@@ -142,11 +147,9 @@ void MainWindow::setupPlot() {
         areaPlot->addESP32(e.getX(), e.getY());
     }
 
-    AreaPlot* plotMovements = new AreaPlot(ui->plot_movements);
-
     // Insert ESP32 in the 2nd plot from settings
     for (ESP32 e: *(Settings::getInstance()->esp32s)){
-        plotMovements->addESP32(e.getX(), e.getY());
+        areaPlotMovements->addESP32(e.getX(), e.getY());
     }
 }
 
@@ -283,7 +286,7 @@ void MainWindow::on_actionDebug_triggered()
             writeLogInUi("Added device at (" +
                      QString::number(x) + ", " +
                      QString::number(y) + ")");
-            areaPlot->addDevice(x,y);
+            areaPlot->addDevice(x,y,"");
         });
 
     connect(removeDeviceBtn, &QPushButton::clicked,
@@ -348,4 +351,46 @@ void MainWindow::on_ShowStatistics_clicked()
     quint32 startDateTimestamp = startWindowDateTimeEdit->dateTime().toTime_t();
     quint32 endDateTimestamp = endWindowDateTimeEdit->dateTime().toTime_t();
     loadDeviceFrequenciesInTableView(startDateTimestamp, endDateTimestamp);
+}
+
+void MainWindow::plotHistory() {
+    quint32 startDateTimestamp = ui->startTimeEdit->dateTime().toTime_t();
+    QList<Device> devices = DeviceFinder::getInstance()->getDb()->
+            getDevicePositionsInWindow(startDateTimestamp, startDateTimestamp+59);
+
+    areaPlotMovements->clearDevices();
+
+    for (Device d: devices) {
+        areaPlotMovements->addDevice(d.pos.x(),d.pos.y(), d.sender_mac);
+    }
+}
+
+// TEST: 14/09/2019 18:30
+void MainWindow::on_btnPlot_clicked()
+{
+    plotHistory();
+}
+
+void MainWindow::on_btnFastBack_clicked()
+{
+    ui->startTimeEdit->setDateTime(ui->startTimeEdit->dateTime().addSecs(-600));
+    plotHistory();
+}
+
+void MainWindow::on_btnBack_clicked()
+{
+    ui->startTimeEdit->setDateTime(ui->startTimeEdit->dateTime().addSecs(-60));
+    plotHistory();
+}
+
+void MainWindow::on_btnForward_clicked()
+{
+    ui->startTimeEdit->setDateTime(ui->startTimeEdit->dateTime().addSecs(+60));
+    plotHistory();
+}
+
+void MainWindow::on_btnFastForward_clicked()
+{
+    ui->startTimeEdit->setDateTime(ui->startTimeEdit->dateTime().addSecs(+600));
+    plotHistory();
 }

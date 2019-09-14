@@ -211,6 +211,7 @@ void ClientHandler::pushPacketsToDeviceFinder()
 {
     writeLog("#ClientHandler");
     dataReceived = dataReceived.replace('\0', '\n');
+    // writeLog(dataReceived);
 
     // Deserialize data received
     QJsonDocument jDoc = QJsonDocument::fromJson(dataReceived);
