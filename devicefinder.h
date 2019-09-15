@@ -32,6 +32,9 @@ private:
 
 
     QVector<Device> hiddenDevices;
+    int hiddenMacRecognitionTimeoutCounter = 0;
+    static const int HIDDEN_MAC_RECOGNITION_TIMEOUT = 15;
+
     /*
      * CORRELATION MATRIX BETWEEN HIDDEN DEVICES
      *    M1  M2    M3

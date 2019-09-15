@@ -83,8 +83,98 @@ void MainWindow::initDeviceFrequenciesTableView() {
     QStringList headers;
     headers << "MAC" << "frequency" << "start_subwindow" << "end_subwindow";
     deviceFrequenciesTableWidget->setHorizontalHeaderLabels(headers);
+
+    ////////////////////////////////////////////////////////
+    correlatedDevicesTableWidget = ui->correlatedDevicesTableWidget;
+    //correlatedDevicesTableWidget->horizontalHeader()->setStretchLastSection(true);
+    correlatedDevicesTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    correlatedDevicesTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    correlatedDevicesTableWidget->setRowCount(0);
+    correlatedDevicesTableWidget->setColumnCount(1);
+
+    // Add headers to table widget
+    QStringList headers2;
+    headers2 << "correlatedMacAddresses";
+    correlatedDevicesTableWidget->setHorizontalHeaderLabels(headers2);
+    ///////////////////////////////////////////////////////////////
+    hiddenMacCorrelationTableWidget = ui->hiddenMacCorrelationTableWidget;
+    //hiddenMacCorrelationTableWidget->horizontalHeader()->setStretchLastSection(true);
+    hiddenMacCorrelationTableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    hiddenMacCorrelationTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    hiddenMacCorrelationTableWidget->setRowCount(0);
+    hiddenMacCorrelationTableWidget->setColumnCount(1);
+
+    // Add headers to table widget
+//    QStringList headers3;
+//    headers3 << "correlatedMacAddresses";
+//    hiddenMacCorrelationTableWidget->setHorizontalHeaderLabels(headers3);
 }
 
+void MainWindow::loadHiddenMacCorrelationInTableView(
+        QVector< QVector<double> > hiddenMacCorrelation, QVector<Device> hiddenDevices) {
+
+    hiddenMacCorrelationTableWidget->clearContents();
+    hiddenMacCorrelationTableWidget->setRowCount(hiddenMacCorrelation.size());
+
+    hiddenMacCorrelationTableWidget->setColumnCount(hiddenDevices.size() + 1);
+    QStringList headers3;
+    headers3 << "MAC" ;
+    for (auto d: hiddenDevices) {
+        headers3 << d.sender_mac;
+    }
+    hiddenMacCorrelationTableWidget->setHorizontalHeaderLabels(headers3);
+
+    int row = 0;
+    for (auto correlationRow: hiddenMacCorrelation) {
+
+//      QString rowStr = "";
+//      for (int n=0; n<corrDevice.size(); n++) {
+//          rowStr += (corrDevice[n].sender_mac + ", ");
+//      }
+
+        if (correlationRow.size() > 0) {
+            int col = 0;
+            QTableWidgetItem* i0 = new QTableWidgetItem(hiddenDevices[row].sender_mac);
+            i0->setTextAlignment(Qt::AlignHCenter);
+            hiddenMacCorrelationTableWidget->setItem(row, col, i0);
+            col++;
+
+            for (auto correlation: correlationRow) {
+                QTableWidgetItem* i0 = new QTableWidgetItem(QString::number(correlation));
+                i0->setTextAlignment(Qt::AlignHCenter);
+                hiddenMacCorrelationTableWidget->setItem(row, col, i0);
+                col++;
+            }
+        }
+
+        row++;
+    }
+
+}
+
+void MainWindow::loadCorrelatedDevicesInTableView(QVector<QVector<Device>> correlatedDevices) {
+
+    correlatedDevicesTableWidget->clearContents();
+    correlatedDevicesTableWidget->setRowCount(correlatedDevices.size());
+
+    int row = 0;
+    for (auto corrDevice: correlatedDevices) {
+        if (!corrDevice.isEmpty()){
+            QString rowStr = "";
+
+            for (int n=0; n<corrDevice.size(); n++) {
+                rowStr += (corrDevice[n].sender_mac + ", ");
+            }
+
+            QTableWidgetItem* i0 = new QTableWidgetItem(rowStr);
+            i0->setTextAlignment(Qt::AlignHCenter);
+            correlatedDevicesTableWidget->setItem(row, 0, i0);
+
+            row++;
+        }
+    }
+
+}
 
 void MainWindow::loadDeviceFrequenciesInTableView(quint32 start_window, quint32 end_window) {
     DbManager* db = DeviceFinder::getInstance()->getDb();

@@ -20,7 +20,7 @@ static QString SETTINGS_PATH = "settings.ini";
 static quint16 SERVER_PORT = 7856;
 static int ESP32_NO = 4;
 // The application shows the devices in area each CHART_PERIOD ms
-static int CHART_PERIOD_MS = 15*1000; //TODO: 5*60*1000;
+static int CHART_PERIOD_MS = 60*1000; //TODO: 5*60*1000;
 static QDateTime START_TIME = QDateTime::currentDateTime();
 static int ESP32_NO_LIMIT_SUP = 15;
 static int ESP32_NO_LIMIT_INF = 2;

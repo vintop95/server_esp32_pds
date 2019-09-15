@@ -47,7 +47,7 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
     // Set initial view of the graph
     m_valueAxisY->setTickCount(6);
     m_timeAxisX->setTickCount(10);
-    axisX()->setRange(m_x.addSecs(-CHART_PERIOD_MS/1000*10), m_x.addSecs(0));
+    axisX()->setRange(m_x.addSecs(-CHART_PERIOD_MS/1000*9), m_x.addSecs(0));
     axisY()->setRange(0, 10);
 
 

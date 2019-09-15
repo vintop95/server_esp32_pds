@@ -168,14 +168,14 @@ double DeviceFinder::correlation(Device d1, Device d2) {
             diff = min2 - max1;
         }
         else {
-            return 0.0;
+            diff = 0.0;
         }
     } else if (max2 < min1) {
         if(d2.timestamp <d1.timestamp){ //anche il timestamp deve essere sequenziale
             diff = min1 - max2;
         }
         else {
-            return 0.0;
+            diff = 0.0;
         }
 
     } else {
@@ -187,6 +187,9 @@ double DeviceFinder::correlation(Device d1, Device d2) {
     if (diff > 0) {
         // e^( a*(1-diff) )
         probSeqNum = qExp(a*(1-diff));
+    }
+    else {
+        probSeqNum = 0.0;
     }
 
     //3) confrontare posizione
@@ -224,6 +227,18 @@ double DeviceFinder::correlation(Device d1, Device d2) {
  * Le matrici cresceranno sempre, ad un certo punto dovremmo pulirle
  */
 void DeviceFinder::hiddenMacRecognition() {
+
+    writeLog("== START HIDDEN MAC RECOGNITION ==",QtInfoMsg);
+
+    // QUANDO SI ARRIVA AD UN LIMITE, PULIRE TUTTE LE STRUTTURE DATI
+    if (hiddenMacRecognitionTimeoutCounter >= HIDDEN_MAC_RECOGNITION_TIMEOUT) {
+        hiddenMacRecognitionTimeoutCounter = 0;
+        hiddenDevices.clear();
+        hiddenMacCorrelationMatrix.clear();
+        correlatedDevices.clear();
+    }
+    hiddenMacRecognitionTimeoutCounter++;
+    // ///////////////////////////////////////////
 
     int hidDevOldSize = hiddenDevices.size();
 
@@ -296,6 +311,15 @@ void DeviceFinder::hiddenMacRecognition() {
         }
     }
 
+    // PRINT MATRIX OF CORRELATED DEVICES
+    for (int m=0;m<hiddenMacCorrelationMatrix.size();m++) {
+        for (int n=0; n<hiddenMacCorrelationMatrix[m].size(); n++) {
+            writeLog(QString::number(hiddenMacCorrelationMatrix[m][n])+" - ",QtInfoMsg);
+        }
+        writeLog("+++",QtInfoMsg);
+    }
+
+
     int correlatedDevicesOldSize = correlatedDevices.size();
 
     for (int i=hidDevOldSize; i<hidDevNewSize; i++) {
@@ -307,13 +331,14 @@ void DeviceFinder::hiddenMacRecognition() {
     int correlatedDevicesNewSize = correlatedDevices.size();
 
     double maxCorrelation = 0.0;
+
     // TODO: considerare di aggiungere il confronto di bucket con più di un elemento
     // leggiamo riga hiddenMacCorrelationMatrix da 0 a quell'elemento
     for (int i=correlatedDevicesOldSize; i<correlatedDevicesNewSize; i++) {
         int j = 0;
         for (; j<correlatedDevicesOldSize; j++) {
 
-            // metto 0 perché l'elemtno è uno solo visto che lo abbiamo appena
+            // metto 0 perché l'elemento è uno solo visto che lo abbiamo appena
             // inserito
             // cerco l'indice j corrispondente al device selezionato
             if (correlatedDevices[i][0] == hiddenDevices[j]) {
@@ -325,7 +350,7 @@ void DeviceFinder::hiddenMacRecognition() {
         int k=0;
         for (; k<hidDevNewSize; k++) {
 
-            if (maxCorrelation < hiddenMacCorrelationMatrix[j][k]) {
+            if (maxCorrelation < hiddenMacCorrelationMatrix[j][k] && j!=k) {
                 maxCorrelation = hiddenMacCorrelationMatrix[j][k];
                 maxIndex = k;
             }
@@ -355,14 +380,20 @@ void DeviceFinder::hiddenMacRecognition() {
 
                     }
                 }
-
             }
-
-
-        }
+        }     
     }
 
+    // PRINT MATRIX OF CORRELATED DEVICES
+    for (int m=0;m<correlatedDevices.size();m++) {
+        for (int n=0; n<correlatedDevices[m].size(); n++) {
+            writeLog(correlatedDevices[m][n].toString(),QtInfoMsg);
+        }
+        writeLog("+++",QtInfoMsg);
+    }
 
+    pWin->loadCorrelatedDevicesInTableView(correlatedDevices);
+    pWin->loadHiddenMacCorrelationInTableView(hiddenMacCorrelationMatrix, hiddenDevices);
 }
 
 bool DeviceFinder::insertBufferedPacketsIntoDB(QString espName)

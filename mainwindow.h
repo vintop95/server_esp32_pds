@@ -37,6 +37,8 @@ private:
     QDateTimeEdit *startWindowDateTimeEdit = nullptr;
     QDateTimeEdit *endWindowDateTimeEdit = nullptr;
     QTableWidget *deviceFrequenciesTableWidget = nullptr;
+    QTableWidget *correlatedDevicesTableWidget = nullptr;
+    QTableWidget *hiddenMacCorrelationTableWidget = nullptr;
 
     explicit MainWindow(QWidget *parent = nullptr);
     void initChart();
@@ -46,6 +48,7 @@ private:
     void setupLogWindow();
     void initDeviceFrequenciesTableView();
     void loadDeviceFrequenciesInTableView(quint32 start_window, quint32 end_window);
+
 signals:
     void logCurrDev();
 
@@ -85,6 +88,8 @@ public:
     AreaPlot* getAreaPlot();
     AreaPlot *getAreaPlotMovements();
     void plotHistory();
+    void loadCorrelatedDevicesInTableView(QVector<QVector<Device> > correlatedDevices);
+    void loadHiddenMacCorrelationInTableView(QVector<QVector<double> > hiddenMacCorrelation, QVector<Device> hiddenDevices);
 };
 
 #endif // MAINWINDOW_H
