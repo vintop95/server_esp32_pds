@@ -32,22 +32,6 @@
          <string>This tab shows the number of devices in the area during time</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <widget class="QCustomPlot" name="plot" native="true">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>500</width>
-             <height>300</height>
-            </size>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="1">
           <widget class="QChartView" name="chartView">
            <property name="sizePolicy">
@@ -59,6 +43,22 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
+             <height>300</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QCustomPlot" name="plot" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>600</width>
              <height>300</height>
             </size>
            </property>
@@ -297,20 +297,6 @@
          </item>
         </layout>
        </widget>
-      </widget>
-      <widget class="QTextEdit" name="txtLog">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
       </widget>
      </widget>
     </item>

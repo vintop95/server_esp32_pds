@@ -137,16 +137,16 @@ void AreaPlot::replot()//aggiorna il grafico
     double min_x_s = *std::min_element(vecEspX.begin(), vecEspX.end());
     double max_y_s = *std::max_element(vecEspY.begin(), vecEspY.end());
     double min_y_s  =  *std::min_element(vecEspY.begin(), vecEspY.end());
-    double max_x = std::max(max_x_p, max_x_s);
-    double min_x= std::min(min_x_p, min_x_s);
-    double max_y = std::max(max_y_p, max_y_s);
-    double min_y= std::min(min_y_p, min_y_s);
-    //
-    // customPlot->xAxis->setRange(min_x-1,max_x+1);
-    // customPlot->yAxis->setRange(min_y -1,max_y+1);
+    double max_x =  max_x_s;
+    double min_x= min_x_s;
+    double max_y = max_y_s;
+    double min_y= min_y_s;
 
-    customPlot->xAxis->setRange(-2,5);
-    customPlot->yAxis->setRange(-2,5);
+     customPlot->xAxis->setRange(min_x-2,max_x+2);
+     customPlot->yAxis->setRange(min_y -2,max_y+2);
+
+//    customPlot->xAxis->setRange(-2,3.5);
+//    customPlot->yAxis->setRange(-2,3.5);
 
 
     customPlot->replot();

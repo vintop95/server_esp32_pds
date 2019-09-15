@@ -86,11 +86,11 @@ void Logger::writeLog(const QString &text, QtMsgType type){
         case QtFatalMsg:
             msg = "FATAL: " + msg;
             msg = "[" + QTime::currentTime().toString() + "] " + msg;
-            emit writeLogInMainWindow(msg, Qt::red);
+            // emit writeLogInMainWindow(msg, Qt::red);
             qFatal(msg.toUtf8().constData());
             abort();
     }
-    emit writeLogInMainWindow(msg, txtColor);
+    // emit writeLogInMainWindow(msg, txtColor);
 }
 
 /**

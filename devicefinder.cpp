@@ -845,10 +845,10 @@ QPointF DeviceFinder::trilateration(QPointF p1, QPointF p2, QPointF p3, double r
     //result coordinates
     double finalX = p1.x()+ x*ex.x() + y*ey.x();
     double finalY = p1.y()+ x*ex.y() + y*ey.y();
-    finalX = finalX<0?0:finalX;
-    finalY = finalY<0?0:finalY;
-    finalX = finalX>10?10:finalX;
-    finalY = finalY>10?10:finalY;
+//    finalX = finalX<0?0:finalX;
+//    finalY = finalY<0?0:finalY;
+//    finalX = finalX>10?10:finalX;
+//    finalY = finalY>10?10:finalY;
     resultPose.setX(finalX);
     resultPose.setY(finalY);
 //    printPoint(resultPose, "resultPose");

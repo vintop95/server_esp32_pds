@@ -30,19 +30,19 @@ MainWindow::MainWindow(QWidget *parent) :
     initWindowDateTimeEdit();
     initDeviceFrequenciesTableView();
 
-    setupLogWindow();
+//    setupLogWindow();
 
     setupPlot();
 
     initChart();
 }
 
-void MainWindow::setupLogWindow() {
-    // Set the background of the log window black
-    QPalette p = ui->txtLog->palette();
-    p.setColor(QPalette::Base, QColor(20, 20, 20));
-    ui->txtLog->setPalette(p);
-}
+//void MainWindow::setupLogWindow() {
+//    // Set the background of the log window black
+//    QPalette p = ui->txtLog->palette();
+//    p.setColor(QPalette::Base, QColor(20, 20, 20));
+//    ui->txtLog->setPalette(p);
+//}
 
 void MainWindow::initWindowDateTimeEdit() {
     startWindowDateTimeEdit = ui->startWindowDateTimeEdit;
@@ -265,8 +265,8 @@ MainWindow::~MainWindow()
  */
 void MainWindow::writeLogInUi(const QString &text, const QColor& color)
 {
-    ui->txtLog->setTextColor( color );
-    ui->txtLog->append(text);
+//    ui->txtLog->setTextColor( color );
+//    ui->txtLog->append(text);
 }
 
 /**
@@ -373,9 +373,9 @@ void MainWindow::on_actionDebug_triggered()
             double x,y;
             x = bx_x->value();
             y = bx_y->value();
-            writeLogInUi("Added device at (" +
-                     QString::number(x) + ", " +
-                     QString::number(y) + ")");
+//            writeLogInUi("Added device at (" +
+//                     QString::number(x) + ", " +
+//                     QString::number(y) + ")");
             areaPlot->addDevice(x,y,"");
         });
 
@@ -384,9 +384,9 @@ void MainWindow::on_actionDebug_triggered()
             double x,y;
             x = bx_x->value();
             y = bx_y->value();
-            writeLogInUi("Removed device at (" +
-                 QString::number(x) + ", " +
-                 QString::number(y) + ")");
+//            writeLogInUi("Removed device at (" +
+//                 QString::number(x) + ", " +
+//                 QString::number(y) + ")");
             areaPlot->removeDevice(x,y);
         });
 
@@ -395,9 +395,9 @@ void MainWindow::on_actionDebug_triggered()
             double x,y;
             x = bx_x->value();
             y = bx_y->value();
-            writeLogInUi("Added ESP Board at (" +
-                 QString::number(x) + ", " +
-                 QString::number(y) + ")");
+//            writeLogInUi("Added ESP Board at (" +
+//                 QString::number(x) + ", " +
+//                 QString::number(y) + ")");
             areaPlot->addESP32(x,y);
         });
     connect(removeEsp32Btn, &QPushButton::clicked,
@@ -405,14 +405,14 @@ void MainWindow::on_actionDebug_triggered()
             double x,y;
             x = bx_x->value();
             y = bx_y->value();
-            writeLogInUi("Removed ESP Board at (" +
-                 QString::number(x) + ", " +
-                 QString::number(y) + ")");
+//            writeLogInUi("Removed ESP Board at (" +
+//                 QString::number(x) + ", " +
+//                 QString::number(y) + ")");
             areaPlot->removeESP32(x,y);
         });
     connect(clear, &QPushButton::clicked,
         [=](){
-            writeLogInUi("Plot cleared.");
+//            writeLogInUi("Plot cleared.");
             areaPlot->clearPlot();
         });
 
