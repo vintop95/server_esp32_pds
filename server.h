@@ -23,18 +23,17 @@ private:
     static Server* instance;
     quint16 port;
     QTcpSocket *socket;
-    bool isMultithread = true;
 
     Server(QObject* parent = nullptr);
     void setPort(quint16 p);
+
 protected:
+    // IT COUNTS AS SLOT (because it's inherited from QTcpServer)
     void incomingConnection(qintptr socketDescriptor) override;
 
 public:
+    // MAIN.C
     static Server* getInstance(quint16 p);
-    void setMultithread(bool flag){
-        isMultithread=flag;
-    }
     bool start();
 };
 

@@ -23,19 +23,24 @@
 #include <QMessageBox>
 #include <QWidget>
 #include <QDialog>
-#include <QString>
-#include <QVector>
+
 #include <QtWidgets>
 #include <QtNetwork>
 #include <QtCore>
-#include <QTime>
-#include <QSettings>
+
+#include <QString>
+#include <QVector>
 #include <QSharedPointer>
+#include <QtMath>
+
+#include <QTime>
+#include <QTimer>
+#include <QSettings>
 
 #include "mainwindow.h"
 #include "logger.h"
 #include "settings.h"
-#include "record.h"
+#include "datastructures.h"
 
 using namespace std;
 

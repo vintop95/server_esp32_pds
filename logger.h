@@ -9,9 +9,6 @@
 #define LOGGER_H
 
 #include "mainwindow.h"
-#include <QTime>
-#include <QString>
-#include <QDebug>
 
 /**
  * We use a Logger class in order to make writeLog a thread-safe
@@ -20,6 +17,7 @@
  */
 class Logger : public QObject{
     Q_OBJECT
+
 private:
     static Logger* instance;
     MainWindow* pWin;
@@ -27,10 +25,14 @@ private:
 
 signals:
     void writeLogInMainWindow(const QString &text, const QColor& = Qt::black);
+
+public slots:
+    // EVERYONE
+    void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
+
 public:
     static Logger* getInstance();
-public slots:
-    void writeLog(const QString &text, QtMsgType type = QtDebugMsg);
+    static bool saveCsv(Packet& p, const QString& path = "output.txt");
 };
 
 void writeLog(const QString &text, QtMsgType type = QtDebugMsg);

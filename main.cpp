@@ -34,12 +34,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     Settings* settings = Settings::getInstance();
-
-    // Retrieve the list of esp32 devices
-    QSharedPointer<QList<ESP32>> espList = QSharedPointer<QList<ESP32>>::create();
-    settings->loadSettings(espList);
-    ESP32_NO = espList->size();
-    writeLog("NUM OF ESPs: " + QString::number(ESP32_NO));
+    settings->loadSettingsFromIni();
 
     MainWindow* w = MainWindow::getInstance();
     w->show();
@@ -48,20 +43,14 @@ int main(int argc, char *argv[])
 
     printMainRssiMeasures();
 
-
     // Initializes the object that handles the packets
     // to find the devices in the area
-    DeviceFinder* deviceFinder = DeviceFinder::getInstance(ESP32_NO);
-    for(auto e : *espList){
-        deviceFinder->setESPPos(e.getName(), e.getX(), e.getY());
-    }
-    deviceFinder->test();
-
+    DeviceFinder::getInstance(settings->esp32s);
     // Initializes the server that listens for the
     // esp devices to send the packets
     Server* s = Server::getInstance(SERVER_PORT);
-    s->setMultithread(false);
     s->start();
+
 
     return a.exec();
 }

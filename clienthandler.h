@@ -8,13 +8,8 @@
 #ifndef CLIENTHANDLER_H
 #define CLIENTHANDLER_H
 
-#include "main.h"
 #include "devicefinder.h"
-#include <QThread>
 #include <QTcpSocket>
-#include <QDebug>
-#include <QTimer>
-
 
 /**
  * It handles the data received from the esp32 devices
@@ -22,35 +17,32 @@
 class ClientHandler : public QObject
 {
     Q_OBJECT
-public:
-   explicit ClientHandler(qintptr s, QObject *parent = nullptr);
-   void handle();
-   void setMultithread(bool flag){
-       writeLog("ClientHandler");
-       writeLog("Multithreading set to " + QString::number(flag));
-       isMultithread=flag;
-   }
+
+private:
+   QTcpSocket *socket;
+   DeviceFinder *deviceFinder;
+
+   qintptr socketDescriptor;
+   QString espName = nullptr;
+   QByteArray dataReceived;
+   QTimer timeoutDisconnect;
+   int timeoutPeriod = 30000;
+
+   void setSocketDescriptor(qintptr socketDescriptor);
+   void pushPacketsToDeviceFinder();
+
 signals:
    void error(QTcpSocket::SocketError socketerror);
 
 public slots:
-   void readyRead();
-   void disconnected();
+   // CLIENT ESP32
+   void readFromSocket();
+   void closeClientHandler();
 
-private:
-   DeviceFinder *deviceFinder;
-   QTcpSocket *socket;
-
-   qintptr socketDescriptor;
-   bool isMultithread = true;
-   QString espName = "UNKNOWN";
-   QByteArray data;
-   QTimer timer;
-   int waitPeriod = 30000;
-
-
-   void setSocketDescriptor(qintptr);
-   void pushRecord();
+public:
+   // SERVER
+   explicit ClientHandler(qintptr s, QObject *parent = nullptr);
+   void init();
 };
 
 #endif // CLIENTHANDLER_H

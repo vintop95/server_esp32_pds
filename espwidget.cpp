@@ -11,7 +11,7 @@
 /**
  * @brief Constructor of ESPWidget
  */
-ESPWidget::ESPWidget(QWidget *parent) :
+EspWidget::EspWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ESPWidget)
 {
@@ -19,7 +19,7 @@ ESPWidget::ESPWidget(QWidget *parent) :
     setModified(false);
 }
 
-ESPWidget::~ESPWidget()
+EspWidget::~EspWidget()
 {
     delete ui;
 }
@@ -27,7 +27,7 @@ ESPWidget::~ESPWidget()
 /**
  * @brief Sets graphically the name of the ESP32 Device
  */
-void ESPWidget::setName(QString name)
+void EspWidget::setName(QString name)
 {
     ui->lblESPName->setText(name);
 }
@@ -35,7 +35,7 @@ void ESPWidget::setName(QString name)
 /**
  * @brief Sets graphically the position of the ESP32 Device
  */
-void ESPWidget::setPoint(double x, double y)
+void EspWidget::setPoint(double x, double y)
 {
     ui->txtX->setText(QString::number(x));
     ui->txtY->setText(QString::number(y));
@@ -45,7 +45,7 @@ void ESPWidget::setPoint(double x, double y)
  * @brief Sets if the data written has been modified
  * Sets italic font it text is modified
  */
-void ESPWidget::setModified(bool m){
+void EspWidget::setModified(bool m){
     modified = m;
     if(modified){
         ui->txtX->setStyleSheet("font: italic Arial;");
@@ -59,7 +59,7 @@ void ESPWidget::setModified(bool m){
 /**
  * @brief Get the name of the ESP32 Device
  */
-QString ESPWidget::getName()
+QString EspWidget::getName()
 {
     return ui->lblESPName->text();
 }
@@ -67,7 +67,7 @@ QString ESPWidget::getName()
 /**
  * @brief Get the x position of the ESP32 Device
  */
-float ESPWidget::getX()
+float EspWidget::getX()
 {
     return ui->txtX->text().toFloat();
 }
@@ -75,7 +75,7 @@ float ESPWidget::getX()
 /**
  * @brief Get the y position of the ESP32 Device
  */
-float ESPWidget::getY()
+float EspWidget::getY()
 {
     return ui->txtY->text().toFloat();
 }
@@ -83,15 +83,16 @@ float ESPWidget::getY()
 /**
  * @brief When x is modified, call this function
  */
-void ESPWidget::on_txtX_textEdited(const QString &dummy)
+void EspWidget::on_txtX_textEdited(const QString &dummy)
 {
+    dummy;
      setModified(true);
 }
 
 /**
  * @brief When y is modified, call this function
  */
-void ESPWidget::on_txtY_textEdited(const QString &dummy)
+void EspWidget::on_txtY_textEdited(const QString &dummy)
 {
     setModified(true);
 }

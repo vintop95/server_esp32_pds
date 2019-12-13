@@ -9,14 +9,10 @@
 #define DEVICEFINDER_H
 
 #include "main.h"
-#include <QVector>
-#include <QtMath>
-
 #include "dbmanager.h"
-#include "record.h"
 
 /**
- * It detects the devices by processing Records received from the ClientHandler
+ * It detects the devices by processing packets received from the ClientHandler
  * Implement run() method in order to run this on a new thread
  */
 class DeviceFinder : public QThread
@@ -25,35 +21,83 @@ private:
     static DeviceFinder* instance;
     MainWindow* pWin;
     DbManager db;
-    int ESPNo;
-    QVector<Record> records = QVector<Record>();
-    QMap<QString, ESP32> esp;
-    QHash<QString, Device> devices;
-    QTimer timer;
+    // A vector that holds true in position i if ESP32#i
+    // already connected to server during the listening window
+    QMap<QString, bool> espInteracted;
+    QVector<Packet> packets;
+    espMapPtr_t esp32s;
+    QMap<QString, Device> devices;
 
+    QSet<QString> devices_in_window;
+
+
+    QVector<Device> hiddenDevices;
+    int hiddenMacRecognitionTimeoutCounter = 0;
+    static const int HIDDEN_MAC_RECOGNITION_TIMEOUT = 15;
+
+    /*
+     * CORRELATION MATRIX BETWEEN HIDDEN DEVICES
+     *    M1  M2    M3
+     * M1 1   0.6  0.8
+     * M2      1   0.8
+     * M3           1
+     */
+    QVector< QVector<double> > hiddenMacCorrelationMatrix;
+    double correlationThreshold = 0.5;
+    QVector< QVector<Device>> correlatedDevices;
+    QTimer chartUpdateTimer;
+    uint lastTimestamp;
+    bool hasTimerReset = true;
 
     DeviceFinder();
-    void pushDevice(Device d);
     void setWindow(MainWindow *);
+    void init(espMapPtr_t list = nullptr,
+              QString dbPath="server_esp32_pds.sqlite3");
+    void setChartUpdateTimer();
+    bool isAllowedESPName(QString name);
+    bool canStartPacketProcessing();
+    void setEspInteracted(QString espName);
+    void resetInteractionsWithEsp();
+    void processLocationsFromPackets();
 
-    QPointF calculatePosition(Record r);
-    static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3, double r1, double r2, double r3);
-    static std::pair<QPointF, QPointF> bilateration(QPointF p1, QPointF p2, double r1, double r2);
-public:
-    static DeviceFinder* getInstance(int espNo = 0, QString dbPath="server_esp32_pds.sqlite3");
+    //DEVICE MANAGEMENT
+    void pushDeviceInBuffer(Device d);
+    bool insertBufferedDevicesIntoDB();
+    void updateDevicesInWindow();
 
-    //void run() override;
-    void setInit(int espNo, QString dbPath="server_esp32_pds.sqlite3");
+    static QPointF trilateration(QPointF p1, QPointF p2, QPointF p3,
+                                 double r1, double r2, double r3);
+    static QPointF bilateration(
+            QPointF p1, QPointF p2, double r1, double r2);
+    static QPair<QPointF, QPointF> bilaterationThatReturnsTwoPoints(
+            QPointF p1, QPointF p2, double r1, double r2);
 
-    void setESPPos(QString ESPName, double xpos, double ypos);
-    void pushRecord(Record r);
 
-    static double calculateDistance(int rssi);
 
+    void hiddenMacRecognition();
+    static double correlation(Device d1, Device d2);
+public slots:
+    // MAINWINDOW
     void logCurrentDevices();
+
+public:
+    //void run() override;
+
+    // EVERYONE
+    static DeviceFinder* getInstance(espMapPtr_t list = nullptr,
+            QString dbPath="server_esp32_pds.sqlite3");
+    static double calculateDistance(double rssi);
+    int getEspNo();
     int countCurrentDevices();
-    void initChart();
-    void test();
+
+    // CLIENT_HANDLER
+    void pushPacketInBuffer(Packet p);
+    bool insertBufferedPacketsIntoDB(QString espName);
+
+    //viene chiamato dentro init
+    void generatePackets();
+
+    DbManager* getDb();
 };
 
 #endif // DEVICEFINDER_H

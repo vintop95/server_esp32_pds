@@ -1,0 +1,22 @@
+come vengono elaborati i packets fino a calcolare le posizioni?
+
+DEVICEFINDER::INIT -> INIZIALIZZA espInteracted a false per tutti
+
+[test : GENERAZIONE PACCHETTI FITTIZI]
+
+DeviceFinder::insertPacketsIntoDB -> inserisci i pkt e controlla se iniziare a calcolare
+    espInteracted[espName] = true 
+    DBMANAGER::INSERTPACKETS() -> AGGIUNTI I PACCHETTI A BLOCCHI
+    if(canStartPacketProcessing)
+        DeviceFinder::processLocationsFromPackets()
+        
+        
+DeviceFinder::processLocationsFromPackets()
+    DbManager::caluclateAvgRssi() -> restituisce per ogni dispositivo
+                                     la distanza in rssi per ogni schedina
+    calculateDistance()
+    trilateration()
+
+
+
+calculateAvgRssi()

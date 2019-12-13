@@ -22,26 +22,33 @@ class SettingsForm;
 /**
  * This class models the graphical form
  * for changing the settings (preferences)
+ * LIFECYCLE OF SETTINGS:
+ * At start call loadSettingsFromIni() and use it for the rest of
+ * the program
+ * If you want to change the settings, change it from the ui
+ * and restart, because we do:
+ *  loadValuesFromIniToWidget()
+ *  saveValuesFromWidgetToIni()
  */
 class SettingsForm : public QDialog
 {
     Q_OBJECT
 
-public:
-    explicit SettingsForm(QString path, QWidget *parent = nullptr);
-    ~SettingsForm();
+private:
+    void addEspWidget(QString name, double x, double y, bool modified = true);
+    void loadValuesFromIniToWidget();
+    void saveValuesFromWidgetToIni();
+    Ui::SettingsForm *ui;
+    QString settingsPath;
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
     void on_btnDecreaseESP_clicked();
     void on_btnIncreaseESP_clicked();
 
-private:
-    void addESPWidget(QString name, double x, double y, bool modified = true);
-    void loadValues();
-    void saveValues();
-    Ui::SettingsForm *ui;
-    QString settingsPath;
+public:
+    explicit SettingsForm(QString path, QWidget *parent = nullptr);
+    ~SettingsForm();
 };
 
 #endif // SETTINGSFORM_H

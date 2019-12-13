@@ -41,16 +41,15 @@ Settings* Settings::getInstance()
  *
  * @param List of esp32 devices read from .ini file
  */
-void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
+void Settings::loadSettingsFromIni(){
     qset->setPath(QSettings::IniFormat, QSettings::UserScope, SETTINGS_PATH);
     qset->sync();
-    espList = esps;
 
     // If the file does not exist
     if(! qset->contains("ESP32_NO")){
         //qDebug() << qset->applicationName();
 
-        qset->setValue("CHART_PERIOD", CHART_PERIOD);
+        qset->setValue("CHART_PERIOD", CHART_PERIOD_MS);
         qset->setValue("ESP32_NO", ESP32_NO);
 
         for(int i=0; i < ESP32_NO; ++i){
@@ -58,18 +57,17 @@ void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
             qreal x = 0.0;
             qreal y = 0.0;
 
-            // TODO: fix the number representation in .ini file
             qset->setValue(QString("ESP%1/name").arg(i), name);
             qset->setValue(QString("ESP%1/pos_x").arg(i), QString::number(x,'f'));
             qset->setValue(QString("ESP%1/pos_y").arg(i), QString::number(y,'f'));
 
-            espList->push_back(ESP32(name, QPointF(x,y)));
+            esp32s->insert(name,ESP32(name, QPointF(x,y)));
 
             qset->sync();
         }
 
     }else{
-        CHART_PERIOD = qset->value("CHART_PERIOD", 1000).toInt();
+        CHART_PERIOD_MS = qset->value("CHART_PERIOD", 1000).toInt();
         ESP32_NO = qset->value("ESP32_NO").toInt();
 
         for(int i=0; i < ESP32_NO; ++i){
@@ -77,10 +75,33 @@ void Settings::loadSettings(QSharedPointer<QList<ESP32>> esps){
             qreal x = qset->value(QString("ESP%1/pos_x").arg(i), -1).toReal();
             qreal y = qset->value(QString("ESP%1/pos_y").arg(i), -1).toReal();
 
-            espList->push_back(ESP32(name, QPointF(x,y)));
+            esp32s->insert(name,ESP32(name, QPointF(x,y)));
             qset->sync();
         }
-
-
     }
+
+}
+
+bool Settings::writeSettingsToIni()
+{
+    //TODO: check if ok
+    try{
+        qset->setValue("CHART_PERIOD", CHART_PERIOD_MS);
+        qset->setValue("ESP32_NO", ESP32_NO);
+
+        for (auto const& esp32 : *esp32s){
+            QString name = esp32.getName();
+            double x = esp32.getX();
+            double y = esp32.getY();
+
+            qset->setValue(QString(name + "/name"), name);
+            qset->setValue(QString(name + "/pos_x"), QString::number(x,'f'));
+            qset->setValue(QString(name + "/pos_y"), QString::number(y,'f'));
+        }
+        qset->sync();
+        return true;
+    }catch(const std::exception& ex){
+        return false;
+    }
+
 }

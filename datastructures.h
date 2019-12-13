@@ -5,23 +5,24 @@
  * Giorgio Pizzuto
  * Vincenzo Topazio
  */
-#ifndef RECORD_H
-#define RECORD_H
+#ifndef DATASTRUCTURES_H
+#define DATASTRUCTURES_H
 
 #include <QObject>
 #include <QPointF>
-
+#include <QDateTime>
+#include <QtSql>
 
 /**
- * Record received from the ESP32 devices
+ * Packet received from the ESP32 devices
  * rssi: -35 MOLTO VICINO, -100 MOLTO LONTANO
  *
  * @todo: change operator==
  */
-class Record{
+class Packet{
 public:
-    Record() {}
-    Record(QString pkt, QString mac):
+    Packet() {}
+    Packet(QString pkt, QString mac):
         sender_mac(mac), hashed_pkt(pkt) {}
     QString sender_mac;
     quint32 timestamp;
@@ -29,6 +30,7 @@ public:
     QString hashed_pkt;
     QString ssid;
     QString espName;
+    quint32 seq_num;
 
     QString toString(){
         QString str;
@@ -37,7 +39,11 @@ public:
         str.append(", MAC: ");
         str.append(sender_mac);
         str.append(", timestamp: ");
-        str.append(QString::number(timestamp));
+        //Human readable timestamp
+        QDateTime hr_timestamp;
+        hr_timestamp.setTime_t(timestamp);
+        str.append(hr_timestamp.toString(Qt::SystemLocaleLongDate));
+        //str.append(QString::number(timestamp));
         str.append(", rssi: ");
         str.append(QString::number(rssi));
         str.append(", ssid: ");
@@ -48,7 +54,7 @@ public:
     }
 
     // TODO: check if is OK
-    bool operator==(const Record& r2) const
+    bool operator==(const Packet& r2) const
     {
         return
         (sender_mac == r2.sender_mac) &&
@@ -66,8 +72,8 @@ public:
 class Device{
 public:
     Device():pos(0,0) {}
-    Device(QString mac, QPointF p):
-        sender_mac(mac), pos(p) {}
+    Device(QString mac, QPointF p, quint32 time):
+        sender_mac(mac), pos(p), timestamp(time) {}
 
     QString toString(){
         QString str = "MAC: ";
@@ -76,12 +82,26 @@ public:
         str.append(QString::number(pos.x()));
         str.append(", ");
         str.append(QString::number(pos.y()));
+        str.append(", timestamp: ");
+        //Human readable timestamp
+        QDateTime hr_timestamp;
+        hr_timestamp.setTime_t(timestamp);
+        str.append(hr_timestamp.toString(Qt::SystemLocaleLongDate));
         str.append(")");
         return str;
     }
 
     QString sender_mac; //id of device
     QPointF pos;
+    quint32 timestamp;
+
+    QSet<QString> ssids;
+    QList<quint32> seqNums;
+
+    bool operator== (Device &d2) {
+        return (this->sender_mac == d2.sender_mac
+                && this->timestamp == d2.timestamp);
+    }
 };
 
 /**
@@ -94,7 +114,7 @@ private:
 public:
     ESP32(QString n, QPointF p = QPointF(0,0)):
     name(n), pos(p){ }
-
+    ESP32(){;}
     QString getName() const{
         return name;
     }
@@ -112,5 +132,19 @@ public:
         pos = QPointF(xpos, ypos);
     }
 };
+
+class DeviceFrequencyInWindow {
+public:
+    QString sender_mac;
+    int frequency;
+    int start_subwindow;
+    int end_subwindow;
+};
+
+typedef QSharedPointer<QMap<QString, ESP32>> espMapPtr_t;
+//una mappa che conterrà per ogni MAC dispositivo (chiave)
+//un vector (valore) contenente le coppie (schedina, RSSI medio)
+//in ordine decrescente di RSSI medio
+typedef QMap<QString,QVector<QPair<QString, double>>> avgRssiMap_t;
 
 #endif // RECORD_H

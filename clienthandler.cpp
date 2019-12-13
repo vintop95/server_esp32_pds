@@ -8,6 +8,7 @@
 #include "clienthandler.h"
 #include <iostream>
 
+
 /**
  * @brief Constructor
  *
@@ -25,18 +26,18 @@ void ClientHandler::setSocketDescriptor(qintptr id)
     this->socketDescriptor = id;
 }
 
-void ClientHandler::handle()
+void ClientHandler::init()
 {
     writeLog("#ClientHandler");
     // after waitPeriod close the connection
-    connect(&timer, &QTimer::timeout,
+    connect(&timeoutDisconnect, &QTimer::timeout,
     [=](){
         if (socket->isValid())
             socket->disconnectFromHost();
         writeLog("Timeout expired.", QtWarningMsg);
     });
-    timer.setInterval(waitPeriod);
-    timer.start();
+    timeoutDisconnect.setInterval(timeoutPeriod);
+    timeoutDisconnect.start();
 
     socket = new QTcpSocket(this);
 
@@ -49,13 +50,10 @@ void ClientHandler::handle()
 
     // Assign the callback to call when data is received from the client
     // (and when it disconnects)
-    // note - Qt::DirectConnection is used because it's multithreaded
-    //        This makes the slot to be invoked immediately, when the signal is emitted.
-    connect(socket, SIGNAL(readyRead()),
-            this, SLOT(readyRead()),
-            Qt::DirectConnection);
-    connect(socket, SIGNAL(disconnected()),
-            this, SLOT(disconnected()));
+    connect(socket, &QTcpSocket::readyRead,
+            this, &ClientHandler::readFromSocket);
+    connect(socket, &QTcpSocket::disconnected,
+            this, &ClientHandler::closeClientHandler);
 
     // alternative connect syntax with lambda
     //    connect(socket, &QTcpSocket::readyRead,
@@ -67,12 +65,12 @@ void ClientHandler::handle()
 
 /**
  * @brief Callback called when the server received data from client
- * This function works together with 'Sender::sendRecordsToServer()' function
+ * This function works together with 'Sender::sendPacketsToServer()' function
  * in the client
  *
  * @todo: add catch for runtime exceptions (like the socket already closed)
  */
-void ClientHandler::readyRead()
+void ClientHandler::readFromSocket()
 {
     writeLog("#ClientHandler");
     // get the information
@@ -81,19 +79,19 @@ void ClientHandler::readyRead()
     // per essere sicuro di aver ricevuto tutti i dati
 
 
-    if(!data.isEmpty()){
+    if(!dataReceived.isEmpty()){
         // There is a connection to conclude
-        data += socket->readAll();
-        writeLog("INITIAL STATE OF DATA VARIABLE: " + data);
-        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
-        this->pushRecord();
+        // writeLog("INITIAL STATE OF DATA VARIABLE: " + dataReceived);
+        dataReceived += socket->readAll();
+        // writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + dataReceived);
+        this->pushPacketsToDeviceFinder();//save the packets
         return;
     }
 
-    data = socket->peek(10);
+    dataReceived = socket->peek(10);
 
     // AGGIUNGERE IF INIT, DATA, END (chiudi)
-    if(data.startsWith("INIT ")){
+    if(dataReceived.startsWith("INIT ")){
         QByteArray msg;
         socket->skip(strlen("INIT "));
         msg = socket->readAll();
@@ -108,7 +106,22 @@ void ClientHandler::readyRead()
             QJsonObject jObj = jDoc.object();
             espName = jObj["name"].toString();
             writeLog(QString::number(socketDescriptor) + " - NAME OF ESP IS " + espName, QtInfoMsg);
-            socket->write("OK\r\n");
+
+            // AUTHENTICATION
+            if(Settings::getInstance()->esp32s->count(espName) != 0){
+                writeLog(QString::number(socketDescriptor) + " - " + espName + " AUTHENTICATED", QtInfoMsg);
+                socket->write("OK\r\n");
+            }else{
+                writeLog(QString::number(socketDescriptor) + " - " + espName + " NOT AUTHENTICATED", QtWarningMsg);
+                socket->write("ERR\r\n");
+
+                dataReceived.clear();
+
+                // Close the connection emitting the disconnected signal
+                if (socket->isValid())
+                    socket->disconnectFromHost();
+            }
+
         }else{
             writeLog(QString::number(socketDescriptor) + " - ERROR IN GETTING ESPNAME", QtCriticalMsg);
             socket->write("ERR\r\n");
@@ -116,16 +129,16 @@ void ClientHandler::readyRead()
 
         socket->flush();
         //socket->waitForBytesWritten();
-        data.clear();
+        dataReceived.clear();
     }
-    else if(data.startsWith("DATA ")){
+    else if(dataReceived.startsWith("DATA ")){
 
         if(espName == "UNKNOWN"){
             writeLog(QString::number(socketDescriptor) + " - ESPNAME UNKNOWN", QtCriticalMsg);
             socket->write("ERR\r\n");
             socket->flush();
             //socket->waitForBytesWritten();
-            data.clear();
+            dataReceived.clear();
             return;
         }
 
@@ -133,23 +146,28 @@ void ClientHandler::readyRead()
 
         socket->skip(strlen("DATA "));
 
-        data = socket->readAll();
-        this->pushRecord();
+        dataReceived = socket->readAll();
+        this->pushPacketsToDeviceFinder();
+
     }
-    else if(data.startsWith("END")){
+    else if(dataReceived.startsWith("END")){
         writeLog(QString::number(socketDescriptor) + " - END MESSAGE");
 
         // Acknowledge the client
         // And send him the timestamp
-        QDateTime current = QDateTime::currentDateTime();
-        uint tmpstmp = current.toTime_t();
+        uint timestamp_now = QDateTime::currentDateTime().toTime_t();
 
-        QString msgOut = "OK " + QString::number(tmpstmp) + "\r\n";
+        //QString msgOut = "OK " + QString::number(tmpstmp) + "\r\n";
+        QString msgOut = "OK ";
+        socket->write(msgOut.toStdString().c_str(), msgOut.length());
+        timestamp_now = qToBigEndian(timestamp_now);
+        socket->write((const char*) &timestamp_now, sizeof(timestamp_now));
+        msgOut = "\r\n";
         socket->write(msgOut.toStdString().c_str(), msgOut.length());
         socket->flush();
         //socket->waitForBytesWritten();
 
-        data.clear();
+        dataReceived.clear();
 
         // Close the connection emitting the disconnected signal
         if (socket->isValid())
@@ -157,12 +175,12 @@ void ClientHandler::readyRead()
 
     }else{
         writeLog(QString::number(socketDescriptor) + " - FORMAT NOT RECOGNIZED");
-        data = socket->readAll();
-        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + data);
+        dataReceived = socket->readAll();
+        writeLog(QString::number(socket->socketDescriptor()) + " - MSG RCVD: " + dataReceived);
         socket->write("ERR\r\n");
         socket->flush();
         //socket->waitForBytesWritten();
-        data.clear();
+        dataReceived.clear();
     }
 
 
@@ -171,54 +189,57 @@ void ClientHandler::readyRead()
 /**
  * @brief Callback called when the client disconnects
  */
-void ClientHandler::disconnected()
+void ClientHandler::closeClientHandler()
 {
     writeLog("#ClientHandler");
     writeLog(QString::number(socketDescriptor) + " Disconnected.");
 
-    timer.stop();
+    timeoutDisconnect.stop();
 
     if (socket->isValid())
         socket->disconnectFromHost();
 
     socket->deleteLater();
 
-    // TODO: check if it's ok
     this->deleteLater();
 
     // if it was a QThread
     //exit(0);
 }
 
-void ClientHandler::pushRecord()
+void ClientHandler::pushPacketsToDeviceFinder()
 {
     writeLog("#ClientHandler");
-    data = data.replace('\0', '\n');
+    dataReceived = dataReceived.replace('\0', '\n');
+    // writeLog(dataReceived);
 
     // Deserialize data received
-    QJsonDocument jDoc = QJsonDocument::fromJson(data);
+    QJsonDocument jDoc = QJsonDocument::fromJson(dataReceived);
     if(!jDoc.isNull() && jDoc.isArray()){
         // IF WE RECEIVED ALL THE JSON ARRAY
-        writeLog(QString::number(socketDescriptor) + " - RECORD RECEIVED", QtInfoMsg);
+        writeLog(QString::number(socketDescriptor) + " - PACKETS RECEIVED", QtInfoMsg);
 
-        QJsonArray records = jDoc.array();
+        QJsonArray packets = jDoc.array();
 
-        for(auto recRcvd : records){
-            QJsonObject obj = recRcvd.toObject();
-            Record r;
+        for(auto pktRcvd : packets){
+            QJsonObject obj = pktRcvd.toObject();
+            Packet r;
             r.sender_mac = obj["sender_mac"].toString();
             r.timestamp = static_cast<quint32>(obj["timestamp"].toInt());
             r.rssi = static_cast<qint8>(obj["rssi"].toInt());
             r.hashed_pkt = obj["hashed_pkt"].toString();
             r.ssid = obj["ssid"].toString();
+            r.seq_num = static_cast<quint32>(obj["seq_num"].toInt());
             r.espName = this->espName;
-            deviceFinder->pushRecord(r);
+            deviceFinder->pushPacketInBuffer(r);
         }
-
+        //TODO: aggiungere metodo di device finder che aggiunga i packets accumulati nel database
+        deviceFinder->insertBufferedPacketsIntoDB(espName);
         socket->write("OK\r\n");
-        data.clear();
+        dataReceived.clear();
+
     }else{
-        writeLog(QString::number(socketDescriptor) + " - ERROR GETTING RECORD, it may arrive later the rest", QtWarningMsg);
+        writeLog(QString::number(socketDescriptor) + " - ERROR GETTING PACKET, it may arrive later the rest", QtWarningMsg);
         //socket->write("ERR\r\n");
     }
     socket->flush();

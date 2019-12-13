@@ -8,25 +8,36 @@
 #ifndef DBMANAGER_H
 #define DBMANAGER_H
 
+#include "main.h"
+
 #include <QObject>
 #include <QtSql>
-#include "logger.h"
 
 /**
  * Database manager
  */
 class DbManager
 {
-public:
-    DbManager(const QString& path);
-    bool saveCsv(Record& record, const QString& path = "output.txt");
-    void setPath(QString p);
-    bool addPacket(Record r);
 private:
     QSqlDatabase db;
-    bool createTables();
+    void createTablesIfNotExist();
+    void checkConsistencyAndCreateTable(QString TABLE_NAME, int nOfCols, QString strQueryCreate );
+    bool addDevice(Device d);
     void test();
 
+public:
+    //DEVICE_FINDER
+    DbManager(const QString& path);
+    void setPath(QString p);
+    bool insertPackets(QVector<Packet> packets);
+    bool insertDevices(QList<Device> devices);
+    avgRssiMap_t calculateAvgRssi(int espNumber,
+                          unsigned int lastTimestamp); //to calculate position of devices
+    QList<DeviceFrequencyInWindow> computeDeviceFrequencies(
+            quint32 start_window, quint32 end_window);
+    QList<Device> getDevicePositionsInWindow(quint32 start_window, quint32 end_window);
+    void test_2();
+    //uint lastTimestamp;
 };
 
 

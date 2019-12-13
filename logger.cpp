@@ -14,7 +14,8 @@ Logger* Logger::instance;
  */
 Logger::Logger( QObject* parent): QObject(parent){
     pWin = MainWindow::getInstance();
-    connect(this,&Logger::writeLogInMainWindow,pWin,&MainWindow::writeLog);
+    connect(this, &Logger::writeLogInMainWindow,
+            pWin, &MainWindow::writeLogInUi);
 }
 
 Logger *Logger::getInstance()
@@ -23,6 +24,20 @@ Logger *Logger::getInstance()
         instance = new Logger();
     }
     return instance;
+}
+
+bool Logger::saveCsv(Packet &r, const QString &path)
+{
+    QFile file(path);
+
+    if(file.open(QFile::WriteOnly | QIODevice::Append)) {
+        QTextStream stream(&file);
+        stream << r.toString() << endl;
+        file.close();
+        return true;
+    }else{
+        return false;
+    }
 }
 
 /**
@@ -71,11 +86,11 @@ void Logger::writeLog(const QString &text, QtMsgType type){
         case QtFatalMsg:
             msg = "FATAL: " + msg;
             msg = "[" + QTime::currentTime().toString() + "] " + msg;
-            emit writeLogInMainWindow(msg, Qt::red);
+            // emit writeLogInMainWindow(msg, Qt::red);
             qFatal(msg.toUtf8().constData());
             abort();
     }
-    emit writeLogInMainWindow(msg, txtColor);
+    // emit writeLogInMainWindow(msg, txtColor);
 }
 
 /**

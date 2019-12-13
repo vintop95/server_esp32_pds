@@ -1,0 +1,35 @@
+SCHEMA:
+"CREATE TABLE location("mac_device text primary key", "timestamp integer primary key", "X double", "Y double")"
+"CREATE TABLE packet("
+ "id integer primary key,"
+ "sender_mac text,"
+ "timestamp integer,"
+ "rssi integer,"
+ "hashed_pkt text,"
+ "ssid text,"
+ "seq_num integer",
+ "hidden_mac boolean",
+ "espName text)"
+
+SELECT 		sender_mac, espName, AVG(rssi)
+FROM 			packet P
+WHERE			timestamp > LAST_TS
+	AND			hashed_pkt IN (
+			SELECT 		hashed_pkt
+			FROM 			packet P1
+			WHERE 		timestamp > LAST_TS
+			GROUP BY	hashed_pkt
+			HAVING COUNT(*) = N)
+GROUP BY	sender_mac, espName
+
+bonus:
+SELECT timestamp (i primi 5)
+
+AND timestamp > -5 + (
+			SELECT 	MAX(timestamp)
+			FROM 		packet P2
+			WHERE		P2.sender_mac = P.sender_mac
+				AND		P2.espName = P.espName)
+				
+				
+

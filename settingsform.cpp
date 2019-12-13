@@ -7,6 +7,7 @@
  */
 #include "settingsform.h"
 #include "ui_settingsform.h"
+#include <QProcess>
 
 /**
  * @brief Constructor of SettingsForm
@@ -18,7 +19,7 @@ SettingsForm::SettingsForm(QString path, QWidget *parent) :
 {
     setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
     ui->setupUi(this);
-    loadValues();
+    loadValuesFromIniToWidget();
 }
 
 SettingsForm::~SettingsForm()
@@ -30,7 +31,7 @@ SettingsForm::~SettingsForm()
 /**
  * @brief Load the values from the .ini file to the form
  */
-void SettingsForm::loadValues()
+void SettingsForm::loadValuesFromIniToWidget()
 {
     QString settingsFile = settingsPath;
     QSettings qs(settingsFile, QSettings::IniFormat);
@@ -48,7 +49,7 @@ void SettingsForm::loadValues()
         double x = qs.value(QString(name + "/pos_x"), -1).toDouble();
         double y = qs.value(QString(name + "/pos_y"), -1).toDouble();
 
-        addESPWidget(name, x, y, false);
+        addEspWidget(name, x, y, false);
     }
     qs.sync();
 }
@@ -56,7 +57,7 @@ void SettingsForm::loadValues()
 /**
  * @brief Save the values in the form to the .ini file
  */
-void SettingsForm::saveValues()
+void SettingsForm::saveValuesFromWidgetToIni()
 {
     QString settingsFile = settingsPath;
     QSettings qs(settingsFile, QSettings::IniFormat);
@@ -68,8 +69,8 @@ void SettingsForm::saveValues()
 
     for(int i=0; i < ESP32No; ++i){
         QString name = QString("ESP%1").arg(i);
-        double x = static_cast<double>(static_cast<ESPWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getX());
-        double y = static_cast<double>(static_cast<ESPWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY());
+        double x = static_cast<double>(static_cast<EspWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getX());
+        double y = static_cast<double>(static_cast<EspWidget*>(ui->listWidget->itemWidget(ui->listWidget->item(i)))->getY());
 
         qs.setValue(QString(name + "/name"), name);
         qs.setValue(QString(name + "/pos_x"), QString::number(x,'f'));
@@ -86,10 +87,10 @@ void SettingsForm::saveValues()
  * @param y position
  * @param if true, the row will be set modified (and the text becomes italic)
  */
-void SettingsForm::addESPWidget(QString name, double x, double y, bool modified)
+void SettingsForm::addEspWidget(QString name, double x, double y, bool modified)
 {
     //Creating an object of the designed widget which is to be added to the listwidget
-    ESPWidget *espWidget = new ESPWidget(this);
+    EspWidget *espWidget = new EspWidget(this);
     espWidget->setName(name);
     espWidget->setPoint(x,y);
     espWidget->setModified(modified);
@@ -115,8 +116,12 @@ void SettingsForm::on_buttonBox_clicked(QAbstractButton *button)
     if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::RestoreDefaults) ){
         // Not added yet
     }else if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::Save) ){
-        saveValues();
-        QMessageBox::warning(this,"Apply changes","Restart the application to apply changes.");
+        saveValuesFromWidgetToIni();
+        QMessageBox::warning(this,"Apply changes","Application will be restarted.");
+        //this two instructions will restart the application "like a charm"
+        qApp->quit();
+        QProcess::startDetached(qApp->arguments()[0], qApp->arguments());
+
     }else if(static_cast<QPushButton*>(button) == ui->buttonBox->button(QDialogButtonBox::Cancel) ){
         this->close();
     }
@@ -132,7 +137,7 @@ void SettingsForm::on_btnDecreaseESP_clicked()
 
     // If we did not reach the limit, delete a row from the ESP32 devices list
     // and decrease the number of ESP32 devices
-    if(n >= 0){
+    if(n >= ESP32_NO_LIMIT_INF){
         ui->txtESP32No->setText(QString::number(n));
 
         //Delete selected item from the listWidget
@@ -149,8 +154,8 @@ void SettingsForm::on_btnIncreaseESP_clicked()
 
     // If we did not reach the limit, add a row in the ESP32 devices list
     // and increase the number of ESP32 devices
-    if(n < ESP32_NO_LIMIT){
-        addESPWidget("ESP" + QString::number(n), 0, 0);
+    if(n < ESP32_NO_LIMIT_SUP){
+        addEspWidget("ESP" + QString::number(n), 0, 0);
         n++;
         ui->txtESP32No->setText(QString::number(n));
     }
